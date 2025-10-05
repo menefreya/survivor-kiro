@@ -1,0 +1,354 @@
+/* Accessibility Enhancements */
+
+/* Skip to Main Content Link */
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: var(--z-tooltip);
+  padding: var(--spacing-3) var(--spacing-6);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-md) 0;
+  transition: top var(--transition-fast);
+}
+
+.skip-to-main:focus {
+  top: 0;
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Screen Reader Only Content */
+.sr-only,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus Visible Enhancements */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Ensure all interactive elements have visible focus states */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Navigation Links Focus */
+.navigation a:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+/* Card Focus Within */
+.card:focus-within {
+  box-shadow: var(--shadow-lg);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Draggable Items Focus */
+[draggable="true"]:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #E55A2B;
+    --color-primary-hover: #CC4A1B;
+    --color-border-light: #000000;
+    --color-border-medium: #000000;
+    --color-border-dark: #000000;
+  }
+  
+  .btn-primary,
+  .btn-danger {
+    border: 2px solid currentColor;
+  }
+  
+  .btn-secondary {
+    border-width: 3px;
+  }
+  
+  .card {
+    border: 2px solid var(--color-border-dark);
+  }
+  
+  .form-input {
+    border-width: 3px;
+  }
+  
+  /* Increase contrast for text */
+  body {
+    color: #000000;
+    background-color: #FFFFFF;
+  }
+  
+  .navigation {
+    background: #000000;
+  }
+  
+  .navigation a {
+    color: #FFFFFF;
+    border: 2px solid transparent;
+  }
+  
+  .navigation a:hover,
+  .navigation a:focus {
+    border-color: #FFFFFF;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Remove transforms on hover */
+  .btn:hover:not(:disabled),
+  .card:hover,
+  .contestant-card:hover {
+    transform: none;
+  }
+  
+  /* Keep focus indicators but remove animations */
+  *:focus-visible {
+    transition: none;
+  }
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-user *:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Improve table accessibility */
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+}
+
+/* Ensure sufficient color contrast for links */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Navigation links exception (already styled) */
+.navigation a {
+  text-decoration: none;
+}
+
+/* Status indicators with non-color cues */
+.eliminated-badge::before {
+  content: '✕ ';
+  font-weight: bold;
+}
+
+.admin-badge::before {
+  content: '★ ';
+  font-weight: bold;
+}
+
+.sole-survivor-badge::before {
+  content: '👑 ';
+}
+
+/* Error and Success messages with icons */
+.form-error::before {
+  content: '⚠ ';
+  font-weight: bold;
+  margin-right: var(--spacing-2);
+}
+
+.form-success::before {
+  content: '✓ ';
+  font-weight: bold;
+  margin-right: var(--spacing-2);
+}
+
+.error-message::before {
+  content: '⚠ ';
+  font-weight: bold;
+  margin-right: var(--spacing-2);
+}
+
+.success-message::before {
+  content: '✓ ';
+  font-weight: bold;
+  margin-right: var(--spacing-2);
+}
+
+/* Loading state accessibility */
+.loading-spinner[role="status"] {
+  position: relative;
+}
+
+/* Ensure minimum touch targets on mobile */
+@media (max-width: 640px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  [tabindex="0"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Ensure form inputs are large enough */
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Focus trap for modals (if added in future) */
+.modal:focus {
+  outline: none;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+/* Improve contrast for disabled elements */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-600);
+}
+
+/* Ensure images have proper alt text handling */
+img:not([alt]) {
+  outline: 3px solid red;
+}
+
+/* Live region for dynamic content */
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: relative;
+}
+
+/* Improve visibility of current page in navigation */
+.navigation a[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+}
+
+/* Table header scope */
+th[scope="col"],
+th[scope="row"] {
+  font-weight: 600;
+}
+
+/* Form label association */
+label {
+  cursor: pointer;
+}
+
+/* Required field indicator */
+.form-label.required::after,
+label.required::after {
+  content: ' *';
+  color: var(--color-danger);
+  font-weight: bold;
+}
+
+/* Improve drag and drop accessibility */
+[draggable="true"] {
+  cursor: move;
+}
+
+[draggable="true"]:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.dragging {
+  opacity: 0.5;
+  outline: 3px dashed var(--color-primary);
+}
+
+/* Ensure proper heading hierarchy is visible */
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Print styles for accessibility */
+@media print {
+  .skip-to-main,
+  .navigation,
+  button,
+  .btn {
+    display: none;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+}

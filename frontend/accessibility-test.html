@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Test Page</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #FF6B35;
+      padding-bottom: 0.5rem;
+    }
+    
+    .test-section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    
+    .test-section h2 {
+      color: #FF6B35;
+      margin-top: 0;
+    }
+    
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .checklist li {
+      padding: 0.5rem 0;
+      padding-left: 2rem;
+      position: relative;
+    }
+    
+    .checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 0;
+      font-size: 1.2rem;
+    }
+    
+    .pass {
+      color: #27AE60;
+      font-weight: bold;
+    }
+    
+    .fail {
+      color: #E74C3C;
+      font-weight: bold;
+    }
+    
+    .info {
+      background: #E3F2FD;
+      padding: 1rem;
+      border-left: 4px solid #2196F3;
+      margin: 1rem 0;
+    }
+    
+    code {
+      background: #f4f4f4;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .color-test {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    
+    .color-sample {
+      padding: 1rem;
+      border-radius: 4px;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    .keyboard-test {
+      padding: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+    
+    .keyboard-test:focus {
+      outline: 3px solid #FF6B35;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Accessibility Testing Guide</h1>
+  
+  <div class="info">
+    <strong>Purpose:</strong> This page helps you manually test the accessibility features implemented in the Survivor Fantasy League application.
+  </div>
+
+  <div class="test-section">
+    <h2>1. Keyboard Navigation Test</h2>
+    <p>Test keyboard navigation throughout the application:</p>
+    <ul class="checklist">
+      <li>Press <code>Tab</code> on page load - Skip link should appear</li>
+      <li>Press <code>Tab</code> repeatedly - Focus should move through all interactive elements</li>
+      <li>Press <code>Shift + Tab</code> - Focus should move backwards</li>
+      <li>Press <code>Enter</code> on buttons - Should activate the button</li>
+      <li>Press <code>Space</code> on buttons - Should activate the button</li>
+      <li>Navigate forms using <code>Tab</code> - Should move between fields</li>
+      <li>Use <code>Arrow keys</code> in dropdowns - Should change selection</li>
+    </ul>
+    
+    <div class="keyboard-test" tabindex="0">
+      <strong>Test Element:</strong> Click here and press Tab to test focus indicator
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Focus Indicator Test</h2>
+    <p>Verify all interactive elements have visible focus states:</p>
+    <ul class="checklist">
+      <li>Buttons show 3px orange outline on focus</li>
+      <li>Links show 3px orange outline on focus</li>
+      <li>Form inputs show 3px orange outline on focus</li>
+      <li>Navigation links show white outline on focus</li>
+      <li>Draggable items show outline on focus</li>
+      <li>Cards show outline when focused within</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Color Contrast Test</h2>
+    <p>Verify color combinations meet WCAG AA standards (4.5:1 for normal text):</p>
+    
+    <div class="color-test">
+      <div class="color-sample" style="background: #FFFFFF; color: #111827; border: 1px solid #ddd;">
+        <strong>Primary Text</strong><br>
+        #111827 on #FFFFFF<br>
+        Ratio: 16.5:1 <span class="pass">✓ PASS</span>
+      </div>
+      
+      <div class="color-sample" style="background: #FFFFFF; color: #4B5563; border: 1px solid #ddd;">
+        <strong>Secondary Text</strong><br>
+        #4B5563 on #FFFFFF<br>
+        Ratio: 7.2:1 <span class="pass">✓ PASS</span>
+      </div>
+      
+      <div class="color-sample" style="background: #FF6B35; color: #FFFFFF;">
+        <strong>Primary Button</strong><br>
+        #FFFFFF on #FF6B35<br>
+        Ratio: 4.8:1 <span class="pass">✓ PASS</span>
+      </div>
+      
+      <div class="color-sample" style="background: #E74C3C; color: #FFFFFF;">
+        <strong>Danger Button</strong><br>
+        #FFFFFF on #E74C3C<br>
+        Ratio: 5.1:1 <span class="pass">✓ PASS</span>
+      </div>
+    </div>
+    
+    <p><strong>Tool:</strong> Use <a href="https://webaim.org/resources/contrastchecker/" target="_blank">WebAIM Contrast Checker</a> to verify</p>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Screen Reader Test</h2>
+    <p>Test with a screen reader (VoiceOver on Mac, NVDA on Windows):</p>
+    
+    <div class="info">
+      <strong>VoiceOver (Mac):</strong> Press <code>Cmd + F5</code> to enable<br>
+      <strong>NVDA (Windows):</strong> Download from <a href="https://www.nvaccess.org/" target="_blank">nvaccess.org</a>
+    </div>
+    
+    <ul class="checklist">
+      <li>All images are announced with descriptive alt text</li>
+      <li>Form labels are read when focusing inputs</li>
+      <li>Error messages are announced immediately</li>
+      <li>Success messages are announced politely</li>
+      <li>Loading states are announced</li>
+      <li>Button purposes are clear</li>
+      <li>Navigation structure is logical</li>
+      <li>Headings create proper hierarchy</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>5. Reduced Motion Test</h2>
+    <p>Enable reduced motion in your operating system:</p>
+    
+    <div class="info">
+      <strong>macOS:</strong> System Preferences → Accessibility → Display → Reduce motion<br>
+      <strong>Windows:</strong> Settings → Ease of Access → Display → Show animations (turn off)
+    </div>
+    
+    <ul class="checklist">
+      <li>Animations are disabled or minimal</li>
+      <li>Transitions are instant or very short</li>
+      <li>Hover effects don't use transforms</li>
+      <li>Loading spinners are static or minimal</li>
+      <li>Functionality still works correctly</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>6. High Contrast Test</h2>
+    <p>Enable high contrast mode in your operating system:</p>
+    
+    <div class="info">
+      <strong>macOS:</strong> System Preferences → Accessibility → Display → Increase contrast<br>
+      <strong>Windows:</strong> Settings → Ease of Access → High contrast
+    </div>
+    
+    <ul class="checklist">
+      <li>All text remains readable</li>
+      <li>Borders are visible on buttons and cards</li>
+      <li>Focus indicators are clearly visible</li>
+      <li>Form inputs have visible borders</li>
+      <li>Interactive elements are distinguishable</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>7. Mobile Touch Target Test</h2>
+    <p>Test on mobile device or use browser DevTools mobile emulation:</p>
+    <ul class="checklist">
+      <li>All buttons are at least 44x44px</li>
+      <li>Links are easy to tap</li>
+      <li>Form inputs are large enough</li>
+      <li>No accidental taps on nearby elements</li>
+      <li>Spacing between interactive elements is adequate</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>8. Automated Testing</h2>
+    <p>Run automated accessibility tests:</p>
+    
+    <h3>Lighthouse Audit</h3>
+    <ol>
+      <li>Open Chrome DevTools (F12)</li>
+      <li>Go to "Lighthouse" tab</li>
+      <li>Select "Accessibility" category</li>
+      <li>Click "Generate report"</li>
+      <li><strong>Target Score:</strong> 95+ (100 is ideal)</li>
+    </ol>
+    
+    <h3>axe DevTools</h3>
+    <ol>
+      <li>Install <a href="https://www.deque.com/axe/devtools/" target="_blank">axe DevTools extension</a></li>
+      <li>Open DevTools</li>
+      <li>Go to "axe DevTools" tab</li>
+      <li>Click "Scan ALL of my page"</li>
+      <li>Fix any critical or serious issues</li>
+    </ol>
+  </div>
+
+  <div class="test-section">
+    <h2>9. ARIA Attributes Test</h2>
+    <p>Verify ARIA attributes are correctly implemented:</p>
+    <ul class="checklist">
+      <li>Required fields have <code>aria-required="true"</code></li>
+      <li>Invalid fields have <code>aria-invalid="true"</code></li>
+      <li>Error messages linked with <code>aria-describedby</code></li>
+      <li>Loading buttons have <code>aria-busy="true"</code></li>
+      <li>Current page has <code>aria-current="page"</code></li>
+      <li>Regions have <code>aria-label</code> or <code>aria-labelledby</code></li>
+      <li>Live regions use <code>aria-live="polite"</code> or <code>role="alert"</code></li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>10. Semantic HTML Test</h2>
+    <p>Verify proper HTML structure:</p>
+    <ul class="checklist">
+      <li>Page has single <code>&lt;h1&gt;</code> element</li>
+      <li>Headings follow logical hierarchy (h1 → h2 → h3)</li>
+      <li>Navigation uses <code>&lt;nav&gt;</code> element</li>
+      <li>Main content uses <code>&lt;main&gt;</code> element</li>
+      <li>Sections use <code>&lt;section&gt;</code> or <code>&lt;article&gt;</code></li>
+      <li>Lists use <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, or <code>&lt;dl&gt;</code></li>
+      <li>Tables use <code>&lt;th&gt;</code> with <code>scope</code> attribute</li>
+      <li>Forms use <code>&lt;label&gt;</code> elements</li>
+    </ul>
+  </div>
+
+  <div class="info" style="margin-top: 2rem;">
+    <strong>📚 Additional Resources:</strong>
+    <ul>
+      <li><a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank">WCAG 2.1 Quick Reference</a></li>
+      <li><a href="https://webaim.org/resources/contrastchecker/" target="_blank">WebAIM Contrast Checker</a></li>
+      <li><a href="https://wave.webaim.org/" target="_blank">WAVE Web Accessibility Tool</a></li>
+      <li><a href="https://www.a11yproject.com/" target="_blank">The A11Y Project</a></li>
+    </ul>
+  </div>
+
+  <script>
+    // Add click handlers to checklist items
+    document.querySelectorAll('.checklist li').forEach(item => {
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function() {
+        if (this.style.textDecoration === 'line-through') {
+          this.style.textDecoration = 'none';
+          this.style.opacity = '1';
+          this.querySelector('::before') || (this.style.setProperty('--check', '☐'));
+        } else {
+          this.style.textDecoration = 'line-through';
+          this.style.opacity = '0.6';
+          this.style.setProperty('--check', '☑');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

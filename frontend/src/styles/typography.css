@@ -1,0 +1,464 @@
+/**
+ * Typography System
+ * 
+ * Defines consistent typography hierarchy and text styles across the application.
+ * Uses design tokens from tokens.css for all values.
+ */
+
+/* ============================================
+   PAGE TITLES
+   ============================================ */
+
+.page-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   SECTION TITLES
+   ============================================ */
+
+.section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-3) 0;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================
+   CARD TITLES
+   ============================================ */
+
+.card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+/* ============================================
+   SUBSECTION TITLES
+   ============================================ */
+
+.subsection-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+/* ============================================
+   BODY TEXT
+   ============================================ */
+
+.body-text {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.body-text-secondary {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================
+   SMALL TEXT
+   ============================================ */
+
+.small-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.small-text-primary {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* ============================================
+   EXTRA SMALL TEXT
+   ============================================ */
+
+.xs-text {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.xs-text-primary {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+
+/* Font Weights */
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+
+.text-inverse {
+  color: var(--color-text-inverse);
+}
+
+.text-disabled {
+  color: var(--color-text-disabled);
+}
+
+.text-brand {
+  color: var(--color-primary);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+/* Text Alignment */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Text Transform */
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+/* Text Decoration */
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-no-underline {
+  text-decoration: none;
+}
+
+/* Text Overflow */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-wrap {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+/* Line Height Utilities */
+.leading-tight {
+  line-height: var(--line-height-tight);
+}
+
+.leading-normal {
+  line-height: var(--line-height-normal);
+}
+
+.leading-relaxed {
+  line-height: var(--line-height-relaxed);
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+/* Mobile adjustments for better readability */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .subsection-title {
+    font-size: var(--font-size-base);
+  }
+  
+  /* Ensure body text remains readable on mobile (minimum 14px) */
+  .body-text,
+  .body-text-secondary {
+    font-size: var(--font-size-sm);
+    line-height: 1.6; /* Slightly increased for mobile readability */
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 375px) {
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .section-title {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Visually hidden but accessible */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ============================================
+   LINK STYLES
+   ============================================ */
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: var(--transition-colors);
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  border-radius: var(--radius-sm);
+}
+
+.link-secondary {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: var(--transition-colors);
+}
+
+.link-secondary:hover {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+}
+
+/* ============================================
+   PARAGRAPH STYLES
+   ============================================ */
+
+.paragraph {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.paragraph-large {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.paragraph-small {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-3) 0;
+}
+
+/* ============================================
+   LIST STYLES
+   ============================================ */
+
+.list {
+  margin: 0 0 var(--spacing-4) 0;
+  padding-left: var(--spacing-6);
+}
+
+.list-item {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.list-unstyled {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+/* ============================================
+   LABEL STYLES
+   ============================================ */
+
+.label {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.label-required::after {
+  content: " *";
+  color: var(--color-danger);
+}
+
+/* ============================================
+   BADGE/TAG STYLES
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-primary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.badge-success {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.badge-danger {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+.badge-warning {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.badge-info {
+  background-color: var(--color-info-light);
+  color: var(--color-info-dark);
+}
+
+.badge-neutral {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+}

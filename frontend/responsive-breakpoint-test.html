@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Breakpoint Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .viewport-info {
+      background: #667eea;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .breakpoint-indicator {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      display: none;
+    }
+    
+    .mobile-indicator {
+      background: #27AE60;
+      color: white;
+    }
+    
+    .tablet-indicator {
+      background: #F39C12;
+      color: white;
+    }
+    
+    .desktop-indicator {
+      background: #3498DB;
+      color: white;
+    }
+    
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .test-card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .test-button {
+      width: 100%;
+      min-height: 44px;
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    
+    .test-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .font-size-test {
+      margin-bottom: 20px;
+    }
+    
+    .font-size-test p {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+    
+    .size-14 { font-size: 14px; }
+    .size-16 { font-size: 16px; }
+    .size-18 { font-size: 18px; }
+    
+    /* Desktop (default) */
+    .desktop-indicator {
+      display: block;
+    }
+    
+    /* Tablet: 641px - 1024px */
+    @media (max-width: 1024px) {
+      .desktop-indicator {
+        display: none;
+      }
+      .tablet-indicator {
+        display: block;
+      }
+      
+      .test-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    /* Mobile: ≤ 640px */
+    @media (max-width: 640px) {
+      .tablet-indicator {
+        display: none;
+      }
+      .mobile-indicator {
+        display: block;
+      }
+      
+      .test-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Responsive Breakpoint Test</h1>
+    
+    <div class="viewport-info">
+      Current Viewport: <span id="viewport-width"></span>px × <span id="viewport-height"></span>px
+    </div>
+    
+    <div class="breakpoint-indicator desktop-indicator">
+      🖥️ DESKTOP MODE (> 1024px)
+    </div>
+    
+    <div class="breakpoint-indicator tablet-indicator">
+      📱 TABLET MODE (641px - 1024px)
+    </div>
+    
+    <div class="breakpoint-indicator mobile-indicator">
+      📱 MOBILE MODE (≤ 640px)
+    </div>
+    
+    <h2>Font Size Test (Minimum 14px on Mobile)</h2>
+    <div class="font-size-test">
+      <p class="size-14">14px text - This should be readable on mobile ✓</p>
+      <p class="size-16">16px text - Standard body text size ✓</p>
+      <p class="size-18">18px text - Larger text for emphasis ✓</p>
+    </div>
+    
+    <h2>Touch Target Test (Minimum 44x44px)</h2>
+    <button class="test-button">Test Button (44px height) ✓</button>
+    <input type="text" class="test-input" placeholder="Test Input (44px height) ✓">
+    
+    <h2>Responsive Grid Test</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <h3>Card 1</h3>
+        <p>Desktop: 3 columns</p>
+        <p>Tablet: 2 columns</p>
+        <p>Mobile: 1 column</p>
+      </div>
+      <div class="test-card">
+        <h3>Card 2</h3>
+        <p>Resize your browser to see the layout change at 640px and 1024px breakpoints.</p>
+      </div>
+      <div class="test-card">
+        <h3>Card 3</h3>
+        <p>All breakpoints are standardized across the application.</p>
+      </div>
+    </div>
+    
+    <h2>Test Widths</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 320px - iPhone SE (smallest mobile)
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 375px - iPhone 12/13
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 414px - iPhone 12 Pro Max
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 640px - Mobile breakpoint
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 768px - iPad portrait
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        📱 1024px - Tablet breakpoint / iPad landscape
+      </li>
+      <li style="padding: 10px; background: #f9f9f9; margin-bottom: 5px; border-radius: 4px;">
+        🖥️ 1440px - Standard laptop
+      </li>
+    </ul>
+  </div>
+  
+  <script>
+    function updateViewportInfo() {
+      document.getElementById('viewport-width').textContent = window.innerWidth;
+      document.getElementById('viewport-height').textContent = window.innerHeight;
+    }
+    
+    updateViewportInfo();
+    window.addEventListener('resize', updateViewportInfo);
+  </script>
+</body>
+</html>

@@ -107,9 +107,9 @@ const SignUp = () => {
   return (
     <div className="auth-container">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form" aria-label="Sign up form">
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name" className="required">Name</label>
           <input
             type="text"
             id="name"
@@ -119,12 +119,16 @@ const SignUp = () => {
             className={errors.name ? 'error' : ''}
             placeholder="Enter your full name"
             required
+            aria-required="true"
+            aria-invalid={errors.name ? 'true' : 'false'}
+            aria-describedby={errors.name ? 'name-error' : undefined}
+            autoComplete="name"
           />
-          {errors.name && <span className="error-message">{errors.name}</span>}
+          {errors.name && <span id="name-error" className="error-message" role="alert">{errors.name}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="required">Email</label>
           <input
             type="email"
             id="email"
@@ -134,12 +138,16 @@ const SignUp = () => {
             className={errors.email ? 'error' : ''}
             placeholder="your.email@example.com"
             required
+            aria-required="true"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            autoComplete="email"
           />
-          {errors.email && <span className="error-message">{errors.email}</span>}
+          {errors.email && <span id="email-error" className="error-message" role="alert">{errors.email}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" className="required">Password</label>
           <input
             type="password"
             id="password"
@@ -149,9 +157,13 @@ const SignUp = () => {
             className={errors.password ? 'error' : ''}
             placeholder="Minimum 8 characters"
             required
+            aria-required="true"
+            aria-invalid={errors.password ? 'true' : 'false'}
+            aria-describedby={errors.password ? 'password-error' : 'password-hint'}
+            autoComplete="new-password"
           />
-          {errors.password && <span className="error-message">{errors.password}</span>}
-          {!errors.password && <span className="password-hint">Must be at least 8 characters</span>}
+          {errors.password && <span id="password-error" className="error-message" role="alert">{errors.password}</span>}
+          {!errors.password && <span id="password-hint" className="password-hint">Must be at least 8 characters</span>}
         </div>
 
         <div className="form-group">
@@ -163,12 +175,19 @@ const SignUp = () => {
             value={formData.profileImageUrl}
             onChange={handleChange}
             placeholder="https://example.com/image.jpg"
+            aria-describedby="profile-image-hint"
           />
+          <span id="profile-image-hint" className="visually-hidden">Enter a valid URL for your profile image</span>
         </div>
 
-        {apiError && <div className="api-error-message">{apiError}</div>}
+        {apiError && <div className="api-error-message" role="alert">{apiError}</div>}
 
-        <button type="submit" className={`auth-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+        <button 
+          type="submit" 
+          className={`auth-button ${isLoading ? 'loading' : ''}`} 
+          disabled={isLoading}
+          aria-busy={isLoading}
+        >
           {isLoading ? 'Creating account...' : 'Sign Up'}
         </button>
       </form>

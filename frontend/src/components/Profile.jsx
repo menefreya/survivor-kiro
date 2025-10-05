@@ -50,19 +50,20 @@ const Profile = () => {
       <h2>My Profile</h2>
       
       <div className="profile-info">
-        <div className="profile-image-section">
+        <div className="profile-image-section" aria-label="Profile picture">
           {user.profile_image_url && user.profile_image_url.startsWith('http') ? (
             <img 
               src={user.profile_image_url} 
-              alt={`${user.name}'s profile`}
+              alt={`${user.name}'s profile picture`}
               className="profile-image"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+                e.target.alt = 'Default profile placeholder image';
               }}
             />
           ) : (
-            <div className="profile-image-placeholder">
-              <span>{user.name.charAt(0).toUpperCase()}</span>
+            <div className="profile-image-placeholder" role="img" aria-label={`${user.name}'s profile initial`}>
+              <span aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
             </div>
           )}
         </div>
@@ -89,10 +90,11 @@ const Profile = () => {
         <h3>Update Profile Image</h3>
         <form onSubmit={handleUpdateProfileImage}>
           <div className="form-group">
-            <label htmlFor="profileImageUrl">Profile Image URL:</label>
+            <label htmlFor="profileImageUrl" className="form-label">Profile Image URL:</label>
             <input
               type="url"
               id="profileImageUrl"
+              className="form-input"
               value={profileImageUrl}
               onChange={(e) => setProfileImageUrl(e.target.value)}
               placeholder="https://example.com/image.jpg"
@@ -100,13 +102,14 @@ const Profile = () => {
             />
           </div>
 
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
+          {error && <div className="form-error" role="alert">{error}</div>}
+          {success && <div className="form-success" role="status">{success}</div>}
 
           <button 
             type="submit" 
             className="btn-primary"
             disabled={isUpdating}
+            aria-busy={isUpdating}
           >
             {isUpdating ? 'Updating...' : 'Update Image'}
           </button>
@@ -114,7 +117,11 @@ const Profile = () => {
       </div>
 
       <div className="profile-actions">
-        <button onClick={handleLogout} className="btn-logout">
+        <button 
+          onClick={handleLogout} 
+          className="btn-danger"
+          aria-label="Logout from your account"
+        >
           Logout
         </button>
       </div>

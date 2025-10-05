@@ -1,0 +1,824 @@
+[
+  {
+    "file": "Dashboard.css",
+    "issues": 27,
+    "details": [
+      {
+        "type": "colors",
+        "value": "#FFD700",
+        "line": 10,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#C0C0C0",
+        "line": 11,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#CD7F32",
+        "line": 12,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "rgba(",
+        "line": 688,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "rgba(",
+        "line": 688,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 48px",
+        "line": 7,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 171,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 24px",
+        "line": 348,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 24px",
+        "line": 348,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 4px",
+        "line": 407,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1024px",
+        "line": 422,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 686,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3rem",
+        "line": 702,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 686,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 48px",
+        "line": 7,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 48px",
+        "line": 7,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 874,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.5px",
+        "line": 968,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3rem",
+        "line": 702,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.75rem",
+        "line": 1075,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 1080,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1.5rem",
+        "line": 686,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 3rem",
+        "line": 702,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1.5rem",
+        "line": 686,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1rem",
+        "line": 874,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 3rem",
+        "line": 702,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1.75rem",
+        "line": 1075,
+        "description": "Hardcoded font sizes"
+      }
+    ]
+  },
+  {
+    "file": "Profile.css",
+    "issues": 3,
+    "details": [
+      {
+        "type": "colors",
+        "value": "#667eea",
+        "line": 53,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#764ba2",
+        "line": 53,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 46,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "Ranking.css",
+    "issues": 2,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 218,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 35px",
+        "line": 268,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "Admin.css",
+    "issues": 4,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 1024px",
+        "line": 217,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 274,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 274,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 274,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "Auth.css",
+    "issues": 64,
+    "details": [
+      {
+        "type": "colors",
+        "value": "rgba(",
+        "line": 8,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#333",
+        "line": 14,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#555",
+        "line": 31,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#e0e0e0",
+        "line": 38,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#646cff",
+        "line": 47,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "rgba(",
+        "line": 8,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#999",
+        "line": 52,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#d32f2f",
+        "line": 56,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#d32f2f",
+        "line": 56,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#ffebee",
+        "line": 68,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#c62828",
+        "line": 69,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#ef9a9a",
+        "line": 73,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#646cff",
+        "line": 47,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#535bf2",
+        "line": 93,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#9ca3af",
+        "line": 102,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#e0e0e0",
+        "line": 38,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#666",
+        "line": 138,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#646cff",
+        "line": 47,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#535bf2",
+        "line": 93,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "colors",
+        "value": "#666",
+        "line": 138,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3rem",
+        "line": 4,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 2.5rem",
+        "line": 5,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 2rem",
+        "line": 13,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 2rem",
+        "line": 13,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 24,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.5rem",
+        "line": 29,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.95rem",
+        "line": 32,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.75rem",
+        "line": 37,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 6px",
+        "line": 39,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 40,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.875rem",
+        "line": 62,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.5rem",
+        "line": 29,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 40,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 6px",
+        "line": 39,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 24,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.95rem",
+        "line": 32,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.875rem",
+        "line": 62,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 6px",
+        "line": 39,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 40,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 40,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 121,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 2rem",
+        "line": 13,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 24,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.95rem",
+        "line": 32,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.85rem",
+        "line": 156,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.25rem",
+        "line": 158,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.5rem",
+        "line": 24,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 2rem",
+        "line": 13,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1.75rem",
+        "line": 169,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 174,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 174,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1rem",
+        "line": 40,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.95rem",
+        "line": 32,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 2rem",
+        "line": 15,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.95rem",
+        "line": 32,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1rem",
+        "line": 40,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.875rem",
+        "line": 62,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.95rem",
+        "line": 32,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1rem",
+        "line": 40,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.95rem",
+        "line": 32,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.85rem",
+        "line": 156,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1.75rem",
+        "line": 169,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 1rem",
+        "line": 40,
+        "description": "Hardcoded font sizes"
+      },
+      {
+        "type": "fontSizes",
+        "value": "font-size: 0.95rem",
+        "line": 32,
+        "description": "Hardcoded font sizes"
+      }
+    ]
+  },
+  {
+    "file": "buttons.css",
+    "issues": 6,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 21,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 26,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 36px",
+        "line": 184,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 21,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 36px",
+        "line": 184,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 36px",
+        "line": 184,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "forms.css",
+    "issues": 9,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 28,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 28,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 28,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 44px",
+        "line": 28,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 330,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 330,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 330,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 330,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 3px",
+        "line": 330,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "cards.css",
+    "issues": 2,
+    "details": [
+      {
+        "type": "colors",
+        "value": "rgba(",
+        "line": 286,
+        "description": "Hardcoded color values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1024px",
+        "line": 507,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "typography.css",
+    "issues": 3,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 768px",
+        "line": 249,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 375px",
+        "line": 275,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 0.05em",
+        "line": 433,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  },
+  {
+    "file": "utilities.css",
+    "issues": 7,
+    "details": [
+      {
+        "type": "spacing",
+        "value": ": 384px",
+        "line": 412,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 448px",
+        "line": 413,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 576px",
+        "line": 415,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 768px",
+        "line": 417,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 896px",
+        "line": 418,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 768px",
+        "line": 417,
+        "description": "Hardcoded spacing values"
+      },
+      {
+        "type": "spacing",
+        "value": ": 1024px",
+        "line": 527,
+        "description": "Hardcoded spacing values"
+      }
+    ]
+  }
+]

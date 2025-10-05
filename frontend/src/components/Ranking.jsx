@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
+import LoadingSpinner from './LoadingSpinner';
 import '../styles/Ranking.css';
 
 const Ranking = () => {
@@ -199,26 +200,36 @@ const Ranking = () => {
   };
 
   if (isLoading) {
-    return <div className="ranking-container"><div className="loading">Loading contestants...</div></div>;
+    return (
+      <div className="ranking-container">
+        <LoadingSpinner 
+          size="lg" 
+          text="Loading contestants..." 
+          centered 
+          role="status"
+          aria-live="polite"
+        />
+      </div>
+    );
   }
 
   return (
     <div className="ranking-container">
       <h2>Rank Contestants</h2>
       
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">Rankings submitted successfully!</div>}
+      {error && <div className="form-error" role="alert">{error}</div>}
+      {success && <div className="form-success" role="status">Rankings submitted successfully!</div>}
       
       {isLocked && (
-        <div className="locked-message">
+        <div className="locked-message" role="status" aria-live="polite">
           Your rankings have been submitted and are now locked. The draft will begin once all players have submitted their rankings.
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         {isLocked ? (
-          <div className="sole-survivor-display">
-            <h3>Your Sole Survivor Pick</h3>
+          <div className="card sole-survivor-display">
+            <h3 className="card-title">Your Sole Survivor Pick</h3>
             <div className="survivor-card">
               {soleSurvivorId && contestants.find(c => c.id === parseInt(soleSurvivorId)) ? (
                 <>
@@ -241,12 +252,13 @@ const Ranking = () => {
             </div>
           </div>
         ) : (
-          <div className="sole-survivor-section">
-            <label htmlFor="sole-survivor">
+          <div className="card sole-survivor-section">
+            <label htmlFor="sole-survivor" className="form-label">
               <strong>Sole Survivor Pick:</strong> Who do you think will win?
             </label>
             <select
               id="sole-survivor"
+              className="form-input"
               value={soleSurvivorId}
               onChange={handleSoleSurvivorChange}
               disabled={isLocked}
@@ -271,11 +283,11 @@ const Ranking = () => {
           {isLocked ? (
             <h3>Your Rankings</h3>
           ) : (
-            <p>Drag and drop contestants or type a rank number to reorder them (1st = highest preference).</p>
+            <p role="status">Drag and drop contestants or type a rank number to reorder them (1st = highest preference).</p>
           )}
         </div>
 
-        <div className="ranked-list">
+        <div className="ranked-list" role="list" aria-label="Contestant rankings">
           {rankedContestants.map((contestant, index) => (
             <div
               key={contestant.id}
@@ -285,9 +297,12 @@ const Ranking = () => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDrop={(e) => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
+              role="listitem"
+              aria-label={`${contestant.name}, rank ${index + 1} of ${rankedContestants.length}${contestant.is_eliminated ? ', eliminated' : ''}`}
+              tabIndex={isLocked ? -1 : 0}
             >
               {isLocked ? (
-                <div className="rank-number">{index + 1}</div>
+                <div className="rank-number" aria-label={`Rank ${index + 1}`}>{index + 1}</div>
               ) : (
                 <input
                   type="number"
@@ -297,32 +312,34 @@ const Ranking = () => {
                   max={rankedContestants.length}
                   onChange={(e) => handleRankChange(index, e.target.value)}
                   onClick={(e) => e.target.select()}
+                  aria-label={`Change rank for ${contestant.name}, currently ${index + 1}`}
                 />
               )}
               <div className="contestant-info">
                 <img 
                   src={contestant.image_url || 'https://via.placeholder.com/60?text=No+Image'} 
-                  alt={contestant.name}
+                  alt={`${contestant.name} profile picture`}
                   className="contestant-image"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/60?text=No+Image';
+                    e.target.alt = 'Contestant profile placeholder';
                   }}
                 />
                 <div className="contestant-details">
                   <div className="contestant-info-line">
                     <h3>{contestant.name}</h3>
-                    <span className="contestant-separator">•</span>
+                    <span className="contestant-separator" aria-hidden="true">•</span>
                     <p>{contestant.profession || 'Contestant'}</p>
                     {contestant.is_eliminated && (
                       <>
-                        <span className="contestant-separator">•</span>
-                        <span className="eliminated-badge">Eliminated</span>
+                        <span className="contestant-separator" aria-hidden="true">•</span>
+                        <span className="eliminated-badge" role="status">Eliminated</span>
                       </>
                     )}
                   </div>
                 </div>
               </div>
-              {!isLocked && <div className="drag-handle">⋮⋮</div>}
+              {!isLocked && <div className="drag-handle" aria-hidden="true">⋮⋮</div>}
             </div>
           ))}
         </div>
@@ -330,8 +347,9 @@ const Ranking = () => {
         {!isLocked && (
           <button 
             type="submit" 
-            className="submit-button"
+            className="btn-primary btn-block"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Rankings'}
           </button>

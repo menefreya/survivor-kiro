@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Audit Checklist - Survivor Fantasy League</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #FF6B35;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #FF6B35;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .intro {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #f9f9f9;
+            border-left: 4px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checklist input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checklist label {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .checklist li:has(input:checked) {
+            background: #e8f5e9;
+            border-left-color: #27AE60;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status.pass {
+            background: #e8f5e9;
+            color: #27AE60;
+        }
+
+        .status.fail {
+            background: #ffebee;
+            color: #E74C3C;
+        }
+
+        .status.warning {
+            background: #fff3e0;
+            color: #F39C12;
+        }
+
+        .contrast-test {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .contrast-sample {
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .keyboard-test {
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .keyboard-test button {
+            margin: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #FF6B35;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .keyboard-test button:hover {
+            background: #E55A2B;
+            transform: translateY(-1px);
+        }
+
+        .keyboard-test button:focus {
+            outline: 3px solid #FF6B35;
+            outline-offset: 2px;
+        }
+
+        .keyboard-test input {
+            margin: 0.5rem;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+        }
+
+        .keyboard-test input:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .progress {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27AE60, #2ECC71);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: #fff3e0;
+            border-left: 4px solid #F39C12;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .instructions strong {
+            color: #F39C12;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro">
+        <h1>🔍 Accessibility Audit Checklist</h1>
+        <p><strong>Project:</strong> Survivor Fantasy League - UX/UI Design Improvements</p>
+        <p><strong>Date:</strong> <span id="current-date"></span></p>
+        <p><strong>Tester:</strong> <input type="text" id="tester-name" placeholder="Enter your name" style="border: none; border-bottom: 1px solid #ddd; padding: 0.25rem; font-size: 1rem;"></p>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar">0%</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>1. Color Contrast Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Use a color contrast checker tool (browser extension or online tool) to verify each combination meets WCAG AA standards (4.5:1 for normal text, 3:1 for large text).
+        </div>
+
+        <h3>Text Combinations to Test</h3>
+        <div class="contrast-test">
+            <div class="contrast-sample" style="background: white; color: #111827;">
+                <div>Primary Text on White</div>
+                <small>Ratio: ___:1</small>
+            </div>
+            <div class="contrast-sample" style="background: white; color: #6B7280;">
+                <div>Secondary Text on White</div>
+                <small>Ratio: ___:1</small>
+            </div>
+            <div class="contrast-sample" style="background: #FF6B35; color: white;">
+                <div>White on Primary</div>
+                <small>Ratio: ___:1</small>
+            </div>
+            <div class="contrast-sample" style="background: #E74C3C; color: white;">
+                <div>White on Danger</div>
+                <small>Ratio: ___:1</small>
+            </div>
+            <div class="contrast-sample" style="background: #27AE60; color: white;">
+                <div>White on Success</div>
+                <small>Ratio: ___:1</small>
+            </div>
+            <div class="contrast-sample" style="background: white; color: #FF6B35;">
+                <div>Primary Link on White</div>
+                <small>Ratio: ___:1</small>
+            </div>
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="contrast-1">
+                <label for="contrast-1">Primary text on white background meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-2">
+                <label for="contrast-2">Secondary text on white background meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-3">
+                <label for="contrast-3">White text on primary button meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-4">
+                <label for="contrast-4">White text on danger button meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-5">
+                <label for="contrast-5">White text on success button meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-6">
+                <label for="contrast-6">Link text on white background meets 4.5:1</label>
+            </li>
+            <li>
+                <input type="checkbox" id="contrast-7">
+                <label for="contrast-7">Focus indicators meet 3:1 contrast ratio</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>2. Keyboard Navigation Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Use only Tab, Shift+Tab, Enter, Space, and Arrow keys. Do not use the mouse.
+        </div>
+
+        <div class="keyboard-test">
+            <p><strong>Test Area:</strong> Try navigating through these elements using only your keyboard.</p>
+            <button>Button 1</button>
+            <button>Button 2</button>
+            <input type="text" placeholder="Text input">
+            <button>Button 3</button>
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="keyboard-1">
+                <label for="keyboard-1">All interactive elements are reachable with Tab key</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-2">
+                <label for="keyboard-2">Tab order is logical and follows visual flow</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-3">
+                <label for="keyboard-3">Focus indicators are clearly visible on all elements</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-4">
+                <label for="keyboard-4">Can navigate backwards with Shift+Tab</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-5">
+                <label for="keyboard-5">Buttons activate with Enter and Space keys</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-6">
+                <label for="keyboard-6">No keyboard traps (can always move focus away)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="keyboard-7">
+                <label for="keyboard-7">Dropdowns/modals can be closed with Escape key</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>3. Screen Reader Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Enable VoiceOver (Mac: Cmd+F5) or NVDA (Windows) and navigate through the application.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="sr-1">
+                <label for="sr-1">Page titles are announced correctly</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-2">
+                <label for="sr-2">Headings are announced with correct levels (h1, h2, h3)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-3">
+                <label for="sr-3">Form labels are announced with their inputs</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-4">
+                <label for="sr-4">Button purposes are clear from their labels</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-5">
+                <label for="sr-5">Error messages are announced when they appear</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-6">
+                <label for="sr-6">Success messages are announced when they appear</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-7">
+                <label for="sr-7">Loading states are announced</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-8">
+                <label for="sr-8">Images have appropriate alt text</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-9">
+                <label for="sr-9">Links describe their destination</label>
+            </li>
+            <li>
+                <input type="checkbox" id="sr-10">
+                <label for="sr-10">Tables have proper structure (headers, captions)</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>4. Semantic HTML Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Inspect the HTML structure using browser DevTools.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="html-1">
+                <label for="html-1">Buttons use &lt;button&gt; elements (not divs)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-2">
+                <label for="html-2">Links use &lt;a&gt; elements with href attributes</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-3">
+                <label for="html-3">Form inputs have associated &lt;label&gt; elements</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-4">
+                <label for="html-4">Headings follow logical hierarchy (h1 → h2 → h3)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-5">
+                <label for="html-5">Main content is in &lt;main&gt; element</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-6">
+                <label for="html-6">Navigation is in &lt;nav&gt; element</label>
+            </li>
+            <li>
+                <input type="checkbox" id="html-7">
+                <label for="html-7">Lists use &lt;ul&gt;/&lt;ol&gt; and &lt;li&gt; elements</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>5. ARIA Attributes Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Check for appropriate ARIA attributes in the HTML.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="aria-1">
+                <label for="aria-1">Icon-only buttons have aria-label attributes</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-2">
+                <label for="aria-2">Loading states have aria-live="polite" or aria-busy="true"</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-3">
+                <label for="aria-3">Error messages have aria-live="assertive" or aria-describedby</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-4">
+                <label for="aria-4">Required form fields have aria-required="true"</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-5">
+                <label for="aria-5">Invalid inputs have aria-invalid="true"</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-6">
+                <label for="aria-6">Modals/dialogs have aria-modal="true" and aria-labelledby</label>
+            </li>
+            <li>
+                <input type="checkbox" id="aria-7">
+                <label for="aria-7">Expandable sections have aria-expanded attribute</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>6. Mobile Accessibility Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Test on mobile devices or use browser DevTools device emulation.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="mobile-1">
+                <label for="mobile-1">Touch targets are at least 44x44 pixels</label>
+            </li>
+            <li>
+                <input type="checkbox" id="mobile-2">
+                <label for="mobile-2">Text is readable without zooming (minimum 14px)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="mobile-3">
+                <label for="mobile-3">No horizontal scrolling required</label>
+            </li>
+            <li>
+                <input type="checkbox" id="mobile-4">
+                <label for="mobile-4">Forms are easy to fill out on mobile</label>
+            </li>
+            <li>
+                <input type="checkbox" id="mobile-5">
+                <label for="mobile-5">Buttons are easy to tap (adequate spacing)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="mobile-6">
+                <label for="mobile-6">Content reflows properly at different orientations</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>7. Visual Accessibility Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Test with browser accessibility features and extensions.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="visual-1">
+                <label for="visual-1">Content is readable with browser zoom at 200%</label>
+            </li>
+            <li>
+                <input type="checkbox" id="visual-2">
+                <label for="visual-2">Layout doesn't break at high zoom levels</label>
+            </li>
+            <li>
+                <input type="checkbox" id="visual-3">
+                <label for="visual-3">Color is not the only means of conveying information</label>
+            </li>
+            <li>
+                <input type="checkbox" id="visual-4">
+                <label for="visual-4">Text can be resized without loss of functionality</label>
+            </li>
+            <li>
+                <input type="checkbox" id="visual-5">
+                <label for="visual-5">Animations respect prefers-reduced-motion setting</label>
+            </li>
+            <li>
+                <input type="checkbox" id="visual-6">
+                <label for="visual-6">High contrast mode is supported</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>8. Form Accessibility Testing</h2>
+        <div class="instructions">
+            <strong>Instructions:</strong> Test all forms in the application.
+        </div>
+
+        <h3>Checklist</h3>
+        <ul class="checklist">
+            <li>
+                <input type="checkbox" id="form-1">
+                <label for="form-1">All inputs have visible labels</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-2">
+                <label for="form-2">Required fields are clearly indicated</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-3">
+                <label for="form-3">Error messages are specific and helpful</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-4">
+                <label for="form-4">Error messages appear near the relevant field</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-5">
+                <label for="form-5">Forms can be submitted with Enter key</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-6">
+                <label for="form-6">Input types are appropriate (email, tel, number, etc.)</label>
+            </li>
+            <li>
+                <input type="checkbox" id="form-7">
+                <label for="form-7">Autocomplete attributes are used where appropriate</label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Summary & Notes</h2>
+        <div style="margin-top: 1rem;">
+            <h3>Critical Issues Found:</h3>
+            <textarea id="critical-issues" style="width: 100%; min-height: 100px; padding: 0.75rem; border: 2px solid #E74C3C; border-radius: 4px; font-family: inherit;" placeholder="List any critical accessibility issues that must be fixed..."></textarea>
+        </div>
+        <div style="margin-top: 1rem;">
+            <h3>Recommendations:</h3>
+            <textarea id="recommendations" style="width: 100%; min-height: 100px; padding: 0.75rem; border: 2px solid #F39C12; border-radius: 4px; font-family: inherit;" placeholder="List recommendations for improvement..."></textarea>
+        </div>
+        <div style="margin-top: 1rem;">
+            <h3>Additional Notes:</h3>
+            <textarea id="notes" style="width: 100%; min-height: 100px; padding: 0.75rem; border: 2px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="Any other observations or notes..."></textarea>
+        </div>
+    </div>
+
+    <div class="section" style="text-align: center;">
+        <h2>Final Assessment</h2>
+        <p style="margin: 1rem 0;">
+            <strong>Overall Accessibility Rating:</strong>
+            <select id="rating" style="padding: 0.5rem; font-size: 1rem; border-radius: 4px; border: 2px solid #ddd; margin-left: 0.5rem;">
+                <option value="">Select...</option>
+                <option value="excellent">Excellent (90-100%)</option>
+                <option value="good">Good (75-89%)</option>
+                <option value="fair">Fair (60-74%)</option>
+                <option value="poor">Poor (&lt;60%)</option>
+            </select>
+        </p>
+        <button onclick="window.print()" style="padding: 1rem 2rem; font-size: 1rem; background: #FF6B35; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 1rem;">
+            Print Report
+        </button>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Update progress bar
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+            const checked = document.querySelectorAll('.checklist input[type="checkbox"]:checked');
+            const percentage = Math.round((checked.length / checkboxes.length) * 100);
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+        }
+
+        // Add event listeners to all checkboxes
+        document.querySelectorAll('.checklist input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgress);
+        });
+
+        // Save state to localStorage
+        function saveState() {
+            const state = {
+                testerName: document.getElementById('tester-name').value,
+                checkboxes: {},
+                criticalIssues: document.getElementById('critical-issues').value,
+                recommendations: document.getElementById('recommendations').value,
+                notes: document.getElementById('notes').value,
+                rating: document.getElementById('rating').value
+            };
+
+            document.querySelectorAll('.checklist input[type="checkbox"]').forEach(checkbox => {
+                state.checkboxes[checkbox.id] = checkbox.checked;
+            });
+
+            localStorage.setItem('accessibility-audit-state', JSON.stringify(state));
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('accessibility-audit-state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                document.getElementById('tester-name').value = state.testerName || '';
+                document.getElementById('critical-issues').value = state.criticalIssues || '';
+                document.getElementById('recommendations').value = state.recommendations || '';
+                document.getElementById('notes').value = state.notes || '';
+                document.getElementById('rating').value = state.rating || '';
+
+                Object.entries(state.checkboxes).forEach(([id, checked]) => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = checked;
+                });
+
+                updateProgress();
+            }
+        }
+
+        // Auto-save every 5 seconds
+        setInterval(saveState, 5000);
+
+        // Save on page unload
+        window.addEventListener('beforeunload', saveState);
+
+        // Load state on page load
+        window.addEventListener('load', loadState);
+
+        // Add event listeners to textareas and select
+        ['tester-name', 'critical-issues', 'recommendations', 'notes', 'rating'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', saveState);
+                element.addEventListener('change', saveState);
+            }
+        });
+    </script>
+</body>
+</html>

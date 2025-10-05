@@ -60,9 +60,9 @@ const Login = () => {
   return (
     <div className="auth-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
+      <form onSubmit={handleSubmit} className="auth-form" aria-label="Login form">
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="required">Email</label>
           <input
             type="email"
             id="email"
@@ -71,10 +71,12 @@ const Login = () => {
             onChange={handleChange}
             placeholder="your.email@example.com"
             required
+            aria-required="true"
+            autoComplete="email"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" className="required">Password</label>
           <input
             type="password"
             id="password"
@@ -83,12 +85,19 @@ const Login = () => {
             onChange={handleChange}
             placeholder="Enter your password"
             required
+            aria-required="true"
+            autoComplete="current-password"
           />
         </div>
 
-        {error && <div className="api-error-message">{error}</div>}
+        {error && <div className="api-error-message" role="alert">{error}</div>}
 
-        <button type="submit" className={`auth-button ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+        <button 
+          type="submit" 
+          className={`auth-button ${isLoading ? 'loading' : ''}`} 
+          disabled={isLoading}
+          aria-busy={isLoading}
+        >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>

@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LeaderboardCard from './LeaderboardCard';
 import MyTeamCard from './MyTeamCard';
+import LoadingSpinner from './LoadingSpinner';
 import '../App.css';
 import '../styles/Dashboard.css';
 
@@ -14,10 +15,8 @@ const Home = () => {
   const [pointsBehindLeader, setPointsBehindLeader] = useState(0);
   const [weeklyChange, setWeeklyChange] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [leaderboardError, setLeaderboardError] = useState(null);
   const [teamError, setTeamError] = useState(null);
-  const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
 
   // Helper function to extract initials from name
   const getInitials = (name) => {
@@ -83,11 +82,9 @@ const Home = () => {
       
       setLeaderboard(transformedLeaderboard);
       setLeaderboardError(null);
-      setError(null);
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
       const errorMessage = err.response?.data?.error || 'Failed to load data. Please try again.';
-      setError(errorMessage);
       setLeaderboardError(errorMessage);
       setTeamError(errorMessage);
     } finally {
@@ -117,17 +114,16 @@ const Home = () => {
     fetchLeaderboard();
   };
 
-  const handleViewFullLeaderboard = () => {
-    setShowFullLeaderboard(true);
-  };
-
   if (isLoading) {
     return (
       <div className="dashboard-container">
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
-          <p>Loading your dashboard...</p>
-        </div>
+        <LoadingSpinner 
+          size="lg" 
+          text="Loading your dashboard..." 
+          centered={true}
+          role="status"
+          aria-live="polite"
+        />
       </div>
     );
   }
@@ -139,8 +135,8 @@ const Home = () => {
     <div className="dashboard-container">
       {/* Dashboard Header */}
       <header className="dashboard-header">
-        <h1>Season 49 Dashboard</h1>
-        <p className="welcome-message">
+        <h1 className="page-title">Season 49 Dashboard</h1>
+        <p className="body-text welcome-message" role="status" aria-live="polite">
           {hasCompletedRankings 
             ? `Welcome back, ${user?.username || user?.email}! Track your team's performance below.`
             : "Welcome to Survivor Season 49! Complete your draft and sole survivor pick to get started."
@@ -152,12 +148,10 @@ const Home = () => {
       <div className="dashboard-columns">
         {/* Left Column: Leaderboard */}
         <LeaderboardCard 
-          players={showFullLeaderboard ? leaderboard : leaderboard.slice(0, 5)}
+          players={leaderboard}
           userPosition={userPosition}
           pointsBehindLeader={pointsBehindLeader}
           currentUserId={user?.id}
-          onViewFull={handleViewFullLeaderboard}
-          showingFull={showFullLeaderboard}
           error={leaderboardError}
           onRetry={handleRefresh}
         />

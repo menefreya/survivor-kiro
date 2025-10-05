@@ -1,0 +1,282 @@
+/**
+ * Design Tokens
+ * 
+ * Centralized design system variables for the Survivor Fantasy League application.
+ * These tokens ensure visual consistency across all components and pages.
+ */
+
+:root {
+  /* ============================================
+     TYPOGRAPHY SCALE (1.25 ratio)
+     ============================================ */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* ============================================
+     COLOR PALETTE
+     ============================================ */
+  
+  /* Primary Colors (Orange - Brand) */
+  --color-primary: #FF6B35;
+  --color-primary-hover: #E55A2B;
+  --color-primary-active: #CC4E24;
+  --color-primary-light: #FFF5F2;
+  --color-primary-dark: #B33D1A;
+  
+  /* Secondary Colors (Blue) */
+  --color-secondary: #4A90E2;
+  --color-secondary-hover: #3A7BC8;
+  --color-secondary-active: #2A6BB8;
+  --color-secondary-light: #F0F7FF;
+  --color-secondary-dark: #1A5BA8;
+  
+  /* Success Colors (Green) */
+  --color-success: #27AE60;
+  --color-success-hover: #1E8449;
+  --color-success-active: #186A3B;
+  --color-success-light: #E8F8F0;
+  --color-success-dark: #145A32;
+  
+  /* Danger Colors (Red) */
+  --color-danger: #E74C3C;
+  --color-danger-hover: #C0392B;
+  --color-danger-active: #A93226;
+  --color-danger-light: #FDEDEC;
+  --color-danger-dark: #922B21;
+  
+  /* Warning Colors (Yellow-Orange) */
+  --color-warning: #F39C12;
+  --color-warning-hover: #D68910;
+  --color-warning-active: #B9770E;
+  --color-warning-light: #FEF5E7;
+  --color-warning-dark: #9C640C;
+  
+  /* Info Colors (Light Blue) */
+  --color-info: #3498DB;
+  --color-info-hover: #2980B9;
+  --color-info-active: #21618C;
+  --color-info-light: #EBF5FB;
+  --color-info-dark: #1B4F72;
+  
+  /* Neutral Colors (Gray Scale) */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  
+  /* Text Colors */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-inverse: #FFFFFF;
+  --color-text-disabled: var(--color-gray-400);
+  
+  /* Background Colors */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: var(--color-gray-50);
+  --color-bg-tertiary: var(--color-gray-100);
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Border Colors */
+  --color-border-light: var(--color-gray-200);
+  --color-border-medium: var(--color-gray-300);
+  --color-border-dark: var(--color-gray-400);
+  
+  /* ============================================
+     SPACING SCALE (8px grid system)
+     ============================================ */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;  /* 4px */
+  --spacing-2: 0.5rem;   /* 8px */
+  --spacing-3: 0.75rem;  /* 12px */
+  --spacing-4: 1rem;     /* 16px */
+  --spacing-5: 1.25rem;  /* 20px */
+  --spacing-6: 1.5rem;   /* 24px */
+  --spacing-7: 1.75rem;  /* 28px */
+  --spacing-8: 2rem;     /* 32px */
+  --spacing-10: 2.5rem;  /* 40px */
+  --spacing-12: 3rem;    /* 48px */
+  --spacing-16: 4rem;    /* 64px */
+  --spacing-20: 5rem;    /* 80px */
+  --spacing-24: 6rem;    /* 96px */
+  
+  /* Legacy spacing variables for backward compatibility */
+  --spacing-xs: var(--spacing-2);   /* 8px */
+  --spacing-sm: var(--spacing-4);   /* 16px */
+  --spacing-md: var(--spacing-6);   /* 24px */
+  --spacing-lg: var(--spacing-8);   /* 32px */
+  --spacing-xl: var(--spacing-12);  /* 48px */
+  
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.75rem;  /* 12px */
+  --radius-xl: 1rem;     /* 16px */
+  --radius-2xl: 1.5rem;  /* 24px */
+  --radius-full: 9999px; /* Fully rounded */
+  
+  /* ============================================
+     SHADOWS
+     ============================================ */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-none: none;
+  
+  /* Focus Shadow */
+  --shadow-focus: 0 0 0 3px rgba(255, 107, 53, 0.2);
+  --shadow-focus-danger: 0 0 0 3px rgba(231, 76, 60, 0.2);
+  --shadow-focus-success: 0 0 0 3px rgba(39, 174, 96, 0.2);
+  
+  /* ============================================
+     TRANSITIONS
+     ============================================ */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+  --transition-slower: 500ms ease-in-out;
+  
+  /* Transition Properties */
+  --transition-all: all var(--transition-base);
+  --transition-colors: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  --transition-opacity: opacity var(--transition-base);
+  --transition-transform: transform var(--transition-base);
+  --transition-shadow: box-shadow var(--transition-base);
+  
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-notification: 1080;
+  
+  /* ============================================
+     BREAKPOINTS (for reference in media queries)
+     ============================================ */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
+  /* ============================================
+     LAYOUT
+     ============================================ */
+  --container-max-width: 1280px;
+  --content-max-width: 960px;
+  --sidebar-width: 280px;
+  
+  /* ============================================
+     COMPONENT SPECIFIC
+     ============================================ */
+  
+  /* Buttons */
+  --button-padding-y: var(--spacing-3);
+  --button-padding-x: var(--spacing-6);
+  --button-min-height: 44px;
+  --button-border-radius: var(--radius-md);
+  
+  /* Forms */
+  --input-height: 44px;
+  --input-padding-y: var(--spacing-3);
+  --input-padding-x: var(--spacing-4);
+  --input-border-width: 2px;
+  --input-border-radius: var(--radius-md);
+  
+  /* Cards */
+  --card-padding: var(--spacing-6);
+  --card-border-radius: var(--radius-lg);
+  --card-border-width: 1px;
+  
+  /* ============================================
+     ACCESSIBILITY
+     ============================================ */
+  
+  /* Focus visible outline */
+  --focus-outline-width: 3px;
+  --focus-outline-offset: 2px;
+  --focus-outline-color: var(--color-primary);
+  
+  /* Minimum touch target size */
+  --touch-target-min: 44px;
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Optional - for future)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Uncomment and adjust when implementing dark mode */
+    /* --color-bg-primary: var(--color-gray-900);
+    --color-bg-secondary: var(--color-gray-800);
+    --color-bg-tertiary: var(--color-gray-700);
+    --color-text-primary: var(--color-gray-50);
+    --color-text-secondary: var(--color-gray-300);
+    --color-text-tertiary: var(--color-gray-400); */
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+    --transition-slower: 0ms;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-light: var(--color-gray-400);
+    --color-border-medium: var(--color-gray-500);
+    --color-border-dark: var(--color-gray-600);
+  }
+}

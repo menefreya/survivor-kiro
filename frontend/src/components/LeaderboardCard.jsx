@@ -1,34 +1,12 @@
-import { useNavigate } from 'react-router-dom';
 import PlayerRow from './PlayerRow';
 import '../styles/Dashboard.css';
 
-const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUserId, onViewFull, showingFull, error, onRetry }) => {
-  const navigate = useNavigate();
-
-  const handleViewFullLeaderboard = () => {
-    // If a callback is provided, use it to show full leaderboard
-    if (onViewFull) {
-      onViewFull();
-    } else {
-      // Otherwise, navigate to home (which is the leaderboard page)
-      navigate('/home');
-    }
-  };
-
+const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUserId, error, onRetry }) => {
   return (
     <div className="card leaderboard-card" role="region" aria-label="Leaderboard">
       {/* Card Header */}
       <div className="card-header">
         <h2 id="leaderboard-title">Leaderboard</h2>
-        {!showingFull && !error && (
-          <button 
-            className="link-button" 
-            onClick={handleViewFullLeaderboard}
-            aria-label="View full leaderboard with all players"
-          >
-            View Full Leaderboard →
-          </button>
-        )}
       </div>
 
       {/* Card Body */}

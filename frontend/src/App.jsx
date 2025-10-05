@@ -16,8 +16,11 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="app">
+          <a href="#main-content" className="skip-to-main">
+            Skip to main content
+          </a>
           <Navigation />
-          <main className="main-content">
+          <main id="main-content" className="main-content">
             <Routes>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/login" element={<Login />} />

@@ -172,12 +172,12 @@ const Admin = () => {
       <h2>Admin Dashboard</h2>
 
       {/* Contestant Management Section */}
-      <section className="admin-section">
-        <h3>Manage Contestants</h3>
+      <section className="admin-section" aria-labelledby="manage-contestants-heading">
+        <h3 id="manage-contestants-heading">Manage Contestants</h3>
         
-        <form onSubmit={handleAddContestant} className="contestant-form">
+        <form onSubmit={handleAddContestant} className="contestant-form" aria-label="Add new contestant">
           <div className="form-group">
-            <label htmlFor="name">Name *</label>
+            <label htmlFor="name" className="required">Name</label>
             <input
               type="text"
               id="name"
@@ -185,6 +185,7 @@ const Admin = () => {
               value={newContestant.name}
               onChange={handleContestantInputChange}
               required
+              aria-required="true"
             />
           </div>
           
@@ -202,33 +203,35 @@ const Admin = () => {
           <div className="form-group">
             <label htmlFor="image_url">Image URL</label>
             <input
-              type="text"
+              type="url"
               id="image_url"
               name="image_url"
               value={newContestant.image_url}
               onChange={handleContestantInputChange}
+              aria-describedby="image-url-hint"
             />
+            <span id="image-url-hint" className="visually-hidden">Enter a valid URL for the contestant's image</span>
           </div>
           
           <button type="submit" className="btn-primary">Add Contestant</button>
         </form>
 
-        {contestantError && <div className="error-message">{contestantError}</div>}
-        {contestantSuccess && <div className="success-message">{contestantSuccess}</div>}
+        {contestantError && <div className="error-message" role="alert">{contestantError}</div>}
+        {contestantSuccess && <div className="success-message" role="status">{contestantSuccess}</div>}
 
         <div className="contestants-list">
           <h4>All Contestants</h4>
           {contestants.length === 0 ? (
             <p>No contestants added yet.</p>
           ) : (
-            <table className="contestants-table">
+            <table className="contestants-table" role="table" aria-label="Contestants list">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Profession</th>
-                  <th>Total Score</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Profession</th>
+                  <th scope="col">Total Score</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -237,11 +240,16 @@ const Admin = () => {
                     <td>{contestant.name}</td>
                     <td>{contestant.profession || 'N/A'}</td>
                     <td>{contestant.total_score || 0}</td>
-                    <td>{contestant.is_eliminated ? 'Eliminated' : 'Active'}</td>
+                    <td>
+                      <span role="status">
+                        {contestant.is_eliminated ? 'Eliminated' : 'Active'}
+                      </span>
+                    </td>
                     <td>
                       <button
                         onClick={() => handleToggleEliminated(contestant.id, contestant.is_eliminated)}
                         className="btn-secondary"
+                        aria-label={`${contestant.is_eliminated ? 'Reactivate' : 'Eliminate'} ${contestant.name}`}
                       >
                         {contestant.is_eliminated ? 'Reactivate' : 'Eliminate'}
                       </button>
@@ -255,11 +263,11 @@ const Admin = () => {
       </section>
 
       {/* Draft Section */}
-      <section className="admin-section">
-        <h3>Trigger Draft</h3>
+      <section className="admin-section" aria-labelledby="trigger-draft-heading">
+        <h3 id="trigger-draft-heading">Trigger Draft</h3>
         
         {draftStatus && (
-          <div className="draft-status">
+          <div className="draft-status" role="status" aria-live="polite">
             <p><strong>Status:</strong> {draftStatus.draft_completed ? 'Complete' : 'Pending'}</p>
             {!draftStatus.draft_completed && (
               <p><strong>Players who submitted rankings:</strong> {draftStatus.players_submitted} / {draftStatus.total_players}</p>
@@ -271,21 +279,23 @@ const Admin = () => {
           onClick={handleTriggerDraft}
           disabled={draftLoading || draftStatus?.draft_completed}
           className="btn-primary"
+          aria-busy={draftLoading}
+          aria-label="Trigger draft to assign contestants to players"
         >
           {draftLoading ? 'Processing...' : 'Trigger Draft'}
         </button>
 
-        {draftError && <div className="error-message">{draftError}</div>}
-        {draftSuccess && <div className="success-message">{draftSuccess}</div>}
+        {draftError && <div className="error-message" role="alert">{draftError}</div>}
+        {draftSuccess && <div className="success-message" role="status">{draftSuccess}</div>}
       </section>
 
       {/* Score Entry Section */}
-      <section className="admin-section">
-        <h3>Enter Episode Scores</h3>
+      <section className="admin-section" aria-labelledby="enter-scores-heading">
+        <h3 id="enter-scores-heading">Enter Episode Scores</h3>
         
-        <form onSubmit={handleSubmitScores} className="score-form">
+        <form onSubmit={handleSubmitScores} className="score-form" aria-label="Enter episode scores">
           <div className="form-group">
-            <label htmlFor="episodeNumber">Episode Number *</label>
+            <label htmlFor="episodeNumber" className="required">Episode Number</label>
             <input
               type="number"
               id="episodeNumber"
@@ -293,6 +303,7 @@ const Admin = () => {
               onChange={(e) => setEpisodeNumber(e.target.value)}
               min="1"
               required
+              aria-required="true"
             />
           </div>
 
@@ -303,7 +314,7 @@ const Admin = () => {
             ) : (
               contestants.map(contestant => (
                 <div key={contestant.id} className="score-input-group">
-                  <label htmlFor={`score-${contestant.id}`}>
+                  <label htmlFor={`score-${contestant.id}`} className="required">
                     {contestant.name} (Total: {contestant.total_score || 0})
                   </label>
                   <input
@@ -312,6 +323,8 @@ const Admin = () => {
                     value={contestantScores[contestant.id] || ''}
                     onChange={(e) => handleScoreChange(contestant.id, e.target.value)}
                     required
+                    aria-required="true"
+                    aria-label={`Score for ${contestant.name}`}
                   />
                 </div>
               ))
@@ -322,13 +335,14 @@ const Admin = () => {
             type="submit" 
             className="btn-primary"
             disabled={scoreLoading || contestants.length === 0}
+            aria-busy={scoreLoading}
           >
             {scoreLoading ? 'Submitting...' : 'Submit Episode Scores'}
           </button>
         </form>
 
-        {scoreError && <div className="error-message">{scoreError}</div>}
-        {scoreSuccess && <div className="success-message">{scoreSuccess}</div>}
+        {scoreError && <div className="error-message" role="alert">{scoreError}</div>}
+        {scoreSuccess && <div className="success-message" role="status">{scoreSuccess}</div>}
       </section>
     </div>
   );

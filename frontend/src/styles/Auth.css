@@ -158,8 +158,8 @@
   margin-top: 0.25rem;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
+/* Responsive design - Mobile */
+@media (max-width: 640px) {
   .auth-container {
     margin: 1.5rem;
     padding: 2rem 1.5rem;
@@ -167,5 +167,20 @@
 
   .auth-container h2 {
     font-size: 1.75rem;
+  }
+  
+  /* Ensure touch targets meet minimum size */
+  .auth-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Ensure font sizes remain readable */
+  .form-group input {
+    font-size: 1rem; /* 16px minimum */
+  }
+  
+  .form-group label {
+    font-size: 0.95rem; /* ~15px */
   }
 }
