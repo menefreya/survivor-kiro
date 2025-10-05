@@ -1004,6 +1004,7 @@ button:disabled,
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: top;
   display: block;
 }
 
@@ -1286,6 +1287,7 @@ button:disabled,
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: top;
   flex-shrink: 0;
 }
 
@@ -1382,6 +1384,7 @@ button:disabled,
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
   display: block;
 }
 
