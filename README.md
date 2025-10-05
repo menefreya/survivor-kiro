@@ -67,3 +67,4 @@ Required environment variables for backend (see `backend/.env.example`):
 - `SUPABASE_KEY` - Your Supabase API key
 - `JWT_SECRET` - Secret key for JWT token signing
 - `PORT` - Backend server port (default: 3001)
+# survivor-kiro
