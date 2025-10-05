@@ -43,6 +43,8 @@ const scoreRoutes = require('./routes/scores');
 const leaderboardRoutes = require('./routes/leaderboard');
 const eventTypeRoutes = require('./routes/eventTypes');
 const eventRoutes = require('./routes/events');
+const predictionRoutes = require('./routes/predictions');
+const episodeRoutes = require('./routes/episodes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/contestants', contestantRoutes);
@@ -54,6 +56,8 @@ app.use('/api/scores', scoreRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/event-types', eventTypeRoutes);
 app.use('/api', eventRoutes);
+app.use('/api/predictions', predictionRoutes);
+app.use('/api/episodes', episodeRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

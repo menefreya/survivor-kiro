@@ -1,4 +1,5 @@
 const supabase = require('../db/supabase');
+const predictionScoringService = require('./predictionScoringService');
 
 /**
  * Service for calculating scores based on events
@@ -157,9 +158,9 @@ class ScoreCalculationService {
   }
 
   /**
-   * Calculate total player score including draft picks and sole survivor bonuses
+   * Calculate total player score including draft picks, sole survivor bonuses, and prediction bonus
    * @param {number} playerId - Player ID
-   * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, total: number}>}
+   * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, total: number}>}
    */
   async calculatePlayerScore(playerId) {
     // Get draft picks and sum contestant scores
@@ -193,11 +194,15 @@ class ScoreCalculationService {
     const bonusBreakdown = await this.calculateSoleSurvivorBonus(playerId);
     const soleSurvivorBonus = bonusBreakdown.totalBonus;
 
+    // Calculate and add prediction bonus
+    const predictionBonus = await predictionScoringService.getPredictionBonus(playerId);
+
     return {
       draft_score: draftScore,
       sole_survivor_score: soleSurvivorScore,
       sole_survivor_bonus: soleSurvivorBonus,
-      total: draftScore + soleSurvivorScore + soleSurvivorBonus
+      prediction_bonus: predictionBonus,
+      total: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus
     };
   }
 }

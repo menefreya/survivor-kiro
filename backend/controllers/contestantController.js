@@ -73,7 +73,7 @@ async function addContestant(req, res) {
 async function updateContestant(req, res) {
   try {
     const { id } = req.params;
-    const { name, profession, image_url, is_eliminated } = req.body;
+    const { name, profession, image_url, is_eliminated, current_tribe } = req.body;
 
     // Build update object with only provided fields
     const updates = {};
@@ -81,6 +81,7 @@ async function updateContestant(req, res) {
     if (profession !== undefined) updates.profession = profession;
     if (image_url !== undefined) updates.image_url = image_url;
     if (is_eliminated !== undefined) updates.is_eliminated = is_eliminated;
+    if (current_tribe !== undefined) updates.current_tribe = current_tribe;
 
     // Check if there are any updates
     if (Object.keys(updates).length === 0) {

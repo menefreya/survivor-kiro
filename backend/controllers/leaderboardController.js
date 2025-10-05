@@ -134,6 +134,7 @@ async function getLeaderboard(req, res) {
         draft_score: playerScoreBreakdown.draft_score,
         sole_survivor_score: playerScoreBreakdown.sole_survivor_score,
         sole_survivor_bonus: playerScoreBreakdown.sole_survivor_bonus,
+        prediction_bonus: playerScoreBreakdown.prediction_bonus || 0,
         bonus_breakdown: bonusBreakdown,
         weekly_change: weeklyChange,
         drafted_contestants: draftedContestants,

@@ -246,6 +246,23 @@ async function recalculateAllScores(req, res) {
       summary.episodes_processed++;
     }
 
+    // Recalculate prediction scores for all episodes
+    const predictionScoringService = require('../services/predictionScoringService');
+    summary.predictions_recalculated = 0;
+    
+    for (const episode of episodes) {
+      try {
+        await predictionScoringService.recalculatePredictionScores(episode.id);
+        summary.predictions_recalculated++;
+      } catch (error) {
+        console.error(`Error recalculating predictions for episode ${episode.episode_number}:`, error);
+        summary.errors.push({
+          episode_number: episode.episode_number,
+          error: `Prediction recalculation failed: ${error.message}`
+        });
+      }
+    }
+
     // Update contestant totals
     for (const contestant of contestants) {
       try {

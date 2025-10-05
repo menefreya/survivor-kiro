@@ -1,5 +1,6 @@
 const supabase = require('../db/supabase');
 const scoreCalculationService = require('../services/scoreCalculationService');
+const predictionScoringService = require('../services/predictionScoringService');
 
 /**
  * Get all events for an episode grouped by contestant
@@ -186,6 +187,58 @@ async function addEvents(req, res) {
       return res.status(500).json({ error: 'Failed to insert events' });
     }
 
+    // Check for elimination events and trigger prediction scoring
+    const predictionScoringResults = [];
+    for (const event of insertedEvents) {
+      // Get event type to check if it's an elimination
+      const { data: eventType, error: eventTypeError } = await supabase
+        .from('event_types')
+        .select('name')
+        .eq('id', event.event_type_id)
+        .single();
+
+      if (eventTypeError) {
+        console.error('Error fetching event type:', eventTypeError);
+        continue;
+      }
+
+      // If this is an elimination event, score predictions
+      if (eventType.name === 'eliminated') {
+        // Get contestant's current_tribe
+        const { data: contestant, error: contestantError } = await supabase
+          .from('contestants')
+          .select('current_tribe')
+          .eq('id', event.contestant_id)
+          .single();
+
+        if (contestantError) {
+          console.error('Error fetching contestant for prediction scoring:', contestantError);
+          continue;
+        }
+
+        // Only score predictions if contestant has a tribe
+        if (contestant.current_tribe) {
+          try {
+            const scoringResult = await predictionScoringService.scorePredictions(
+              event.episode_id,
+              event.contestant_id,
+              contestant.current_tribe
+            );
+            
+            predictionScoringResults.push({
+              episode_id: event.episode_id,
+              contestant_id: event.contestant_id,
+              tribe: contestant.current_tribe,
+              ...scoringResult
+            });
+          } catch (error) {
+            console.error('Error scoring predictions:', error);
+            // Continue processing other events even if prediction scoring fails
+          }
+        }
+      }
+    }
+
     // Recalculate episode scores and update contestant total scores
     const updatedScores = [];
     
@@ -245,7 +298,8 @@ async function addEvents(req, res) {
     res.status(201).json({
       message: 'Events added successfully',
       events: insertedEvents,
-      updated_scores: updatedScores
+      updated_scores: updatedScores,
+      prediction_scoring: predictionScoringResults
     });
   } catch (error) {
     console.error('Error in addEvents:', error);
@@ -455,14 +509,70 @@ async function bulkUpdateEvents(req, res) {
       }
 
       // Insert all new events
+      let insertedEvents = [];
       if (eventsToInsert.length > 0) {
-        const { error: insertError } = await supabase
+        const { data, error: insertError } = await supabase
           .from('contestant_events')
-          .insert(eventsToInsert);
+          .insert(eventsToInsert)
+          .select();
 
         if (insertError) {
           console.error('Error inserting events:', insertError);
           return res.status(500).json({ error: 'Failed to insert events' });
+        }
+        
+        insertedEvents = data || [];
+      }
+    }
+
+    // Check for elimination events and trigger prediction scoring
+    const predictionScoringResults = [];
+    for (const event of insertedEvents) {
+      // Get event type to check if it's an elimination
+      const { data: eventType, error: eventTypeError } = await supabase
+        .from('event_types')
+        .select('name')
+        .eq('id', event.event_type_id)
+        .single();
+
+      if (eventTypeError) {
+        console.error('Error fetching event type:', eventTypeError);
+        continue;
+      }
+
+      // If this is an elimination event, score predictions
+      if (eventType.name === 'eliminated') {
+        // Get contestant's current_tribe
+        const { data: contestant, error: contestantError } = await supabase
+          .from('contestants')
+          .select('current_tribe')
+          .eq('id', event.contestant_id)
+          .single();
+
+        if (contestantError) {
+          console.error('Error fetching contestant for prediction scoring:', contestantError);
+          continue;
+        }
+
+        // Only score predictions if contestant has a tribe
+        if (contestant.current_tribe) {
+          try {
+            const scoringResult = await predictionScoringService.scorePredictions(
+              event.episode_id,
+              event.contestant_id,
+              contestant.current_tribe
+            );
+            
+            predictionScoringResults.push({
+              episode_id: event.episode_id,
+              contestant_id: event.contestant_id,
+              tribe: contestant.current_tribe,
+              ...scoringResult
+            });
+          } catch (error) {
+            console.error('Error scoring predictions:', error);
+            // Continue processing other events even if prediction scoring fails
+          }
         }
       }
     }
@@ -527,7 +637,8 @@ async function bulkUpdateEvents(req, res) {
       message: 'Bulk update completed successfully',
       added: eventsToInsert.length,
       removed: remove.length,
-      updated_scores: updatedScores
+      updated_scores: updatedScores,
+      prediction_scoring: predictionScoringResults
     });
   } catch (error) {
     console.error('Error in bulkUpdateEvents:', error);
