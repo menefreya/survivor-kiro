@@ -3,7 +3,6 @@ import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LeaderboardCard from './LeaderboardCard';
 import MyTeamCard from './MyTeamCard';
-import { LeaderboardSkeleton, MyTeamSkeleton } from './SkeletonLoader';
 import '../App.css';
 import '../styles/Dashboard.css';
 
@@ -125,16 +124,9 @@ const Home = () => {
   if (isLoading) {
     return (
       <div className="dashboard-container">
-        {/* Dashboard Header */}
-        <header className="dashboard-header">
-          <h1>Season 49 Dashboard</h1>
-          <p className="welcome-message">Loading your dashboard...</p>
-        </header>
-        
-        {/* Two-Column Layout with Skeletons */}
-        <div className="dashboard-columns">
-          <LeaderboardSkeleton />
-          <MyTeamSkeleton />
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading your dashboard...</p>
         </div>
       </div>
     );
