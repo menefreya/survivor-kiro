@@ -780,6 +780,219 @@
 /* Legacy button classes removed - use btn-primary, btn-danger from buttons.css */
 
 /* ===========================
+   Current Predictions Card Styles
+   =========================== */
+.current-predictions-card {
+  max-width: 1400px;
+  margin: 0 auto var(--spacing-6) auto;
+}
+
+.card-title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.lock-badge {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.lock-badge.locked {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.lock-badge.open {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-text:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+  background-color: var(--color-primary-light);
+}
+
+.submitted-predictions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.submitted-contestant-card {
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.submitted-contestant-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.tribe-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+}
+
+.tribe-badge.tribe-kele {
+  color: var(--tribe-kele-dark);
+  background-color: var(--tribe-kele-light);
+}
+
+.tribe-badge.tribe-hina {
+  color: var(--tribe-hina-dark);
+  background-color: var(--tribe-hina-light);
+}
+
+.tribe-badge.tribe-uli {
+  color: var(--tribe-uli-dark);
+  background-color: var(--tribe-uli-light);
+}
+
+.contestant-card-image-container {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.contestant-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.contestant-card-placeholder {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: white;
+}
+
+.contestant-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.contestant-card-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.contestant-tribe-name {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  margin: var(--spacing-1) 0;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.contestant-tribe-name.tribe-kele {
+  color: var(--tribe-kele-dark);
+  background-color: var(--tribe-kele-light);
+}
+
+.contestant-tribe-name.tribe-hina {
+  color: var(--tribe-hina-dark);
+  background-color: var(--tribe-hina-light);
+}
+
+.contestant-tribe-name.tribe-uli {
+  color: var(--tribe-uli-dark);
+  background-color: var(--tribe-uli-light);
+}
+
+.contestant-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.detail-item {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.prediction-result {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.prediction-result.correct {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.prediction-result.incorrect {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.prediction-info-footer {
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.info-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+/* ===========================
    Responsive Design - Tablet
    =========================== */
 @media (max-width: 1024px) {
@@ -939,6 +1152,26 @@
 
   .bonus-icon {
     font-size: var(--font-size-sm);
+  }
+
+  /* Current Predictions Card - Mobile */
+  .submitted-predictions-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .submitted-contestant-card {
+    padding: var(--spacing-3);
+  }
+
+  .contestant-card-name {
+    font-size: var(--font-size-base);
+  }
+
+  .card-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
   }
 }
 

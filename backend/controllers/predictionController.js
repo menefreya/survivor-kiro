@@ -2,6 +2,67 @@ const supabase = require('../db/supabase');
 const predictionScoringService = require('../services/predictionScoringService');
 
 /**
+ * Get prediction status for current episode
+ * @route GET /api/predictions/status
+ * @access Protected
+ */
+async function getPredictionStatus(req, res) {
+  try {
+    const playerId = req.user.id;
+
+    // Get current episode
+    const { data: currentEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('id, episode_number, predictions_locked')
+      .order('episode_number', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (episodeError) {
+      console.error('Error fetching current episode:', episodeError);
+      return res.status(500).json({ error: 'Failed to fetch current episode' });
+    }
+
+    if (!currentEpisode) {
+      return res.json({
+        predictions_available: false,
+        has_submitted: false,
+        episode: null
+      });
+    }
+
+    // Check if user has submitted predictions for current episode
+    const { data: existingPredictions, error: predictionError } = await supabase
+      .from('elimination_predictions')
+      .select('id')
+      .eq('player_id', playerId)
+      .eq('episode_id', currentEpisode.id)
+      .limit(1);
+
+    if (predictionError) {
+      console.error('Error checking predictions:', predictionError);
+      return res.status(500).json({ error: 'Failed to check prediction status' });
+    }
+
+    const hasSubmitted = existingPredictions && existingPredictions.length > 0;
+    const predictionsAvailable = !currentEpisode.predictions_locked && !hasSubmitted;
+
+    res.json({
+      predictions_available: predictionsAvailable,
+      has_submitted: hasSubmitted,
+      episode: {
+        id: currentEpisode.id,
+        episode_number: currentEpisode.episode_number,
+        predictions_locked: currentEpisode.predictions_locked
+      }
+    });
+  } catch (error) {
+    console.error('Error in getPredictionStatus:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
  * Submit predictions for current episode
  * @route POST /api/predictions
  * @access Protected
@@ -642,32 +703,70 @@ async function getPredictionAccuracy(req, res) {
   try {
     const playerId = req.user.id;
 
-    // Get all predictions for this player
+    // Get all predictions for this player with related data
     const { data: predictions, error: predictionsError } = await supabase
       .from('elimination_predictions')
       .select(`
-        *,
-        episodes!inner(episode_number, air_date),
-        contestants!inner(name)
+        id,
+        player_id,
+        episode_id,
+        tribe,
+        contestant_id,
+        is_correct,
+        scored_at,
+        created_at,
+        episodes (
+          episode_number,
+          air_date
+        ),
+        contestants (
+          name
+        )
       `)
       .eq('player_id', playerId)
       .order('created_at', { ascending: false });
 
     if (predictionsError) {
       console.error('Error fetching predictions:', predictionsError);
-      return res.status(500).json({ error: 'Failed to fetch predictions' });
+      console.error('Predictions error details:', JSON.stringify(predictionsError, null, 2));
+      return res.status(500).json({ 
+        error: 'Failed to fetch predictions',
+        details: process.env.NODE_ENV === 'development' ? predictionsError.message : undefined
+      });
+    }
+
+    // Handle case where there are no predictions
+    if (!predictions || predictions.length === 0) {
+      return res.json({
+        totalPredictions: 0,
+        scoredPredictions: 0,
+        correctPredictions: 0,
+        accuracy: 0,
+        totalPoints: 0,
+        recentPredictions: []
+      });
     }
 
     // Calculate accuracy stats
     const totalPredictions = predictions.length;
-    const scoredPredictions = predictions.filter(p => p.points_earned !== null);
-    const correctPredictions = predictions.filter(p => p.points_earned > 0);
+    const scoredPredictions = predictions.filter(p => p.is_correct !== null);
+    const correctPredictions = predictions.filter(p => p.is_correct === true);
     
     const accuracy = scoredPredictions.length > 0 
       ? (correctPredictions.length / scoredPredictions.length * 100).toFixed(1)
       : 0;
 
-    const totalPoints = predictions.reduce((sum, p) => sum + (p.points_earned || 0), 0);
+    // Each correct prediction is worth 3 points
+    const totalPoints = correctPredictions.length * 3;
+
+    // Build recent predictions safely
+    const recentPredictions = predictions.slice(0, 5).map(p => ({
+      episodeNumber: p.episodes?.episode_number || 'Unknown',
+      contestantName: p.contestants?.name || 'Unknown',
+      isCorrect: p.is_correct,
+      pointsEarned: p.is_correct === true ? 3 : 0,
+      createdAt: p.created_at
+    }));
 
     res.json({
       totalPredictions,
@@ -675,12 +774,7 @@ async function getPredictionAccuracy(req, res) {
       correctPredictions: correctPredictions.length,
       accuracy: parseFloat(accuracy),
       totalPoints,
-      recentPredictions: predictions.slice(0, 5).map(p => ({
-        episodeNumber: p.episodes.episode_number,
-        contestantName: p.contestants.name,
-        pointsEarned: p.points_earned,
-        createdAt: p.created_at
-      }))
+      recentPredictions
     });
   } catch (error) {
     console.error('Error in getPredictionAccuracy:', error);
@@ -689,6 +783,7 @@ async function getPredictionAccuracy(req, res) {
 }
 
 module.exports = {
+  getPredictionStatus,
   submitPredictions,
   getCurrentPredictions,
   getPredictionHistory,

@@ -60,6 +60,14 @@ const CurrentPredictionsCard = () => {
       : <span className="status-badge status-incorrect">✗ Incorrect</span>;
   };
 
+  const getTribeClass = (tribeName) => {
+    const tribe = tribeName.toLowerCase();
+    if (tribe === 'kele') return 'tribe-kele';
+    if (tribe === 'hina') return 'tribe-hina';
+    if (tribe === 'uli') return 'tribe-uli';
+    return '';
+  };
+
   return (
     <div className="current-predictions-card card">
       <div className="card-header">
@@ -74,21 +82,37 @@ const CurrentPredictionsCard = () => {
         </Link>
       </div>
 
-      <div className="predictions-list">
+      <div className="submitted-predictions-grid">
         {predictions.map((prediction, index) => (
-          <div key={index} className="prediction-item-card">
-            <div className="prediction-tribe-label">{prediction.tribe} Tribe</div>
-            <div className="prediction-contestant-info">
-              {prediction.contestant?.image_url && (
+          <div key={index} className="submitted-contestant-card">
+            <div className="contestant-card-image-container">
+              {prediction.contestant?.image_url ? (
                 <img
                   src={prediction.contestant.image_url}
                   alt={prediction.contestant.name}
-                  className="contestant-avatar-small"
+                  className="contestant-card-image"
                 />
+              ) : (
+                <div className="contestant-card-placeholder">
+                  {prediction.contestant?.name?.charAt(0) || '?'}
+                </div>
               )}
-              <span className="contestant-name">{prediction.contestant?.name || 'Unknown'}</span>
             </div>
-            {getScoringBadge(prediction)}
+            
+            <div className="contestant-card-info">
+              <h4 className="contestant-card-name">{prediction.contestant?.name || 'Unknown'}</h4>
+              <div className={`contestant-tribe-name ${getTribeClass(prediction.tribe)}`}>{prediction.tribe} Tribe</div>
+              <div className="contestant-card-details">
+                {prediction.contestant?.age && <span className="detail-item">{prediction.contestant.age} years old</span>}
+                {prediction.contestant?.occupation && <span className="detail-item">{prediction.contestant.occupation}</span>}
+              </div>
+            </div>
+            
+            {prediction.is_correct !== null && (
+              <div className={`prediction-result ${prediction.is_correct ? 'correct' : 'incorrect'}`}>
+                {prediction.is_correct ? '✓ Correct (+3)' : '✗ Incorrect'}
+              </div>
+            )}
           </div>
         ))}
       </div>

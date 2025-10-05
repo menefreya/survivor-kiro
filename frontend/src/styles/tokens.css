@@ -107,6 +107,25 @@
   --color-border-dark: var(--color-gray-400);
   
   /* ============================================
+     TRIBE COLORS - Survivor Season 49
+     ============================================ */
+  
+  /* Kele Tribe - Blue */
+  --tribe-kele: #3b82f6;
+  --tribe-kele-light: #dbeafe;
+  --tribe-kele-dark: #1e40af;
+  
+  /* Hina Tribe - Yellow */
+  --tribe-hina: #eab308;
+  --tribe-hina-light: #fef9c3;
+  --tribe-hina-dark: #a16207;
+  
+  /* Uli Tribe - Red */
+  --tribe-uli: #ef4444;
+  --tribe-uli-light: #fee2e2;
+  --tribe-uli-dark: #b91c1c;
+  
+  /* ============================================
      SPACING SCALE (8px grid system)
      ============================================ */
   --spacing-0: 0;

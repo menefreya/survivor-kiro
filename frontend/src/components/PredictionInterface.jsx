@@ -138,6 +138,14 @@ const PredictionInterface = () => {
     return true;
   };
 
+  const getTribeClass = (tribeName) => {
+    const tribe = tribeName.toLowerCase();
+    if (tribe === 'kele') return 'tribe-kele';
+    if (tribe === 'hina') return 'tribe-hina';
+    if (tribe === 'uli') return 'tribe-uli';
+    return '';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -243,8 +251,6 @@ const PredictionInterface = () => {
               <div className="submitted-predictions-grid">
                 {submittedPredictions.map((pred, index) => (
                   <div key={index} className="submitted-contestant-card">
-                    <div className="tribe-badge">{pred.tribe} Tribe</div>
-                    
                     <div className="contestant-card-image-container">
                       {pred.contestant?.image_url ? (
                         <img
@@ -261,6 +267,7 @@ const PredictionInterface = () => {
                     
                     <div className="contestant-card-info">
                       <h4 className="contestant-card-name">{pred.contestant?.name || 'Unknown'}</h4>
+                      <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                       <div className="contestant-card-details">
                         {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
                         {pred.contestant?.occupation && <span className="detail-item">{pred.contestant.occupation}</span>}
@@ -292,8 +299,6 @@ const PredictionInterface = () => {
             <div className="submitted-predictions-grid">
               {submittedPredictions.map((pred, index) => (
                 <div key={index} className="submitted-contestant-card">
-                  <div className="tribe-badge">{pred.tribe} Tribe</div>
-                  
                   <div className="contestant-card-image-container">
                     {pred.contestant?.image_url ? (
                       <img
@@ -310,6 +315,7 @@ const PredictionInterface = () => {
                   
                   <div className="contestant-card-info">
                     <h4 className="contestant-card-name">{pred.contestant?.name || 'Unknown'}</h4>
+                    <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                     <div className="contestant-card-details">
                       {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
                       {pred.contestant?.occupation && <span className="detail-item">{pred.contestant.occupation}</span>}

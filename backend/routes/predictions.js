@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const {
+  getPredictionStatus,
   submitPredictions,
   getCurrentPredictions,
   getPredictionHistory,
@@ -16,6 +17,9 @@ const {
  * All routes require authentication
  * Admin routes require admin privileges
  */
+
+// Get prediction status for current episode
+router.get('/status', authenticateToken, getPredictionStatus);
 
 // Submit predictions for current episode
 router.post('/', authenticateToken, submitPredictions);
