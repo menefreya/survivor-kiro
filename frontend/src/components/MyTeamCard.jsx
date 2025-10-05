@@ -1,9 +1,27 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
+import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
 import '../styles/Dashboard.css';
 
-const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry }) => {
+const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry, playerId }) => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleChangeSoleSurvivor = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSoleSurvivorUpdated = () => {
+    // Refresh the data by calling the retry function
+    if (onRetry) {
+      onRetry();
+    }
+  };
 
   return (
     <div className="dashboard-card my-team-card" role="region" aria-label="My Team">
@@ -69,35 +87,48 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
               </div>
             </div>
           ) : (
-            <div className="sole-survivor-display" role="article" aria-label={`Sole survivor: ${soleSurvivor.name}`}>
-              {soleSurvivor.image_url ? (
-                <img 
-                  src={soleSurvivor.image_url} 
-                  alt={`${soleSurvivor.name}'s profile picture`}
-                  className="sole-survivor-image"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextElementSibling.style.display = 'flex';
-                  }}
-                />
-              ) : null}
-              <div 
-                className="sole-survivor-initials"
-                style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
-                aria-label={`${soleSurvivor.name} initials`}
-              >
-                {soleSurvivor.name.split(' ').map(n => n[0]).join('')}
+            <>
+              <div className="sole-survivor-display" role="article" aria-label={`Sole survivor: ${soleSurvivor.name}`}>
+                {soleSurvivor.image_url ? (
+                  <img 
+                    src={soleSurvivor.image_url} 
+                    alt={`${soleSurvivor.name}'s profile picture`}
+                    className="sole-survivor-image"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="sole-survivor-initials"
+                  style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
+                  aria-label={`${soleSurvivor.name} initials`}
+                >
+                  {soleSurvivor.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div className="sole-survivor-info">
+                  <h4>{soleSurvivor.name}</h4>
+                  <p className="profession">{soleSurvivor.profession}</p>
+                  {soleSurvivor.is_eliminated && (
+                    <span className="eliminated-badge" role="status" aria-label="This contestant has been eliminated">
+                      Eliminated
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="sole-survivor-info">
-                <h4>{soleSurvivor.name}</h4>
-                <p className="profession">{soleSurvivor.profession}</p>
-                {soleSurvivor.is_eliminated && (
-                  <span className="eliminated-badge" role="status" aria-label="This contestant has been eliminated">
-                    Eliminated
-                  </span>
-                )}
-              </div>
-            </div>
+              
+              {/* Show Change Sole Survivor button when eliminated */}
+              {soleSurvivor.is_eliminated && (
+                <button 
+                  className="change-sole-survivor-btn"
+                  onClick={handleChangeSoleSurvivor}
+                  aria-label="Change your sole survivor pick"
+                >
+                  Change Sole Survivor
+                </button>
+              )}
+            </>
           )}
         </div>
 
@@ -150,6 +181,15 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
         </>
         )}
       </div>
+
+      {/* Change Sole Survivor Modal */}
+      <ChangeSoleSurvivorModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        currentSoleSurvivor={soleSurvivor}
+        playerId={playerId}
+        onSuccess={handleSoleSurvivorUpdated}
+      />
     </div>
   );
 };

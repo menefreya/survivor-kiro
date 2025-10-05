@@ -172,6 +172,67 @@
   font-weight: var(--font-weight-semibold);
 }
 
+/* Player Status List */
+.player-status-list {
+  margin-top: var(--spacing-6);
+}
+
+.player-status-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-4);
+}
+
+.player-status-table th,
+.player-status-table td {
+  padding: var(--spacing-3);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.player-status-table th {
+  background-color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.player-status-table td {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.player-status-table tr.submitted {
+  background-color: var(--color-success-light);
+}
+
+.player-status-table tr.pending {
+  background-color: var(--color-warning-light);
+}
+
+.player-status-table tr:hover {
+  opacity: 0.9;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-submitted {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.status-pending {
+  background-color: var(--color-warning);
+  color: var(--color-text-primary);
+}
+
 /* Score Entry */
 .scores-grid {
   margin-top: var(--spacing-6);
@@ -249,13 +310,24 @@
     font-size: var(--font-size-lg);
   }
 
-  .contestants-table {
+  .contestants-table,
+  .player-status-table {
     font-size: var(--font-size-sm); /* 14px minimum */
   }
 
   .contestants-table th,
-  .contestants-table td {
+  .contestants-table td,
+  .player-status-table th,
+  .player-status-table td {
     padding: var(--spacing-2);
+  }
+
+  /* Stack table on very small screens */
+  @media (max-width: 480px) {
+    .player-status-table {
+      display: block;
+      overflow-x: auto;
+    }
   }
 
   .score-input-group {

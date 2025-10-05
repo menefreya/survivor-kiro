@@ -164,6 +164,7 @@ const Home = () => {
           weeklyChange={weeklyChange}
           error={teamError}
           onRetry={handleRefresh}
+          playerId={user?.id}
         />
       </div>
     </div>

@@ -96,7 +96,7 @@ async function testInitialSoleSurvivorPick() {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/sole-survivor/${playerId}`,
-      { sole_survivor_id: contestantIds[0] },
+      { contestant_id: contestantIds[0] },
       {
         headers: { Authorization: `Bearer ${playerToken}` }
       }
@@ -208,7 +208,7 @@ async function testRePickSoleSurvivor() {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/sole-survivor/${playerId}`,
-      { sole_survivor_id: contestantIds[1] },
+      { contestant_id: contestantIds[1] },
       {
         headers: { Authorization: `Bearer ${playerToken}` }
       }
@@ -265,7 +265,7 @@ async function testRePickToAnotherContestant() {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/sole-survivor/${playerId}`,
-      { sole_survivor_id: contestantIds[2] },
+      { contestant_id: contestantIds[2] },
       {
         headers: { Authorization: `Bearer ${playerToken}` }
       }

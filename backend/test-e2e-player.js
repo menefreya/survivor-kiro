@@ -182,7 +182,7 @@ async function testSubmitSoleSurvivor() {
     // Player 1 picks first contestant
     await axios.put(
       `${API_BASE_URL}/sole-survivor/${playerIds[0]}`,
-      { sole_survivor_id: contestantIds[0] },
+      { contestant_id: contestantIds[0] },
       {
         headers: { Authorization: `Bearer ${playerTokens[0]}` }
       }
@@ -191,7 +191,7 @@ async function testSubmitSoleSurvivor() {
     // Player 2 picks last contestant
     await axios.put(
       `${API_BASE_URL}/sole-survivor/${playerIds[1]}`,
-      { sole_survivor_id: contestantIds[contestantIds.length - 1] },
+      { contestant_id: contestantIds[contestantIds.length - 1] },
       {
         headers: { Authorization: `Bearer ${playerTokens[1]}` }
       }

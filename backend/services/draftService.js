@@ -24,6 +24,35 @@ async function checkAllRankingsSubmitted() {
 }
 
 /**
+ * Get detailed player ranking submission status
+ * @returns {Promise<{players: Array, totalPlayers: number, submittedCount: number}>}
+ */
+async function getPlayerRankingStatus() {
+  const { data: players, error } = await supabase
+    .from('players')
+    .select('id, name, email, has_submitted_rankings')
+    .order('name', { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to fetch players: ${error.message}`);
+  }
+
+  const totalPlayers = players.length;
+  const submittedCount = players.filter(p => p.has_submitted_rankings).length;
+
+  return {
+    players: players.map(p => ({
+      id: p.id,
+      name: p.name,
+      email: p.email,
+      hasSubmitted: p.has_submitted_rankings
+    })),
+    totalPlayers,
+    submittedCount
+  };
+}
+
+/**
  * Execute snake draft algorithm
  * Assigns 2 contestants per player based on their rankings
  * Uses draft_status table to prevent duplicate drafts (transaction-like behavior)
@@ -78,10 +107,10 @@ async function executeDraft() {
       );
     }
 
-  // Get all players
+  // Get all players with their sole survivor picks
   const { data: players, error: playersError } = await supabase
     .from('players')
-    .select('id, name')
+    .select('id, name, sole_survivor_id')
     .order('id', { ascending: true });
 
   if (playersError) {
@@ -91,6 +120,20 @@ async function executeDraft() {
   if (players.length === 0) {
     throw new Error('No players found');
   }
+
+  // Randomize player order for fair draft
+  // Fisher-Yates shuffle algorithm
+  const shufflePlayers = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const randomizedPlayers = shufflePlayers(players);
+  console.log('Draft order:', randomizedPlayers.map(p => p.name).join(', '));
 
   // Get all rankings for all players
   const { data: rankings, error: rankingsError } = await supabase
@@ -103,11 +146,12 @@ async function executeDraft() {
     throw new Error(`Failed to fetch rankings: ${rankingsError.message}`);
   }
 
-  // Organize rankings by player
+  // Organize rankings by player, excluding their sole survivor pick
   const playerRankings = {};
   players.forEach(player => {
     playerRankings[player.id] = rankings
       .filter(r => r.player_id === player.id)
+      .filter(r => r.contestant_id !== player.sole_survivor_id) // Exclude sole survivor
       .map(r => r.contestant_id);
   });
 
@@ -118,10 +162,10 @@ async function executeDraft() {
   const totalRounds = picksPerPlayer;
 
   for (let round = 0; round < totalRounds; round++) {
-    // Determine pick order for this round
+    // Determine pick order for this round (snake draft)
     const pickOrder = round % 2 === 0 
-      ? [...players] // Forward order for even rounds (0, 2, 4...)
-      : [...players].reverse(); // Reverse order for odd rounds (1, 3, 5...)
+      ? [...randomizedPlayers] // Forward order for even rounds (0, 2, 4...)
+      : [...randomizedPlayers].reverse(); // Reverse order for odd rounds (1, 3, 5...)
 
     for (const player of pickOrder) {
       const playerRanking = playerRankings[player.id];
@@ -229,8 +273,133 @@ async function checkDraftStatus() {
   };
 }
 
+/**
+ * Replace eliminated draft picks with next highest-ranked available contestants
+ * @param {number} eliminatedContestantId - ID of the eliminated contestant
+ * @returns {Promise<Array>} Array of replacement actions performed
+ */
+async function replaceEliminatedDraftPicks(eliminatedContestantId) {
+  const replacements = [];
+
+  try {
+    // Find all players who have this contestant as a draft pick
+    const { data: affectedPicks, error: picksError } = await supabase
+      .from('draft_picks')
+      .select('id, player_id, contestant_id')
+      .eq('contestant_id', eliminatedContestantId);
+
+    if (picksError) {
+      throw new Error(`Failed to find affected draft picks: ${picksError.message}`);
+    }
+
+    // If no players have this contestant as a draft pick, nothing to do
+    if (!affectedPicks || affectedPicks.length === 0) {
+      console.log(`No draft picks found for eliminated contestant ${eliminatedContestantId}`);
+      return replacements;
+    }
+
+    // Process each affected player
+    for (const pick of affectedPicks) {
+      const playerId = pick.player_id;
+
+      // Get player's sole survivor
+      const { data: player, error: playerError } = await supabase
+        .from('players')
+        .select('sole_survivor_id, name')
+        .eq('id', playerId)
+        .single();
+
+      if (playerError) {
+        console.error(`Failed to fetch player ${playerId}:`, playerError);
+        continue;
+      }
+
+      // Get player's rankings
+      const { data: rankings, error: rankingsError } = await supabase
+        .from('rankings')
+        .select('contestant_id, rank')
+        .eq('player_id', playerId)
+        .order('rank', { ascending: true });
+
+      if (rankingsError) {
+        console.error(`Failed to fetch rankings for player ${playerId}:`, rankingsError);
+        continue;
+      }
+
+      // Get player's current draft picks
+      const { data: currentPicks, error: currentPicksError } = await supabase
+        .from('draft_picks')
+        .select('contestant_id')
+        .eq('player_id', playerId);
+
+      if (currentPicksError) {
+        console.error(`Failed to fetch current picks for player ${playerId}:`, currentPicksError);
+        continue;
+      }
+
+      // Build set of already assigned contestants (excluding the eliminated one)
+      const assignedContestants = new Set(
+        currentPicks
+          .map(p => p.contestant_id)
+          .filter(id => id !== eliminatedContestantId)
+      );
+
+      // Add sole survivor to exclusion list
+      if (player.sole_survivor_id) {
+        assignedContestants.add(player.sole_survivor_id);
+      }
+
+      // Find highest-ranked unassigned contestant
+      let replacementContestant = null;
+      for (const ranking of rankings) {
+        if (!assignedContestants.has(ranking.contestant_id)) {
+          replacementContestant = ranking.contestant_id;
+          break;
+        }
+      }
+
+      if (!replacementContestant) {
+        console.error(`No available replacement contestant for player ${playerId}`);
+        continue;
+      }
+
+      // Update the draft pick with the replacement contestant
+      const { data: updatedPick, error: updateError } = await supabase
+        .from('draft_picks')
+        .update({ contestant_id: replacementContestant })
+        .eq('id', pick.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error(`Failed to update draft pick for player ${playerId}:`, updateError);
+        continue;
+      }
+
+      // Log the replacement
+      const replacementInfo = {
+        playerId,
+        playerName: player.name,
+        eliminatedContestantId,
+        replacementContestantId: replacementContestant,
+        pickId: pick.id
+      };
+
+      console.log('Draft pick replacement:', replacementInfo);
+      replacements.push(replacementInfo);
+    }
+
+    return replacements;
+  } catch (error) {
+    console.error('Error in replaceEliminatedDraftPicks:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   checkAllRankingsSubmitted,
+  getPlayerRankingStatus,
   executeDraft,
-  checkDraftStatus
+  checkDraftStatus,
+  replaceEliminatedDraftPicks
 };

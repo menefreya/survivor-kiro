@@ -268,16 +268,49 @@ const Admin = () => {
         
         {draftStatus && (
           <div className="draft-status" role="status" aria-live="polite">
-            <p><strong>Status:</strong> {draftStatus.draft_completed ? 'Complete' : 'Pending'}</p>
-            {!draftStatus.draft_completed && (
-              <p><strong>Players who submitted rankings:</strong> {draftStatus.players_submitted} / {draftStatus.total_players}</p>
+            <p><strong>Status:</strong> {draftStatus.isComplete ? 'Complete' : 'Pending'}</p>
+            {draftStatus.completedAt && (
+              <p><strong>Completed:</strong> {new Date(draftStatus.completedAt).toLocaleString()}</p>
+            )}
+            {!draftStatus.isComplete && (
+              <>
+                <p><strong>Rankings Submitted:</strong> {draftStatus.submittedCount} / {draftStatus.totalPlayers}</p>
+                
+                {draftStatus.players && draftStatus.players.length > 0 && (
+                  <div className="player-status-list">
+                    <h4>Player Submission Status</h4>
+                    <table className="player-status-table" role="table" aria-label="Player ranking submission status">
+                      <thead>
+                        <tr>
+                          <th scope="col">Player</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {draftStatus.players.map(player => (
+                          <tr key={player.id} className={player.hasSubmitted ? 'submitted' : 'pending'}>
+                            <td>{player.name}</td>
+                            <td>{player.email}</td>
+                            <td>
+                              <span className={`status-badge ${player.hasSubmitted ? 'status-submitted' : 'status-pending'}`}>
+                                {player.hasSubmitted ? '✓ Submitted' : '⏳ Pending'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
 
         <button
           onClick={handleTriggerDraft}
-          disabled={draftLoading || draftStatus?.draft_completed}
+          disabled={draftLoading || draftStatus?.isComplete}
           className="btn-primary"
           aria-busy={draftLoading}
           aria-label="Trigger draft to assign contestants to players"

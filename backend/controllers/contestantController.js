@@ -1,4 +1,5 @@
 const supabase = require('../db/supabase');
+const { replaceEliminatedDraftPicks } = require('../services/draftService');
 
 /**
  * Get all contestants
@@ -86,6 +87,9 @@ async function updateContestant(req, res) {
       return res.status(400).json({ error: 'No fields to update' });
     }
 
+    // Check if contestant is being marked as eliminated
+    const wasEliminatedNow = is_eliminated === true;
+
     const { data, error } = await supabase
       .from('contestants')
       .update(updates)
@@ -99,6 +103,31 @@ async function updateContestant(req, res) {
         return res.status(404).json({ error: 'Contestant not found' });
       }
       return res.status(500).json({ error: 'Failed to update contestant' });
+    }
+
+    // If contestant was marked as eliminated, trigger draft pick replacement
+    if (wasEliminatedNow) {
+      try {
+        const replacements = await replaceEliminatedDraftPicks(parseInt(id));
+        
+        if (replacements.length > 0) {
+          console.log(`Replaced ${replacements.length} draft pick(s) for eliminated contestant ${id}`);
+          
+          // Include replacement info in response
+          return res.json({
+            ...data,
+            replacements: replacements.map(r => ({
+              playerId: r.playerId,
+              playerName: r.playerName,
+              newContestantId: r.replacementContestantId
+            }))
+          });
+        }
+      } catch (replacementError) {
+        // Log error but don't fail the request - contestant was still updated
+        console.error('Error replacing draft picks:', replacementError);
+        // Continue to return the updated contestant
+      }
     }
 
     res.json(data);

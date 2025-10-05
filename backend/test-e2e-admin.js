@@ -188,7 +188,7 @@ async function setupPlayersForDraft() {
       // Submit sole survivor
       await axios.put(
         `${API_BASE_URL}/sole-survivor/${loginResponse.data.user.id}`,
-        { sole_survivor_id: contestantIds[0] },
+        { contestant_id: contestantIds[0] },
         {
           headers: { Authorization: `Bearer ${loginResponse.data.token}` }
         }

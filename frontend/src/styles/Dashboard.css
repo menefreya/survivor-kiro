@@ -494,8 +494,26 @@
     gap: var(--spacing-6);
   }
   
-  .dashboard-columns > section {
+  .dashboard-columns > * {
     width: 100%;
+  }
+  
+  /* Ensure both card types have the same height on mobile */
+  .card,
+  .dashboard-card,
+  .leaderboard-card,
+  .my-team-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 500px;
+  }
+  
+  /* Make card body flex to fill available space */
+  .card .card-body,
+  .dashboard-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   
   .dashboard-content {
@@ -854,6 +872,36 @@
   font-weight: var(--font-weight-semibold);
   background-color: var(--color-danger-light);
   color: var(--color-danger);
+}
+
+/* Change Sole Survivor Button */
+.change-sole-survivor-btn {
+  width: 100%;
+  margin-top: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.change-sole-survivor-btn:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.change-sole-survivor-btn:active {
+  transform: translateY(0);
+}
+
+.change-sole-survivor-btn:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Draft Picks Section */

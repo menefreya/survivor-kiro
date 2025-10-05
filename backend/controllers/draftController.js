@@ -37,11 +37,15 @@ async function triggerDraft(req, res) {
 async function getDraftStatus(req, res) {
   try {
     const status = await draftService.checkDraftStatus();
+    const rankingStatus = await draftService.getPlayerRankingStatus();
     
     res.status(200).json({
       isComplete: status.isComplete,
       pickCount: status.pickCount,
-      completedAt: status.completedAt
+      completedAt: status.completedAt,
+      players: rankingStatus.players,
+      totalPlayers: rankingStatus.totalPlayers,
+      submittedCount: rankingStatus.submittedCount
     });
   } catch (error) {
     console.error('Draft status error:', error);
