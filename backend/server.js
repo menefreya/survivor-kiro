@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 const allowedOrigins = [
   'https://survivor-kiro.vercel.app',
+  'https://survivor-league.app',
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:5174',
