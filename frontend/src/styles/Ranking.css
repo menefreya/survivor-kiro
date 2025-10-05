@@ -1,0 +1,352 @@
+.ranking-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.ranking-container h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.ranking-instructions {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 3px solid #e0e0e0;
+  border-radius: 50%;
+  border-top-color: #646cff;
+  animation: spinner 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: 1px solid #fcc;
+}
+
+.success-message {
+  background-color: #efe;
+  color: #3c3;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: 1px solid #cfc;
+}
+
+.locked-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ffeaa7;
+  text-align: center;
+}
+
+.ranked-list {
+  margin-bottom: 2rem;
+}
+
+.contestant-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: move;
+  transition: all 0.2s ease;
+}
+
+.contestant-card:hover:not(.locked) {
+  border-color: #4CAF50;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.contestant-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.contestant-card.locked {
+  cursor: default;
+  background-color: #f9f9f9;
+}
+
+.rank-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  min-width: 40px;
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.rank-input {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  min-width: 40px;
+  width: 50px;
+  text-align: center;
+  margin-right: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.25rem;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.rank-input:hover {
+  border-color: #4CAF50;
+}
+
+.rank-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Hide number input arrows */
+.rank-input::-webkit-outer-spin-button,
+.rank-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.rank-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.contestant-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.contestant-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+  border: 2px solid #e0e0e0;
+}
+
+.contestant-info-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.contestant-details h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.contestant-details p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.contestant-separator {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.eliminated-badge {
+  display: inline-block;
+  background-color: #dc3545;
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.drag-handle {
+  font-size: 1.5rem;
+  color: #999;
+  cursor: grab;
+  padding: 0 0.5rem;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.sole-survivor-section {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.sole-survivor-section label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: #333;
+  font-size: 1rem;
+}
+
+.sole-survivor-section select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.sole-survivor-section select:hover:not(:disabled) {
+  border-color: #4CAF50;
+}
+
+.sole-survivor-section select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.sole-survivor-section select:disabled {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+
+.selected-survivor {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #e8f5e9;
+  border-radius: 4px;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.sole-survivor-display {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.sole-survivor-display h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.survivor-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.survivor-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1.5rem;
+  border: 3px solid #4CAF50;
+}
+
+.survivor-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.survivor-info p {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .ranking-container {
+    padding: 1rem;
+  }
+
+  .contestant-card {
+    padding: 0.75rem;
+  }
+
+  .contestant-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .contestant-details h3 {
+    font-size: 1rem;
+  }
+
+  .contestant-details p {
+    font-size: 0.85rem;
+  }
+
+  .rank-number {
+    font-size: 1.25rem;
+    min-width: 35px;
+  }
+}
