@@ -40,6 +40,8 @@ const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUse
                 totalScore={player.total_score}
                 weeklyChange={player.weekly_change}
                 isCurrentUser={player.player_id === currentUserId}
+                draftedContestants={player.drafted_contestants || []}
+                soleSurvivor={player.sole_survivor}
               />
             ))}
           </div>

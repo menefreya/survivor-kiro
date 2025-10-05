@@ -89,32 +89,42 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
           ) : (
             <>
               <div className="sole-survivor-display" role="article" aria-label={`Sole survivor: ${soleSurvivor.name}`}>
-                {soleSurvivor.image_url ? (
-                  <img 
-                    src={soleSurvivor.image_url} 
-                    alt={`${soleSurvivor.name}'s profile picture`}
-                    className="sole-survivor-image"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextElementSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : null}
-                <div 
-                  className="sole-survivor-initials"
-                  style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
-                  aria-label={`${soleSurvivor.name} initials`}
-                >
-                  {soleSurvivor.name.split(' ').map(n => n[0]).join('')}
+                <div className="sole-survivor-left">
+                  {soleSurvivor.image_url ? (
+                    <img 
+                      src={soleSurvivor.image_url} 
+                      alt={`${soleSurvivor.name}'s profile picture`}
+                      className="sole-survivor-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="sole-survivor-initials"
+                    style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
+                    aria-label={`${soleSurvivor.name} initials`}
+                  >
+                    {soleSurvivor.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div className="sole-survivor-info">
+                    <h4>{soleSurvivor.name}</h4>
+                    <p className="profession">{soleSurvivor.profession}</p>
+                  </div>
                 </div>
-                <div className="sole-survivor-info">
-                  <h4>{soleSurvivor.name}</h4>
-                  <p className="profession">{soleSurvivor.profession}</p>
-                  {soleSurvivor.is_eliminated && (
-                    <span className="eliminated-badge" role="status" aria-label="This contestant has been eliminated">
-                      Eliminated
-                    </span>
-                  )}
+                
+                <div className="sole-survivor-stats">
+                  <span className="sole-survivor-score" aria-label={`${soleSurvivor.total_score || 0} points`}>
+                    {soleSurvivor.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
+                  </span>
+                  <span 
+                    className={`sole-survivor-status ${soleSurvivor.is_eliminated ? 'status-eliminated' : 'status-active'}`}
+                    role="status"
+                    aria-label={`Status: ${soleSurvivor.is_eliminated ? 'eliminated' : 'active'}`}
+                  >
+                    {soleSurvivor.is_eliminated ? 'Eliminated' : 'Active'}
+                  </span>
                 </div>
               </div>
               

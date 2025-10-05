@@ -136,6 +136,13 @@
   border-bottom: 1px solid var(--color-border-light);
 }
 
+.card-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
 .card-body {
   margin-bottom: var(--spacing-6);
 }
@@ -207,6 +214,55 @@
 .rank-badge.blue {
   background-color: var(--color-secondary);
   color: white;
+}
+
+/* Rank badge variants - minimal text-only style */
+.rank-badge-gold {
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  color: #D4AF37;
+  margin-right: var(--spacing-2);
+}
+
+.rank-badge-silver {
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  color: #A8A8A8;
+  margin-right: var(--spacing-2);
+}
+
+.rank-badge-bronze {
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  color: #CD7F32;
+  margin-right: var(--spacing-2);
+}
+
+.rank-badge-blue {
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-2);
 }
 
 /* ===========================
@@ -323,6 +379,173 @@
 }
 
 .weekly-change.negative {
+  color: var(--color-danger);
+}
+
+/* Expandable Player Row */
+.player-row-container {
+  margin-bottom: var(--spacing-2);
+}
+
+.player-row-container.current-user .player-row {
+  background-color: var(--color-warning-light);
+}
+
+.player-row.expandable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.player-row.expandable:hover {
+  background-color: var(--color-gray-200);
+}
+
+.player-row.expandable:active {
+  transform: scale(0.99);
+}
+
+.expand-icon {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-left: var(--spacing-2);
+}
+
+/* Team Details Expansion */
+.player-team-details {
+  padding: var(--spacing-4);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-2);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-detail-section {
+  margin-bottom: var(--spacing-4);
+}
+
+.team-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.team-detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.team-detail-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.team-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background-color: white;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-2);
+}
+
+.team-member-row:last-child {
+  margin-bottom: 0;
+}
+
+.team-member-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.team-member-image {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+}
+
+.team-member-initials {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.team-member-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.team-member-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.team-member-profession {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.team-member-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-2);
+}
+
+.team-member-score {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.team-member-status {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+.team-member-status.status-active {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.team-member-status.status-eliminated {
+  background-color: var(--color-danger-light);
   color: var(--color-danger);
 }
 
@@ -621,12 +844,7 @@
   box-shadow: var(--shadow-md);
 }
 
-.leaderboard-card .card-header h2 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin: 0;
-}
+
 
 .link-button {
   background: none;
@@ -736,6 +954,7 @@
 .section-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-2);
   margin-bottom: var(--spacing-4);
 }
@@ -745,6 +964,16 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
+  flex: 1;
+}
+
+.section-total-score {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-md);
 }
 
 /* Crown and Trophy Icons */
@@ -806,21 +1035,19 @@
 .sole-survivor-display {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-4);
-  padding: var(--spacing-2);
-  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-4);
   border-radius: var(--radius-md);
-  transition: all var(--transition-base);
+  margin-bottom: var(--spacing-2);
 }
 
-.sole-survivor-display:hover {
-  background-color: var(--color-gray-200);
-  transform: translateX(2px);
-}
-
-.sole-survivor-display:focus-within {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+.sole-survivor-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  flex: 1;
+  min-width: 0;
 }
 
 .sole-survivor-image {
@@ -861,7 +1088,44 @@
 .sole-survivor-info .profession {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin: 0 0 var(--spacing-2) 0;
+  margin: 0;
+}
+
+.sole-survivor-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-2);
+}
+
+.sole-survivor-score {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.sole-survivor-score .pts-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-secondary);
+}
+
+.sole-survivor-status {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+.sole-survivor-status.status-active {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.sole-survivor-status.status-eliminated {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
 }
 
 .eliminated-badge {
