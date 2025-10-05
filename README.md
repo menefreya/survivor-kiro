@@ -68,3 +68,4 @@ Required environment variables for backend (see `backend/.env.example`):
 - `JWT_SECRET` - Secret key for JWT token signing
 - `PORT` - Backend server port (default: 3001)
 # survivor-kiro
+# survivor-kiro
