@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
 import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
+import ScoreBreakdown from './ScoreBreakdown';
 import '../styles/Dashboard.css';
 
 const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry, playerId }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
 
   const handleChangeSoleSurvivor = () => {
     setIsModalOpen(true);
@@ -21,6 +23,14 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
     if (onRetry) {
       onRetry();
     }
+  };
+
+  const handleViewDetails = () => {
+    setShowScoreBreakdown(true);
+  };
+
+  const handleCloseScoreBreakdown = () => {
+    setShowScoreBreakdown(false);
   };
 
   return (
@@ -185,6 +195,13 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
                   </span>
                 )}
               </div>
+              <button 
+                className="view-details-btn"
+                onClick={handleViewDetails}
+                aria-label="View detailed score breakdown"
+              >
+                View Details
+              </button>
             </div>
           </div>
         </div>
@@ -200,6 +217,14 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
         playerId={playerId}
         onSuccess={handleSoleSurvivorUpdated}
       />
+
+      {/* Score Breakdown Modal */}
+      {showScoreBreakdown && playerId && (
+        <ScoreBreakdown
+          playerId={playerId}
+          onClose={handleCloseScoreBreakdown}
+        />
+      )}
     </div>
   );
 };

@@ -1,0 +1,488 @@
+/* Score Breakdown Modal */
+.score-breakdown-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+.score-breakdown-content {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-6);
+}
+
+/* Header */
+.score-breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.score-breakdown-header h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: var(--font-size-3xl);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-primary);
+}
+
+/* Score Summary */
+.score-summary {
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) 0;
+}
+
+.summary-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.summary-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.summary-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.summary-item.bonus .summary-value {
+  color: var(--color-success);
+}
+
+.summary-item.total {
+  padding-top: var(--space-4);
+  margin-top: var(--space-2);
+  border-top: 2px solid var(--color-border);
+}
+
+.summary-item.total .summary-label {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+.summary-item.total .summary-value {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+}
+
+/* Contestants Breakdown */
+.contestants-breakdown {
+  margin-top: var(--space-6);
+}
+
+.contestants-breakdown h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: var(--space-6) 0 var(--space-4) 0;
+}
+
+.contestants-breakdown h3:first-child {
+  margin-top: 0;
+}
+
+/* Contestant Score Details */
+.contestant-score-details {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.contestant-score-details:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.contestant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.contestant-header:hover {
+  background-color: var(--color-gray-50);
+}
+
+.contestant-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.contestant-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 2px solid var(--color-border);
+}
+
+.contestant-name-score h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.sole-survivor-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #8b6914;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contestant-total-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.score-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.expand-toggle {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  font-size: var(--font-size-base);
+  transition: transform 0.2s ease;
+}
+
+.expand-toggle:hover {
+  color: var(--color-text-primary);
+}
+
+/* Contestant Episodes */
+.contestant-episodes {
+  padding: var(--space-4);
+  background-color: var(--color-gray-50);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Episode Score List */
+.episode-score-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.episode-item {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+}
+
+.episode-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.episode-number {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.episode-total {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+/* Episode Events */
+.episode-events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-sm);
+}
+
+.event-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.event-points {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.event-points.positive {
+  color: var(--color-success);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.event-points.negative {
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.no-events {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  margin: 0;
+}
+
+.no-episodes {
+  font-size: var(--font-size-base);
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding: var(--space-6);
+}
+
+/* Sole Survivor Bonus Breakdown */
+.sole-survivor-bonus-breakdown {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #fbbf24;
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+.sole-survivor-bonus-breakdown h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #92400e;
+  margin: 0 0 var(--space-4) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sole-survivor-bonus-breakdown h4::before {
+  content: '👑';
+  font-size: var(--font-size-xl);
+}
+
+.bonus-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bonus-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-3);
+  background: white;
+  border-radius: var(--radius-sm);
+}
+
+.bonus-item.winner-bonus {
+  background: linear-gradient(135deg, #fef3c7, white);
+  border: 1px solid #fbbf24;
+}
+
+.bonus-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.bonus-value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+}
+
+.bonus-explanation {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: var(--space-1) 0 0 0;
+  font-style: italic;
+}
+
+.bonus-total {
+  padding: var(--space-3);
+  background: #92400e;
+  color: white;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.bonus-total .bonus-label {
+  color: #fde68a;
+}
+
+.bonus-total .bonus-value {
+  color: white;
+  font-size: var(--font-size-lg);
+}
+
+/* Selection History */
+.selection-history {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid #fbbf24;
+}
+
+.selection-history h5 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #92400e;
+  margin: 0 0 var(--space-2) 0;
+}
+
+.history-detail {
+  font-size: var(--font-size-sm);
+  color: #78350f;
+  margin: 0 0 var(--space-2) 0;
+}
+
+.contiguous-explanation {
+  font-size: var(--font-size-xs);
+  color: #92400e;
+  font-style: italic;
+  margin: 0;
+}
+
+/* View Details Button */
+.view-details-btn {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-details-btn:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.view-details-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .score-breakdown-content {
+    padding: var(--space-4);
+    max-height: 95vh;
+  }
+
+  .score-breakdown-header h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  .contestant-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .contestant-name-score h4 {
+    font-size: var(--font-size-base);
+  }
+
+  .score-value {
+    font-size: var(--font-size-lg);
+  }
+
+  .episode-item {
+    padding: var(--space-3);
+  }
+
+  .sole-survivor-bonus-breakdown {
+    padding: var(--space-4);
+  }
+}
+
+/* Loading and Error States */
+.score-breakdown-content .error-message {
+  text-align: center;
+  padding: var(--space-6);
+  color: var(--color-error);
+}
+
+.score-breakdown-content .btn-secondary {
+  display: block;
+  margin: var(--space-4) auto 0;
+}

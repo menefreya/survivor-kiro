@@ -4,12 +4,18 @@ const { authenticateToken } = require('../middleware/auth');
 const {
   getAllPlayers,
   getPlayerById,
-  updatePlayerProfile
+  updatePlayerProfile,
+  getSoleSurvivorHistory,
+  updateSoleSurvivor
 } = require('../controllers/playerController');
 
 // All player routes require authentication
 router.get('/', authenticateToken, getAllPlayers);
 router.get('/:id', authenticateToken, getPlayerById);
 router.put('/:id', authenticateToken, updatePlayerProfile);
+
+// Sole survivor routes
+router.get('/:playerId/sole-survivor-history', authenticateToken, getSoleSurvivorHistory);
+router.post('/:playerId/sole-survivor', authenticateToken, updateSoleSurvivor);
 
 module.exports = router;

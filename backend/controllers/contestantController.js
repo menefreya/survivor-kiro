@@ -137,8 +137,179 @@ async function updateContestant(req, res) {
   }
 }
 
+/**
+ * Get detailed score breakdown for a contestant
+ * @route GET /api/contestants/:id/score-breakdown
+ * @access Protected
+ */
+async function getScoreBreakdown(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Verify contestant exists
+    const { data: contestant, error: contestantError } = await supabase
+      .from('contestants')
+      .select('id, name, image_url, total_score')
+      .eq('id', id)
+      .single();
+
+    if (contestantError || !contestant) {
+      return res.status(404).json({ error: 'Contestant not found' });
+    }
+
+    // Fetch all episode scores with events for this contestant
+    const { data: episodeScores, error: scoresError } = await supabase
+      .from('episode_scores')
+      .select(`
+        episode_id,
+        score,
+        episodes!inner(episode_number)
+      `)
+      .eq('contestant_id', id)
+      .order('episodes.episode_number', { ascending: true });
+
+    if (scoresError) {
+      console.error('Error fetching episode scores:', scoresError);
+      return res.status(500).json({ error: 'Failed to fetch episode scores' });
+    }
+
+    // Fetch all events for this contestant
+    const { data: events, error: eventsError } = await supabase
+      .from('contestant_events')
+      .select(`
+        id,
+        episode_id,
+        point_value,
+        event_types!inner(
+          id,
+          name,
+          display_name
+        ),
+        episodes!inner(episode_number)
+      `)
+      .eq('contestant_id', id)
+      .order('episodes.episode_number', { ascending: true });
+
+    if (eventsError) {
+      console.error('Error fetching contestant events:', eventsError);
+      return res.status(500).json({ error: 'Failed to fetch events' });
+    }
+
+    // Group events by episode
+    const eventsByEpisode = {};
+    events.forEach(event => {
+      const episodeId = event.episode_id;
+      if (!eventsByEpisode[episodeId]) {
+        eventsByEpisode[episodeId] = [];
+      }
+      eventsByEpisode[episodeId].push({
+        event_type: event.event_types.name,
+        display_name: event.event_types.display_name,
+        points: event.point_value
+      });
+    });
+
+    // Build episode breakdown
+    const episodes = episodeScores.map(episodeScore => {
+      const episodeEvents = eventsByEpisode[episodeScore.episode_id] || [];
+      return {
+        episode_number: episodeScore.episodes.episode_number,
+        events: episodeEvents,
+        total: episodeScore.score
+      };
+    });
+
+    // Return structured breakdown
+    res.json({
+      contestant: {
+        id: contestant.id,
+        name: contestant.name,
+        image_url: contestant.image_url,
+        total_score: contestant.total_score
+      },
+      episodes
+    });
+  } catch (error) {
+    console.error('Error in getScoreBreakdown:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
+ * Get all events for a contestant across all episodes
+ * @route GET /api/contestants/:id/events
+ * @access Protected
+ */
+async function getContestantEvents(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Verify contestant exists
+    const { data: contestant, error: contestantError } = await supabase
+      .from('contestants')
+      .select('id, name')
+      .eq('id', id)
+      .single();
+
+    if (contestantError || !contestant) {
+      return res.status(404).json({ error: 'Contestant not found' });
+    }
+
+    // Fetch all contestant_events for this contestant
+    const { data: events, error: eventsError } = await supabase
+      .from('contestant_events')
+      .select(`
+        id,
+        episode_id,
+        point_value,
+        created_at,
+        event_types!inner(
+          id,
+          name,
+          display_name
+        ),
+        episodes!inner(
+          id,
+          episode_number
+        )
+      `)
+      .eq('contestant_id', id)
+      .order('episodes.episode_number', { ascending: true })
+      .order('created_at', { ascending: true });
+
+    if (eventsError) {
+      console.error('Error fetching contestant events:', eventsError);
+      return res.status(500).json({ error: 'Failed to fetch events' });
+    }
+
+    // Format the response
+    const formattedEvents = (events || []).map(event => ({
+      id: event.id,
+      episode_id: event.episode_id,
+      episode_number: event.episodes.episode_number,
+      event_type: event.event_types.name,
+      event_display_name: event.event_types.display_name,
+      points: event.point_value,
+      created_at: event.created_at
+    }));
+
+    res.json({
+      contestant: {
+        id: contestant.id,
+        name: contestant.name
+      },
+      events: formattedEvents
+    });
+  } catch (error) {
+    console.error('Error in getContestantEvents:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getAllContestants,
   addContestant,
-  updateContestant
+  updateContestant,
+  getScoreBreakdown,
+  getContestantEvents
 };

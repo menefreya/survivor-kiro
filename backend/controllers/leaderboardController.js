@@ -1,4 +1,5 @@
 const supabase = require('../db/supabase');
+const ScoreCalculationService = require('../services/scoreCalculationService');
 
 /**
  * Get leaderboard with all players ranked by total score
@@ -69,17 +70,37 @@ async function getLeaderboard(req, res) {
         .map(pick => pick.contestants)
         .filter(contestant => contestant !== null);
 
-      // Calculate total score (sum of all 3 contestants' scores)
-      let totalScore = 0;
-      
-      // Add draft picks scores
-      draftedContestants.forEach(contestant => {
-        totalScore += contestant.total_score || 0;
-      });
+      // Use ScoreCalculationService to calculate player score with bonuses
+      let playerScoreBreakdown;
+      try {
+        playerScoreBreakdown = await ScoreCalculationService.calculatePlayerScore(player.id);
+      } catch (error) {
+        console.error(`Error calculating score for player ${player.id}:`, error);
+        // Fallback to basic calculation without bonuses
+        playerScoreBreakdown = {
+          draft_score: draftedContestants.reduce((sum, c) => sum + (c.total_score || 0), 0),
+          sole_survivor_score: soleSurvivor ? (soleSurvivor.total_score || 0) : 0,
+          sole_survivor_bonus: 0,
+          total: 0
+        };
+        playerScoreBreakdown.total = playerScoreBreakdown.draft_score + 
+                                      playerScoreBreakdown.sole_survivor_score;
+      }
 
-      // Add sole survivor score
-      if (soleSurvivor) {
-        totalScore += soleSurvivor.total_score || 0;
+      // Calculate sole survivor bonus breakdown
+      let bonusBreakdown = null;
+      try {
+        const bonus = await ScoreCalculationService.calculateSoleSurvivorBonus(player.id);
+        if (bonus.totalBonus > 0) {
+          bonusBreakdown = {
+            episode_count: bonus.episodeCount,
+            episode_bonus: bonus.episodeBonus,
+            winner_bonus: bonus.winnerBonus,
+            total_bonus: bonus.totalBonus
+          };
+        }
+      } catch (error) {
+        console.error(`Error calculating sole survivor bonus for player ${player.id}:`, error);
       }
 
       // Calculate weekly change (latest episode scores)
@@ -109,7 +130,11 @@ async function getLeaderboard(req, res) {
         player_name: player.name,
         username: player.email.split('@')[0], // Extract username from email
         profile_image_url: player.profile_image_url,
-        total_score: totalScore,
+        total_score: playerScoreBreakdown.total,
+        draft_score: playerScoreBreakdown.draft_score,
+        sole_survivor_score: playerScoreBreakdown.sole_survivor_score,
+        sole_survivor_bonus: playerScoreBreakdown.sole_survivor_bonus,
+        bonus_breakdown: bonusBreakdown,
         weekly_change: weeklyChange,
         drafted_contestants: draftedContestants,
         sole_survivor: soleSurvivor

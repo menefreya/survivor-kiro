@@ -5,10 +5,65 @@
 }
 
 .admin-container h2 {
-  margin-bottom: var(--spacing-8);
+  margin-bottom: var(--spacing-6);
   color: var(--color-text-primary);
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
+}
+
+/* Admin Tabs */
+.admin-tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 2px solid var(--color-border-light);
+  overflow-x: auto;
+}
+
+.admin-tab {
+  padding: var(--spacing-3) var(--spacing-6);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  position: relative;
+  bottom: -2px;
+}
+
+.admin-tab:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+}
+
+.admin-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.admin-tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.admin-tab-content {
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .admin-section {
@@ -153,6 +208,19 @@
   color: var(--color-text-tertiary);
 }
 
+/* Action Buttons in Table */
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
 /* Draft Status */
 .draft-status {
   background-color: var(--color-bg-secondary);
@@ -293,7 +361,19 @@
 
   .admin-container h2 {
     font-size: var(--font-size-3xl);
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-4);
+  }
+
+  .admin-tabs {
+    gap: 0;
+    margin-bottom: var(--spacing-4);
+  }
+
+  .admin-tab {
+    flex: 1;
+    padding: var(--spacing-3) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    text-align: center;
   }
 
   .admin-section {
