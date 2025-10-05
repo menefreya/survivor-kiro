@@ -47,6 +47,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Survivor Fantasy League API' });
 });
 
+// Debug endpoint to check environment variables
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    FRONTEND_URL: process.env.FRONTEND_URL || 'not set',
+    NODE_ENV: process.env.NODE_ENV || 'not set',
+    VERCEL: process.env.VERCEL || 'not set',
+    hasSupabaseUrl: !!process.env.SUPABASE_URL,
+    hasSupabaseKey: !!process.env.SUPABASE_KEY,
+    hasJwtSecret: !!process.env.JWT_SECRET
+  });
+});
+
 // Start server (only if not in serverless environment)
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   app.listen(PORT, () => {
