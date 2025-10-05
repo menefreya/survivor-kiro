@@ -10,15 +10,6 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
       {/* Card Header */}
       <div className="card-header">
         <h2 id="my-team-title">My Team</h2>
-        {!error && (
-          <button 
-            className="view-full-link"
-            onClick={() => navigate('/profile')}
-            aria-label="View full team details on profile page"
-          >
-            View Full Team →
-          </button>
-        )}
       </div>
 
       {/* Card Body */}

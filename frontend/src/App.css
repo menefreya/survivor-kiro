@@ -20,6 +20,10 @@
   align-items: center;
 }
 
+.navigation ul li:last-child {
+  margin-left: auto;
+}
+
 .navigation a {
   color: white;
   text-decoration: none;
@@ -35,6 +39,23 @@
 
 .navigation a.active {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navigation .logout-link {
+  color: white;
+  background: none;
+  border: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.navigation .logout-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .main-content {

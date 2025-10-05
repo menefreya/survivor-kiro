@@ -1,9 +1,15 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Navigation = () => {
-  const { isAuthenticated, user } = useContext(AuthContext);
+  const { isAuthenticated, user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   if (!isAuthenticated) {
     return null;
@@ -18,6 +24,7 @@ const Navigation = () => {
           <li><Link to="/admin">Admin</Link></li>
         )}
         <li><Link to="/profile">Profile</Link></li>
+        <li><button onClick={handleLogout} className="logout-link">Logout</button></li>
       </ul>
     </nav>
   );
