@@ -33,6 +33,15 @@ app.use('/api/draft', draftRoutes);
 app.use('/api/scores', scoreRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'Survivor Fantasy League API',
+    endpoints: ['/api/health', '/api/auth', '/api/contestants', '/api/leaderboard']
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Survivor Fantasy League API' });
