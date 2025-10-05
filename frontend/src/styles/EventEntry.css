@@ -80,7 +80,7 @@
 .selected-episode-info {
   margin-top: var(--spacing-4);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--spacing-3);
 }
 
@@ -170,6 +170,46 @@
   gap: var(--spacing-6);
 }
 
+/* Tribe Grouping */
+.tribe-group {
+  margin-bottom: var(--spacing-8);
+}
+
+.tribe-group-header {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+.tribe-group-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.tribe-group-title.no-tribe-header {
+  color: var(--color-warning);
+}
+
+.tribe-contestant-count {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-left: var(--spacing-2);
+}
+
+.tribe-contestants {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
 /* Contestant Event Row */
 .contestant-event-row {
   display: grid;
@@ -185,6 +225,11 @@
 .contestant-event-row:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--color-border-medium);
+}
+
+.contestant-event-row.no-tribe {
+  border-color: var(--color-warning-light);
+  background: var(--color-warning-lightest);
 }
 
 /* Contestant Info */
@@ -228,11 +273,43 @@
   min-width: 0;
 }
 
+.contestant-name-tribe {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-2);
+}
+
 .contestant-name {
-  margin: 0 0 var(--spacing-2) 0;
+  margin: 0;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
+}
+
+.contestant-tribe-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.contestant-no-tribe-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .contestant-scores {
@@ -792,5 +869,120 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-2);
+  }
+}
+
+/* Prediction Lock Controls */
+.episode-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: var(--spacing-4);
+}
+
+.prediction-lock-control {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.lock-status-display {
+  display: flex;
+  align-items: center;
+}
+
+.lock-status-badge {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.lock-status-badge.locked {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+  border: 2px solid var(--color-danger);
+}
+
+.lock-status-badge.unlocked {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: 2px solid var(--color-success);
+}
+
+.btn-lock-toggle {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  border: 2px solid;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-lock-toggle.btn-lock {
+  background-color: var(--color-danger);
+  color: white;
+  border-color: var(--color-danger);
+}
+
+.btn-lock-toggle.btn-lock:hover:not(:disabled) {
+  background-color: var(--color-danger-dark);
+  border-color: var(--color-danger-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-lock-toggle.btn-unlock {
+  background-color: var(--color-success);
+  color: white;
+  border-color: var(--color-success);
+}
+
+.btn-lock-toggle.btn-unlock:hover:not(:disabled) {
+  background-color: var(--color-success-dark);
+  border-color: var(--color-success-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-lock-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.prediction-lock-info {
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-info-light);
+  border-left: 4px solid var(--color-info);
+  border-radius: var(--radius-md);
+}
+
+.prediction-lock-info p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .episode-info-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .prediction-lock-control {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .btn-lock-toggle {
+    width: 100%;
   }
 }

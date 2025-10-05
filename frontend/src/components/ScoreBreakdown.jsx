@@ -16,6 +16,7 @@ function ScoreBreakdown({ playerId, onClose }) {
   const [draftPicksData, setDraftPicksData] = useState([]);
   const [soleSurvivorData, setSoleSurvivorData] = useState(null);
   const [currentEpisode, setCurrentEpisode] = useState(null);
+  const [predictionBonus, setPredictionBonus] = useState(0);
 
   useEffect(() => {
     fetchScoreBreakdown();
@@ -35,6 +36,15 @@ function ScoreBreakdown({ playerId, onClose }) {
       const episodesResponse = await api.get('/api/episodes');
       const currentEp = episodesResponse.data.find(ep => ep.is_current);
       setCurrentEpisode(currentEp?.episode_number || null);
+
+      // Fetch prediction bonus
+      try {
+        const predictionResponse = await api.get(`/api/predictions/bonus/${playerId}`);
+        setPredictionBonus(predictionResponse.data.bonus || 0);
+      } catch (err) {
+        console.error('Error fetching prediction bonus:', err);
+        setPredictionBonus(0);
+      }
 
       // Fetch score breakdown for each draft pick
       const draftPicksPromises = player.draft_picks.map(async (pick) => {
@@ -121,7 +131,7 @@ function ScoreBreakdown({ playerId, onClose }) {
   const draftScore = draftPicksData.reduce((sum, pick) => sum + (pick.contestant?.total_score || 0), 0);
   const soleSurvivorScore = soleSurvivorData?.contestant?.total_score || 0;
   const soleSurvivorBonus = soleSurvivorData?.bonus?.total_bonus || 0;
-  const totalScore = draftScore + soleSurvivorScore + soleSurvivorBonus;
+  const totalScore = draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus;
 
   return (
     <div className="score-breakdown-modal" onClick={onClose}>
@@ -144,6 +154,12 @@ function ScoreBreakdown({ playerId, onClose }) {
             <div className="summary-item bonus">
               <span className="summary-label">Sole Survivor Bonus:</span>
               <span className="summary-value">+{soleSurvivorBonus} pts</span>
+            </div>
+          )}
+          {predictionBonus > 0 && (
+            <div className="summary-item bonus">
+              <span className="summary-label">Prediction Bonus:</span>
+              <span className="summary-value">+{predictionBonus} pts</span>
             </div>
           )}
           <div className="summary-item total">

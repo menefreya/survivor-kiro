@@ -38,14 +38,14 @@ api.interceptors.response.use(
       });
       return Promise.reject(new Error('Unable to connect to server. Please try again later.'));
     }
-    
+
     if (error.response?.status === 401) {
       // Token expired or invalid, clear it
       console.log('401 error - clearing token and redirecting to login');
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    
+
     return Promise.reject(error);
   }
 );

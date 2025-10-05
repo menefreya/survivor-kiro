@@ -32,3 +32,6 @@ backend/docs/
 specs/
 frontend/docs
 .kiro
+
+# db
+backend/db

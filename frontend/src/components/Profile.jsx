@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import '../styles/Profile.css';
@@ -11,6 +11,26 @@ const Profile = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [predictionStats, setPredictionStats] = useState(null);
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  useEffect(() => {
+    fetchPredictionStats();
+  }, []);
+
+  const fetchPredictionStats = async () => {
+    try {
+      setLoadingStats(true);
+      const response = await api.get('/predictions/accuracy');
+      setPredictionStats(response.data);
+    } catch (err) {
+      console.error('Error fetching prediction stats:', err);
+      // Don't show error - predictions are optional
+      setPredictionStats(null);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -85,6 +105,39 @@ const Profile = () => {
           )}
         </div>
       </div>
+
+      {/* Prediction Statistics Section */}
+      {!loadingStats && predictionStats && predictionStats.total > 0 && (
+        <div className="prediction-stats-section">
+          <h3>Prediction Statistics</h3>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-icon">🎯</div>
+              <div className="stat-content">
+                <div className="stat-value">{predictionStats.percentage.toFixed(1)}%</div>
+                <div className="stat-label">Accuracy</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">✅</div>
+              <div className="stat-content">
+                <div className="stat-value">{predictionStats.correct}</div>
+                <div className="stat-label">Correct</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">📊</div>
+              <div className="stat-content">
+                <div className="stat-value">{predictionStats.total}</div>
+                <div className="stat-label">Total Predictions</div>
+              </div>
+            </div>
+          </div>
+          <Link to="/predictions/history" className="btn-secondary view-history-btn">
+            View Full History
+          </Link>
+        </div>
+      )}
 
       <div className="profile-update-section">
         <h3>Update Profile Image</h3>

@@ -8,6 +8,8 @@ import Home from './components/Home';
 import Ranking from './components/Ranking';
 import Profile from './components/Profile';
 import Admin from './components/Admin';
+import PredictionInterface from './components/PredictionInterface';
+import PredictionHistory from './components/PredictionHistory';
 import ApiStatus from './components/ApiStatus';
 import './App.css';
 
@@ -53,6 +55,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Admin />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/predictions" 
+                element={
+                  <ProtectedRoute>
+                    <PredictionInterface />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/predictions/history" 
+                element={
+                  <ProtectedRoute>
+                    <PredictionHistory />
                   </ProtectedRoute>
                 } 
               />

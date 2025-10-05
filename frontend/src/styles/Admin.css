@@ -432,3 +432,197 @@
     min-height: 44px;
   }
 }
+
+/* Predictions Sub-Tabs */
+.predictions-sub-tabs {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-6);
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+.sub-tab {
+  padding: var(--spacing-2) var(--spacing-4);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  position: relative;
+  bottom: -2px;
+}
+
+.sub-tab:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+}
+
+.sub-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.sub-tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+/* Responsive Design - Mobile Sub-Tabs */
+@media (max-width: 640px) {
+  .predictions-sub-tabs {
+    gap: 0;
+  }
+
+  .sub-tab {
+    flex: 1;
+    padding: var(--spacing-2) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+}
+
+/* Tribe Management */
+.tribe-management-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  align-items: center;
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+.bulk-tribe-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  align-items: center;
+  flex: 1;
+}
+
+.tribe-input {
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 2px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  transition: all var(--transition-fast);
+  min-width: 200px;
+}
+
+.tribe-input:hover:not(:disabled) {
+  border-color: var(--color-border-dark);
+}
+
+.tribe-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.tribe-edit-inline {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.tribe-input-small {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 2px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  transition: all var(--transition-fast);
+  width: 120px;
+}
+
+.tribe-input-small:hover:not(:disabled) {
+  border-color: var(--color-border-dark);
+}
+
+.tribe-input-small:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.tribe-display {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.tribe-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.tribe-none {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-tertiary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-1);
+  font-size: var(--font-size-base);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.btn-icon:hover {
+  opacity: 1;
+}
+
+.btn-icon:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive Design - Mobile Tribe Management */
+@media (max-width: 640px) {
+  .tribe-management-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bulk-tribe-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tribe-input {
+    min-width: 100%;
+  }
+
+  .tribe-edit-inline {
+    flex-wrap: wrap;
+  }
+
+  .tribe-input-small {
+    flex: 1;
+    min-width: 100px;
+  }
+}

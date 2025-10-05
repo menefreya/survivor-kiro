@@ -10,9 +10,11 @@ const PlayerRow = ({
   weeklyChange, 
   isCurrentUser,
   draftedContestants,
-  soleSurvivor
+  soleSurvivor,
+  predictionBonus
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // Determine rank badge color based on position
   const getRankBadgeColor = (rank) => {
@@ -113,6 +115,24 @@ const PlayerRow = ({
           <div className="weekly-change" aria-label={`Increased by ${weeklyChange} points this week`}>
             <span className="change-arrow" aria-hidden="true" role="img">↑</span>
             <span className="change-value">+{weeklyChange}</span>
+          </div>
+        )}
+
+        {/* Prediction Bonus Indicator */}
+        {predictionBonus > 0 && (
+          <div 
+            className="prediction-bonus-indicator"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            aria-label={`Prediction bonus: ${predictionBonus} points`}
+          >
+            <span className="bonus-icon" role="img" aria-hidden="true">🎯</span>
+            <span className="bonus-value">+{predictionBonus}</span>
+            {showTooltip && (
+              <div className="bonus-tooltip" role="tooltip">
+                Prediction Bonus: +{predictionBonus} pts
+              </div>
+            )}
           </div>
         )}
 

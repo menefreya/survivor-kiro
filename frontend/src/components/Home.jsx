@@ -1,9 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LeaderboardCard from './LeaderboardCard';
 import MyTeamCard from './MyTeamCard';
 import LoadingSpinner from './LoadingSpinner';
+import PredictionReminder from './PredictionReminder';
+import PredictionResultsNotification from './PredictionResultsNotification';
+import CurrentPredictionsCard from './CurrentPredictionsCard';
 import '../App.css';
 import '../styles/Dashboard.css';
 
@@ -17,6 +21,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboardError, setLeaderboardError] = useState(null);
   const [teamError, setTeamError] = useState(null);
+  const [predictionAccuracy, setPredictionAccuracy] = useState(null);
 
   // Helper function to extract initials from name
   const getInitials = (name) => {
@@ -24,6 +29,18 @@ const Home = () => {
     const parts = name.trim().split(' ');
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
+
+  // Fetch prediction accuracy
+  const fetchPredictionAccuracy = async () => {
+    try {
+      const response = await api.get('/predictions/accuracy');
+      setPredictionAccuracy(response.data);
+    } catch (err) {
+      console.error('Error fetching prediction accuracy:', err);
+      // Don't show error for predictions - it's optional
+      setPredictionAccuracy(null);
+    }
   };
 
   // Fetch leaderboard data
@@ -95,6 +112,7 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       fetchLeaderboard();
+      fetchPredictionAccuracy();
     }
   }, [user]);
 
@@ -103,6 +121,7 @@ const Home = () => {
     const interval = setInterval(() => {
       if (user) {
         fetchLeaderboard();
+        fetchPredictionAccuracy();
       }
     }, 30000);
 
@@ -112,6 +131,7 @@ const Home = () => {
   const handleRefresh = () => {
     setIsLoading(true);
     fetchLeaderboard();
+    fetchPredictionAccuracy();
   };
 
   if (isLoading) {
@@ -133,6 +153,9 @@ const Home = () => {
 
   return (
     <div className="dashboard-container">
+      {/* Prediction Results Notification (Fixed Position) */}
+      <PredictionResultsNotification />
+
       {/* Dashboard Header */}
       <header className="dashboard-header">
         <h1 className="page-title">Season 49 Dashboard</h1>
@@ -143,6 +166,31 @@ const Home = () => {
           }
         </p>
       </header>
+
+      {/* Prediction Reminder Banner */}
+      <PredictionReminder />
+
+      {/* Current Episode Predictions */}
+      <CurrentPredictionsCard />
+
+      {/* Prediction Accuracy Widget */}
+      {predictionAccuracy && predictionAccuracy.totalPredictions > 0 && (
+        <div className="prediction-accuracy-widget card">
+          <div className="prediction-accuracy-content">
+            <div className="prediction-accuracy-icon">🎯</div>
+            <div className="prediction-accuracy-stats">
+              <h3>Prediction Accuracy</h3>
+              <div className="accuracy-percentage">{predictionAccuracy.accuracy}%</div>
+              <div className="accuracy-count">
+                {predictionAccuracy.correctPredictions} / {predictionAccuracy.scoredPredictions} correct
+              </div>
+            </div>
+            <Link to="/predictions/history" className="btn-secondary btn-sm">
+              View History
+            </Link>
+          </div>
+        </div>
+      )}
       
       {/* Two-Column Layout */}
       <div className="dashboard-columns">

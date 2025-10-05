@@ -248,17 +248,50 @@ const EventEntryGrid = ({ episodeId, contestants, onSave }) => {
         </div>
       )}
 
-      {/* Contestant Rows */}
+      {/* Contestant Rows - Grouped by Tribe */}
       <div className="contestant-rows">
-        {contestants.map(contestant => (
-          <ContestantEventRow
-            key={contestant.id}
-            contestant={contestant}
-            eventTypes={eventTypes}
-            activeEvents={contestantEvents[contestant.id] || []}
-            onEventToggle={handleEventToggle}
-          />
-        ))}
+        {(() => {
+          // Group contestants by tribe
+          const contestantsByTribe = contestants.reduce((acc, contestant) => {
+            const tribe = contestant.current_tribe || 'No Tribe';
+            if (!acc[tribe]) {
+              acc[tribe] = [];
+            }
+            acc[tribe].push(contestant);
+            return acc;
+          }, {});
+
+          // Sort tribes: named tribes first (alphabetically), then "No Tribe"
+          const sortedTribes = Object.keys(contestantsByTribe).sort((a, b) => {
+            if (a === 'No Tribe') return 1;
+            if (b === 'No Tribe') return -1;
+            return a.localeCompare(b);
+          });
+
+          return sortedTribes.map(tribe => (
+            <div key={tribe} className="tribe-group">
+              <div className="tribe-group-header">
+                <h3 className={`tribe-group-title ${tribe === 'No Tribe' ? 'no-tribe-header' : ''}`}>
+                  {tribe === 'No Tribe' ? '⚠️ ' : ''}{tribe}
+                  <span className="tribe-contestant-count">
+                    ({contestantsByTribe[tribe].length} {contestantsByTribe[tribe].length === 1 ? 'contestant' : 'contestants'})
+                  </span>
+                </h3>
+              </div>
+              <div className="tribe-contestants">
+                {contestantsByTribe[tribe].map(contestant => (
+                  <ContestantEventRow
+                    key={contestant.id}
+                    contestant={contestant}
+                    eventTypes={eventTypes}
+                    activeEvents={contestantEvents[contestant.id] || []}
+                    onEventToggle={handleEventToggle}
+                  />
+                ))}
+              </div>
+            </div>
+          ));
+        })()}
       </div>
 
       {/* Bottom Save Button */}
@@ -282,7 +315,8 @@ EventEntryGrid.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     image_url: PropTypes.string,
-    total_score: PropTypes.number
+    total_score: PropTypes.number,
+    current_tribe: PropTypes.string
   })).isRequired,
   onSave: PropTypes.func
 };

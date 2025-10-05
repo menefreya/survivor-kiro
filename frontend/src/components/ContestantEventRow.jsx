@@ -58,7 +58,7 @@ const ContestantEventRow = ({
   };
 
   return (
-    <div className="contestant-event-row">
+    <div className={`contestant-event-row ${!contestant.current_tribe ? 'no-tribe' : ''}`}>
       {/* Contestant Info */}
       <div className="contestant-info">
         <div className="contestant-avatar">
@@ -80,7 +80,14 @@ const ContestantEventRow = ({
           </div>
         </div>
         <div className="contestant-details">
-          <h4 className="contestant-name">{contestant.name}</h4>
+          <div className="contestant-name-tribe">
+            <h4 className="contestant-name">{contestant.name}</h4>
+            {contestant.current_tribe ? (
+              <span className="contestant-tribe-badge">{contestant.current_tribe}</span>
+            ) : (
+              <span className="contestant-no-tribe-badge" title="No tribe assigned">⚠️ No Tribe</span>
+            )}
+          </div>
           <div className="contestant-scores">
             <span className="score-label">Current Total:</span>
             <span className="score-value">{contestant.total_score || 0} pts</span>
@@ -159,7 +166,8 @@ ContestantEventRow.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     image_url: PropTypes.string,
-    total_score: PropTypes.number
+    total_score: PropTypes.number,
+    current_tribe: PropTypes.string
   }).isRequired,
   eventTypes: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,

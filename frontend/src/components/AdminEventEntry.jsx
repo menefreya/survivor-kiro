@@ -17,6 +17,7 @@ const AdminEventEntry = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [creatingEpisode, setCreatingEpisode] = useState(false);
+  const [lockingPredictions, setLockingPredictions] = useState(false);
 
   // Fetch episodes and contestants on mount
   useEffect(() => {
@@ -128,6 +129,54 @@ const AdminEventEntry = () => {
     }
   };
 
+  // Handle prediction lock toggle
+  const handleTogglePredictionLock = async () => {
+    if (!selectedEpisode) return;
+
+    const willLock = !selectedEpisode.predictions_locked;
+    
+    // Show confirmation before locking
+    if (willLock) {
+      const confirmed = window.confirm(
+        `Are you sure you want to lock predictions for Episode ${selectedEpisode.episode_number}? Players will no longer be able to submit or modify their predictions.`
+      );
+      if (!confirmed) return;
+    }
+
+    setLockingPredictions(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const response = await api.put(`/episodes/${selectedEpisodeId}/lock-predictions`, {
+        locked: willLock
+      });
+
+      // Update the episode in the episodes list
+      setEpisodes(episodes.map(ep => 
+        ep.id === selectedEpisodeId 
+          ? { ...ep, predictions_locked: willLock }
+          : ep
+      ));
+
+      setSuccessMessage(
+        willLock 
+          ? `Predictions locked for Episode ${selectedEpisode.episode_number}` 
+          : `Predictions unlocked for Episode ${selectedEpisode.episode_number}`
+      );
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (err) {
+      console.error('Error toggling prediction lock:', err);
+      setError(err.response?.data?.error || 'Failed to update prediction lock status');
+    } finally {
+      setLockingPredictions(false);
+    }
+  };
+
   // Get selected episode details
   const selectedEpisode = episodes.find(ep => ep.id === selectedEpisodeId);
 
@@ -197,9 +246,44 @@ const AdminEventEntry = () => {
 
         {selectedEpisode && (
           <div className="selected-episode-info">
-            <h4>Episode {selectedEpisode.episode_number}</h4>
-            {selectedEpisode.is_current && (
-              <span className="current-episode-badge">Current Episode</span>
+            <div className="episode-info-header">
+              <div>
+                <h4>Episode {selectedEpisode.episode_number}</h4>
+                {selectedEpisode.is_current && (
+                  <span className="current-episode-badge">Current Episode</span>
+                )}
+              </div>
+              
+              {/* Prediction Lock Toggle */}
+              <div className="prediction-lock-control">
+                <div className="lock-status-display">
+                  <span className={`lock-status-badge ${selectedEpisode.predictions_locked ? 'locked' : 'unlocked'}`}>
+                    {selectedEpisode.predictions_locked ? '🔒 Predictions Locked' : '🔓 Predictions Open'}
+                  </span>
+                </div>
+                <button
+                  onClick={handleTogglePredictionLock}
+                  disabled={lockingPredictions}
+                  className={`btn-lock-toggle ${selectedEpisode.predictions_locked ? 'btn-unlock' : 'btn-lock'}`}
+                  title={selectedEpisode.predictions_locked ? 'Unlock predictions' : 'Lock predictions'}
+                >
+                  {lockingPredictions ? (
+                    'Processing...'
+                  ) : selectedEpisode.predictions_locked ? (
+                    '🔓 Unlock Predictions'
+                  ) : (
+                    '🔒 Lock Predictions'
+                  )}
+                </button>
+              </div>
+            </div>
+            
+            {selectedEpisode.predictions_locked && (
+              <div className="prediction-lock-info">
+                <p>
+                  ℹ️ Predictions are locked. Players cannot submit or modify predictions for this episode.
+                </p>
+              </div>
             )}
           </div>
         )}
