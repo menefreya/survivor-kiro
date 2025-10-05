@@ -28,11 +28,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle network errors
+    if (!error.response) {
+      console.error('Network error - backend may be unreachable:', error.message);
+      return Promise.reject(new Error('Unable to connect to server. Please try again later.'));
+    }
+    
     if (error.response?.status === 401) {
       // Token expired or invalid, clear it
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+    
     return Promise.reject(error);
   }
 );

@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Ranking from './components/Ranking';
 import Profile from './components/Profile';
 import Admin from './components/Admin';
+import ApiStatus from './components/ApiStatus';
 import './App.css';
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
               <Route path="/" element={<Navigate to="/login" replace />} />
             </Routes>
           </main>
+          <ApiStatus />
         </div>
       </Router>
     </AuthProvider>

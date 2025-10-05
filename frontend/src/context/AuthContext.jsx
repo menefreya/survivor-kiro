@@ -20,13 +20,17 @@ export const AuthProvider = ({ children }) => {
           });
           setUser(response.data.user);
         } catch (error) {
-          console.error('Failed to fetch user:', error);
-          // Token might be invalid, clear it
+          console.error('Failed to fetch user:', error.message || error);
+          // Token might be invalid or backend unreachable, clear it
           localStorage.removeItem('token');
           setToken(null);
+          setUser(null);
+        } finally {
+          setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchUser();
