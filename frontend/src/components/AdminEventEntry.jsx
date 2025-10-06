@@ -3,7 +3,7 @@ import EventEntryGrid from './EventEntryGrid';
 import LoadingSpinner from './LoadingSpinner';
 import EmptyState from './EmptyState';
 import api from '../services/api';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * AdminEventEntry - Main page component for admin event entry
@@ -79,7 +79,7 @@ const AdminEventEntry = () => {
         : 1;
 
       // Create new episode
-      const response = await api.post('/scores/episodes', {
+      await api.post('/scores/episodes', {
         episode_number: nextEpisodeNumber,
         aired_date: new Date().toISOString().split('T')[0] // Today's date
       });

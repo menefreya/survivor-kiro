@@ -1,24 +1,42 @@
-/* Import design system styles in correct order */
-/* 1. Design tokens first - CSS variables used by all other styles */
-@import './styles/tokens.css';
+/* CSS Architecture - Cascade Layer System */
+/* Import order is critical and must not be changed */
 
-/* 2. Base component styles - typography, buttons, forms, cards */
-@import './styles/typography.css';
-@import './styles/buttons.css';
-@import './styles/forms.css';
-@import './styles/cards.css';
-@import './styles/loading.css';
-@import './styles/accessibility.css';
+/* Layer 1: Reset & Normalize */
+@import './styles/01-reset.css';
 
-/* 3. Utility classes - helper classes that may override component styles */
-@import './styles/utilities.css';
+/* Layer 2: Design Tokens */
+@import './styles/02-tokens.css';
 
-/* 4. Page-specific styles last - most specific styles */
-@import './styles/Dashboard.css';
-@import './styles/Profile.css';
-@import './styles/Ranking.css';
-@import './styles/Admin.css';
-@import './styles/Auth.css';
+/* Layer 3: Base Elements */
+@import './styles/03-base.css';
+
+/* Layer 4: Layout Utilities */
+@import './styles/04-layout.css';
+
+/* Layer 5: Component Styles */
+@import './styles/05-components/buttons.css';
+@import './styles/05-components/forms.css';
+@import './styles/05-components/cards.css';
+@import './styles/05-components/navigation.css';
+
+/* Layer 6: Feature Styles */
+@import './styles/06-features/loading.css';
+@import './styles/06-features/accessibility.css';
+@import './styles/06-features/demo.css';
+@import './styles/06-features/event-entry.css';
+
+/* Layer 7: Page Styles */
+@import './styles/07-pages/dashboard.css';
+@import './styles/07-pages/profile.css';
+@import './styles/07-pages/ranking.css';
+@import './styles/07-pages/admin.css';
+@import './styles/07-pages/auth.css';
+
+/* Layer 8: Utility Classes */
+@import './styles/08-utilities.css';
+
+/* Layer 9: Legacy Overrides */
+@import './styles/09-legacy.css';
 
 /* ===========================
    App-Level Layout
@@ -39,145 +57,9 @@
 }
 
 /* ===========================
-   Navigation
-   =========================== */
-.navigation {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: var(--spacing-4) var(--spacing-8);
-  box-shadow: var(--shadow-sm);
-}
-
-.navigation ul {
-  list-style: none;
-  display: flex;
-  gap: var(--spacing-8);
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-
-.navigation ul li:last-child {
-  margin-left: auto;
-}
-
-.navigation a {
-  color: var(--color-text-inverse);
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-sm);
-  transition: background-color var(--transition-fast);
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-}
-
-.navigation a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.navigation a.active {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Navigation Badge */
-.navigation a.has-badge {
-  padding-right: var(--spacing-6);
-}
-
-.nav-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: var(--color-danger);
-  color: white;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.9;
-  }
-}
-
-.navigation a:focus-visible {
-  outline: 3px solid var(--color-text-inverse);
-  outline-offset: 2px;
-}
-
-.navigation .logout-link {
-  color: var(--color-text-inverse);
-  background: none;
-  border: none;
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  transition: background-color var(--transition-fast);
-  min-height: 44px;
-}
-
-.navigation .logout-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.navigation .logout-link:focus-visible {
-  outline: 3px solid var(--color-text-inverse);
-  outline-offset: 2px;
-}
-
-/* Mobile Menu Toggle - Hidden on Desktop */
-.mobile-menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: var(--spacing-2);
-  color: var(--color-text-inverse);
-  z-index: 1001;
-}
-
-.hamburger-icon {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 24px;
-}
-
-.hamburger-icon span {
-  display: block;
-  height: 3px;
-  width: 100%;
-  background-color: var(--color-text-inverse);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-/* ===========================
    Responsive Design - Tablet
    =========================== */
 @media (max-width: 1024px) {
-  .navigation ul {
-    gap: var(--spacing-6);
-  }
-  
   .main-content {
     padding: var(--spacing-6);
   }
@@ -187,67 +69,7 @@
    Responsive Design - Mobile
    =========================== */
 @media (max-width: 640px) {
-  .navigation {
-    padding: var(--spacing-4);
-    position: relative;
-  }
-  
-  /* Show hamburger menu on mobile */
-  .mobile-menu-toggle {
-    display: block;
-  }
-  
-  /* Hide menu by default on mobile */
-  .navigation ul {
-    display: none;
-    flex-direction: column;
-    gap: 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: var(--shadow-lg);
-    padding: var(--spacing-2) 0;
-    z-index: 1000;
-  }
-  
-  /* Show menu when open */
-  .navigation ul.mobile-menu-open {
-    display: flex;
-  }
-  
-  .navigation ul li {
-    width: 100%;
-    margin: 0;
-  }
-  
-  .navigation ul li:last-child {
-    margin-left: 0;
-  }
-
-  .navigation a,
-  .navigation .logout-link {
-    width: 100%;
-    padding: var(--spacing-3) var(--spacing-4);
-    font-size: var(--font-size-base);
-    border-radius: 0;
-    justify-content: flex-start;
-  }
-
-  .navigation a.has-badge {
-    padding-right: var(--spacing-6);
-  }
-
-  .nav-badge {
-    width: 16px;
-    height: 16px;
-    font-size: 10px;
-  }
-
   .main-content {
     padding: var(--spacing-4);
   }
 }
-
-

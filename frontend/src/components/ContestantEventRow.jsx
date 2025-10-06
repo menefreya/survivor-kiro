@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import EventTypeButton from './EventTypeButton';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * ContestantEventRow - Row displaying contestant info and event buttons
@@ -66,15 +66,16 @@ const ContestantEventRow = ({
             <img 
               src={contestant.image_url} 
               alt={contestant.name}
+              className="contestant-avatar-image"
               onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
+                e.target.classList.add('u-hidden');
+                e.target.nextSibling.classList.remove('u-hidden');
+                e.target.nextSibling.classList.add('u-flex');
               }}
             />
           ) : null}
           <div 
-            className="contestant-avatar-placeholder"
-            style={{ display: contestant.image_url ? 'none' : 'flex' }}
+            className={`contestant-avatar-placeholder ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
           >
             {contestant.name.charAt(0)}
           </div>
@@ -83,7 +84,7 @@ const ContestantEventRow = ({
           <div className="contestant-name-tribe">
             <h4 className="contestant-name">{contestant.name}</h4>
             {contestant.current_tribe ? (
-              <span className="contestant-tribe-badge">{contestant.current_tribe}</span>
+              <span className={`contestant-tribe-badge tribe-${contestant.current_tribe.toLowerCase()}`}>{contestant.current_tribe}</span>
             ) : (
               <span className="contestant-no-tribe-badge" title="No tribe assigned">⚠️ No Tribe</span>
             )}

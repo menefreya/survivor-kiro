@@ -1,0 +1,8 @@
+🟢 *Legacy CSS Override Report*
+
+*Status*: EXCELLENT
+*Active Overrides*: 0
+
+🎉 *Excellent!* No active overrides.
+
+_Full report available in project reports folder_

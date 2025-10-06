@@ -10,7 +10,6 @@ import Profile from './components/Profile';
 import Admin from './components/Admin';
 import PredictionInterface from './components/PredictionInterface';
 import PredictionHistory from './components/PredictionHistory';
-import ApiStatus from './components/ApiStatus';
 import './App.css';
 
 function App() {
@@ -77,7 +76,6 @@ function App() {
               <Route path="/" element={<Navigate to="/login" replace />} />
             </Routes>
           </main>
-          <ApiStatus />
         </div>
       </Router>
     </AuthProvider>

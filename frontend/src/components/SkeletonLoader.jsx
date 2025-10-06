@@ -1,4 +1,4 @@
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
 // Skeleton loader for LeaderboardCard
 export const LeaderboardSkeleton = () => {

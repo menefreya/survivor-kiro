@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
-import '../styles/Predictions.css';
+// Prediction styles are included in dashboard.css and admin.css
 
 const PredictionInterface = () => {
   const [currentEpisode, setCurrentEpisode] = useState(null);
@@ -118,10 +119,24 @@ const PredictionInterface = () => {
   };
 
   const handlePredictionChange = (tribe, contestantId) => {
-    setPredictions(prev => ({
-      ...prev,
-      [tribe]: contestantId === '' ? undefined : parseInt(contestantId)
-    }));
+    setPredictions(prev => {
+      const currentSelection = prev[tribe];
+      const newContestantId = parseInt(contestantId);
+      
+      // If clicking on the already selected contestant, clear the selection
+      if (currentSelection === newContestantId) {
+        return {
+          ...prev,
+          [tribe]: undefined
+        };
+      }
+      
+      // Otherwise, select the new contestant
+      return {
+        ...prev,
+        [tribe]: newContestantId
+      };
+    });
     setError(null);
     setSuccessMessage(null);
   };
@@ -230,7 +245,12 @@ const PredictionInterface = () => {
 
   return (
     <div className="prediction-interface">
-      <h2>Episode {currentEpisode?.episode_number} Elimination Predictions</h2>
+      <div className="prediction-header">
+        <h2>Episode {currentEpisode?.episode_number} Elimination Predictions</h2>
+        {hasSubmitted && (
+          <span className="status-badge status-submitted">✓ Submitted</span>
+        )}
+      </div>
       
       {error && (
         <div className="error-message">{error}</div>
@@ -287,14 +307,9 @@ const PredictionInterface = () => {
         </div>
       ) : hasSubmitted ? (
         <div className="prediction-confirmation">
-          <div className="confirmation-header">
-            <div className="confirmation-icon">✅</div>
-            <h3>Predictions Submitted Successfully!</h3>
-            <p>Your elimination predictions for Episode {currentEpisode?.episode_number} have been recorded.</p>
-          </div>
-          
           <div className="submitted-predictions">
             <h4>Your Predictions</h4>
+            <p className="prediction-scoring-info">Earn +3 points for each correct prediction</p>
             
             <div className="submitted-predictions-grid">
               {submittedPredictions.map((pred, index) => (
@@ -331,24 +346,10 @@ const PredictionInterface = () => {
               ))}
             </div>
             
-            <div className="confirmation-info">
-              <p>
-                <strong>What happens next?</strong>
-              </p>
-              <ul>
-                <li>Your predictions are locked and cannot be changed</li>
-                <li>After the episode airs, predictions will be automatically scored</li>
-                <li>You'll earn +3 points for each correct prediction</li>
-              </ul>
-            </div>
-            
             <div className="confirmation-actions">
-              <a href="/predictions/history" className="btn-primary">
-                View Prediction History
-              </a>
-              <a href="/" className="btn-secondary">
+              <Link to="/home" className="btn-link">
                 Back to Dashboard
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -409,19 +410,6 @@ const PredictionInterface = () => {
                     </div>
                   ))}
                 </div>
-                
-                {predictions[tribe.name] && (
-                  <button
-                    type="button"
-                    className="clear-selection-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePredictionChange(tribe.name, '');
-                    }}
-                  >
-                    Clear Selection
-                  </button>
-                )}
               </div>
             ))}
           </div>

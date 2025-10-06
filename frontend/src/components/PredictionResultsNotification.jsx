@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import '../styles/Predictions.css';
+// Prediction styles are included in dashboard.css
 
 const PredictionResultsNotification = () => {
   const [recentResults, setRecentResults] = useState(null);

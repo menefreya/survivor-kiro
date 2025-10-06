@@ -19,6 +19,7 @@ npm-debug.log*
 # OS files
 .DS_Store
 Thumbs.db
+frontend/test-results
 
 # IDE
 .vscode/
@@ -26,7 +27,7 @@ Thumbs.db
 *.swp
 *.swo
 
-# Documentation
+# Documentation (keep deployment docs)
 Docs
 backend/docs/
 specs/
@@ -35,3 +36,7 @@ frontend/docs
 
 # db
 backend/db
+
+# Scripts (keep deployment scripts)
+!scripts/
+

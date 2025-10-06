@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
 import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
-const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry, playerId }) => {
+const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, playerId }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -102,14 +102,14 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
                       alt={`${soleSurvivor.name}'s profile picture`}
                       className="sole-survivor-image"
                       onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
+                        e.target.classList.add('u-hidden');
+                        e.target.nextElementSibling.classList.remove('u-hidden');
+                        e.target.nextElementSibling.classList.add('u-flex');
                       }}
                     />
                   ) : null}
                   <div 
-                    className="sole-survivor-initials"
-                    style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
+                    className={`sole-survivor-initials ${soleSurvivor.image_url ? 'u-hidden' : 'u-flex'}`}
                     aria-label={`${soleSurvivor.name} initials`}
                   >
                     {soleSurvivor.name.split(' ').map(n => n[0]).join('')}
@@ -162,14 +162,14 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
                         alt={`${contestant.name}'s profile picture`}
                         className="draft-pick-image"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'flex';
+                          e.target.classList.add('u-hidden');
+                          e.target.nextElementSibling.classList.remove('u-hidden');
+                          e.target.nextElementSibling.classList.add('u-flex');
                         }}
                       />
                     ) : null}
                     <div 
-                      className="draft-pick-initials"
-                      style={{ display: contestant.image_url ? 'none' : 'flex' }}
+                      className={`draft-pick-initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
                       aria-label={`${contestant.name} initials`}
                     >
                       {contestant.name.split(' ').map(n => n[0]).join('')}
@@ -184,13 +184,15 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
                     <span className="draft-pick-score" aria-label={`${contestant.total_score || 0} points`}>
                       {contestant.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
                     </span>
-                    <span
-                      className={`draft-pick-status ${contestant.is_eliminated ? 'status-eliminated' : 'status-active'}`}
-                      role="status"
-                      aria-label={`Status: ${contestant.is_eliminated ? 'eliminated' : 'active'}`}
-                    >
-                      {contestant.is_eliminated ? 'Eliminated' : 'Active'}
-                    </span>
+                    {contestant.is_eliminated && (
+                      <span
+                        className="draft-pick-status status-eliminated"
+                        role="status"
+                        aria-label="Status: eliminated"
+                      >
+                        Eliminated
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}

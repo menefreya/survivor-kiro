@@ -3,7 +3,7 @@ import ContestantScoreDetails from './ContestantScoreDetails';
 import SoleSurvivorBonusBreakdown from './SoleSurvivorBonusBreakdown';
 import LoadingSpinner from './LoadingSpinner';
 import api from '../services/api';
-import '../styles/ScoreBreakdown.css';
+// Score breakdown styles are included in dashboard.css
 
 /**
  * ScoreBreakdown Component
