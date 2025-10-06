@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "lint:css": "stylelint 'src/styles/**/*.css'",
+    "lint:css:fix": "stylelint 'src/styles/**/*.css' --fix",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -25,6 +27,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0",
     "vite": "^7.1.7"
   }
 }
