@@ -4,7 +4,7 @@ import ContestantRow from './ContestantRow';
 import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
 import '../styles/07-pages/dashboard.css';
 
-const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry, playerId }) => {
+const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, playerId }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

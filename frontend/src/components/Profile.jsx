@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
@@ -24,7 +24,7 @@ const Profile = () => {
     setIsUpdating(true);
 
     try {
-      const response = await api.put(`/players/${user.id}`, {
+      await api.put(`/players/${user.id}`, {
         profile_image_url: profileImageUrl
       });
 

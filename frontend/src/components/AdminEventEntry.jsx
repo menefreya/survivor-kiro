@@ -79,7 +79,7 @@ const AdminEventEntry = () => {
         : 1;
 
       // Create new episode
-      const response = await api.post('/scores/episodes', {
+      await api.post('/scores/episodes', {
         episode_number: nextEpisodeNumber,
         aired_date: new Date().toISOString().split('T')[0] // Today's date
       });
