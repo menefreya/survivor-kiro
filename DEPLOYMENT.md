@@ -6,12 +6,25 @@
 
 The frontend is configured to deploy automatically to Vercel when changes are pushed to the main branch.
 
-#### Build Configuration
+#### Vercel Configuration Options
 
-- **Build Command**: `npm run build`
-- **Output Directory**: `frontend/dist`
-- **Install Command**: `npm install`
+**Option 1: Deploy from frontend directory (Recommended)**
 - **Root Directory**: `frontend`
+- **Build Command**: `npm run build:prod`
+- **Output Directory**: `dist`
+- **Install Command**: `npm install`
+
+**Option 2: Deploy from root directory**
+- **Root Directory**: (leave empty)
+- **Build Command**: `cd frontend && npm run build:prod`
+- **Output Directory**: `frontend/dist`
+- **Install Command**: `cd frontend && npm install`
+
+#### Vercel.json Files
+
+Two configuration files are provided:
+- `frontend/vercel.json` - For frontend directory deployment
+- `vercel.json` - For root directory deployment
 
 #### Environment Variables
 
@@ -43,17 +56,14 @@ NODE_ENV=production
 
 ### Common Issues
 
-#### Husky Installation Error
+#### Git Hooks
 
-If you see `husky: command not found` during deployment:
+Git hooks have been removed from this project to simplify deployment. 
 
-- This is expected in production environments
-- Husky is only needed for local development (git hooks)
-- No action needed - deployment will continue
-
-To set up Husky locally after cloning:
+For code quality, run these commands manually before committing:
 ```bash
-npm run husky:install
+npm run lint
+npm test
 ```
 
 #### CSS Linting Failures
