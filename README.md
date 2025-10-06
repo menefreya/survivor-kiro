@@ -11,6 +11,14 @@ A web application for running a fantasy league based on the Survivor reality sho
 
 ## Setup Instructions
 
+### Initial Setup
+
+1. Install root dependencies and set up git hooks:
+   ```bash
+   npm install
+   npm run husky:install
+   ```
+
 ### Backend Setup
 
 1. Navigate to the backend directory:

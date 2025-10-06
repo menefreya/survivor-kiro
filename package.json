@@ -4,16 +4,16 @@
   "description": "Survivor Fantasy League application with React frontend and Express backend",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
+
   "scripts": {
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "install:backend": "cd backend && npm install",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "build": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm install",
+    "start": "cd backend && npm start",
     "deploy:check": "node scripts/deploy-check.js",
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "cd frontend && npm run lint:all",
@@ -21,12 +21,11 @@
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "cd frontend && npm test",
     "test:backend": "cd backend && npm test",
-    "prepare": "is-ci || husky install"
+    "husky:install": "husky install"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "husky": "^8.0.3",
-    "is-ci": "^3.0.1",
     "lint-staged": "^15.2.0"
   },
   "lint-staged": {

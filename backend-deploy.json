@@ -1,0 +1,15 @@
+{
+  "name": "survivor-backend",
+  "version": "1.0.0",
+  "description": "Survivor Fantasy League Backend API",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm install",
+    "install": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

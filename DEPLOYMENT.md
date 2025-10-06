@@ -48,8 +48,13 @@ NODE_ENV=production
 If you see `husky: command not found` during deployment:
 
 - This is expected in production environments
-- The `is-ci` package prevents Husky from running in CI/CD
+- Husky is only needed for local development (git hooks)
 - No action needed - deployment will continue
+
+To set up Husky locally after cloning:
+```bash
+npm run husky:install
+```
 
 #### CSS Linting Failures
 
