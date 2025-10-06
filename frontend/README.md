@@ -1,3 +1,4 @@
+
 # Survivor Fantasy League - Frontend
 
 React application for the Survivor Fantasy League, built with Vite and featuring a modern CSS architecture.
