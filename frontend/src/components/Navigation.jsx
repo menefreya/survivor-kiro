@@ -8,6 +8,7 @@ const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [predictionStatus, setPredictionStatus] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,6 +29,15 @@ const Navigation = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   if (!isAuthenticated) {
@@ -43,11 +53,27 @@ const Navigation = () => {
 
   return (
     <nav className="navigation" aria-label="Main navigation">
-      <ul role="list">
+      {/* Hamburger Menu Button - Mobile Only */}
+      <button 
+        className="mobile-menu-toggle"
+        onClick={toggleMobileMenu}
+        aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={isMobileMenuOpen}
+      >
+        <span className="hamburger-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      {/* Navigation Menu */}
+      <ul role="list" className={isMobileMenuOpen ? 'mobile-menu-open' : ''}>
         <li>
           <Link 
             to="/home" 
             aria-current={isActive('/home') ? 'page' : undefined}
+            onClick={closeMobileMenu}
           >
             Home
           </Link>
@@ -56,6 +82,7 @@ const Navigation = () => {
           <Link 
             to="/ranking" 
             aria-current={isActive('/ranking') ? 'page' : undefined}
+            onClick={closeMobileMenu}
           >
             Ranking
           </Link>
@@ -65,6 +92,7 @@ const Navigation = () => {
             to="/predictions" 
             aria-current={isActive('/predictions') ? 'page' : undefined}
             className={showPredictionBadge ? 'has-badge' : ''}
+            onClick={closeMobileMenu}
           >
             Predictions
             {showPredictionBadge && (
@@ -79,6 +107,7 @@ const Navigation = () => {
             <Link 
               to="/admin" 
               aria-current={isActive('/admin') ? 'page' : undefined}
+              onClick={closeMobileMenu}
             >
               Admin
             </Link>
@@ -88,6 +117,7 @@ const Navigation = () => {
           <Link 
             to="/profile" 
             aria-current={isActive('/profile') ? 'page' : undefined}
+            onClick={closeMobileMenu}
           >
             Profile
           </Link>

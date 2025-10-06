@@ -142,7 +142,7 @@ const PredictionResultsNotification = () => {
 
           {!hasCorrect && hasIncorrect && (
             <div className="results-message neutral">
-              Better luck next time! Keep making predictions to improve your accuracy.
+              Better luck next time! Keep making predictions to earn more points.
             </div>
           )}
 

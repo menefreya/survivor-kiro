@@ -6,7 +6,6 @@ import '../styles/Predictions.css';
 
 const PredictionHistory = () => {
   const [predictions, setPredictions] = useState([]);
-  const [accuracy, setAccuracy] = useState({ total: 0, correct: 0, percentage: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterEpisode, setFilterEpisode] = useState('all');
@@ -24,7 +23,6 @@ const PredictionHistory = () => {
       const response = await api.get('/predictions/history');
       
       setPredictions(response.data.predictions || []);
-      setAccuracy(response.data.accuracy || { total: 0, correct: 0, percentage: 0 });
     } catch (err) {
       console.error('Error fetching prediction history:', err);
       setError(err.response?.data?.error || 'Failed to load prediction history');
@@ -55,7 +53,7 @@ const PredictionHistory = () => {
     filtered.sort((a, b) => {
       if (sortBy === 'episode') {
         return b.episode_number - a.episode_number; // Newest first
-      } else if (sortBy === 'accuracy') {
+      } else if (sortBy === 'correct') {
         // Correct predictions first
         if (a.is_correct === b.is_correct) {
           return b.episode_number - a.episode_number;
@@ -108,28 +106,6 @@ const PredictionHistory = () => {
     <div className="prediction-history">
       <div className="prediction-history-header">
         <h2>Prediction History</h2>
-        
-        {/* Accuracy Statistics */}
-        <div className="accuracy-stats">
-          <div className="accuracy-circle">
-            <div className="accuracy-percentage">{accuracy.percentage.toFixed(1)}%</div>
-            <div className="accuracy-label">Accuracy</div>
-          </div>
-          <div className="accuracy-details">
-            <div className="accuracy-stat">
-              <span className="stat-value correct">{accuracy.correct}</span>
-              <span className="stat-label">Correct</span>
-            </div>
-            <div className="accuracy-stat">
-              <span className="stat-value incorrect">{accuracy.total - accuracy.correct}</span>
-              <span className="stat-label">Incorrect</span>
-            </div>
-            <div className="accuracy-stat">
-              <span className="stat-value">{accuracy.total}</span>
-              <span className="stat-label">Total</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Filters and Sort */}
@@ -170,7 +146,7 @@ const PredictionHistory = () => {
             onChange={(e) => setSortBy(e.target.value)}
           >
             <option value="episode">Episode (Newest First)</option>
-            <option value="accuracy">Accuracy (Correct First)</option>
+            <option value="correct">Correct First</option>
           </select>
         </div>
       </div>

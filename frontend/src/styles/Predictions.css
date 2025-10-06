@@ -510,58 +510,6 @@
   margin-bottom: var(--spacing-8);
 }
 
-/* Accuracy Statistics */
-.accuracy-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-8);
-  padding: var(--spacing-6);
-  background-color: var(--color-bg-secondary);
-  border-radius: var(--card-border-radius);
-  box-shadow: var(--shadow-sm);
-}
-
-.accuracy-circle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-md);
-}
-
-.accuracy-percentage {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-  margin-bottom: var(--spacing-2);
-}
-
-.accuracy-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.9;
-}
-
-.accuracy-details {
-  display: flex;
-  gap: var(--spacing-6);
-}
-
-.accuracy-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-2);
-}
-
 .stat-value {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
@@ -764,21 +712,6 @@
     margin-bottom: var(--spacing-4);
   }
 
-  .accuracy-stats {
-    flex-direction: column;
-    gap: var(--spacing-6);
-    padding: var(--spacing-4);
-  }
-
-  .accuracy-circle {
-    width: 120px;
-    height: 120px;
-  }
-
-  .accuracy-percentage {
-    font-size: var(--font-size-3xl);
-  }
-
   .accuracy-details {
     width: 100%;
     justify-content: space-around;
@@ -821,19 +754,6 @@
 @media (max-width: 480px) {
   .prediction-history {
     padding: var(--spacing-3);
-  }
-
-  .accuracy-stats {
-    padding: var(--spacing-3);
-  }
-
-  .accuracy-circle {
-    width: 100px;
-    height: 100px;
-  }
-
-  .accuracy-percentage {
-    font-size: var(--font-size-2xl);
   }
 
   .stat-value {
@@ -903,10 +823,6 @@
     break-inside: avoid;
     box-shadow: none;
     border: 2px solid var(--color-gray-400);
-  }
-
-  .accuracy-stats {
-    break-inside: avoid;
   }
 }
 

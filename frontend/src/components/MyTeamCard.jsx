@@ -2,13 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
 import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
-import ScoreBreakdown from './ScoreBreakdown';
 import '../styles/Dashboard.css';
 
 const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error, onRetry, playerId }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showScoreBreakdown, setShowScoreBreakdown] = useState(false);
 
   const handleChangeSoleSurvivor = () => {
     setIsModalOpen(true);
@@ -25,19 +23,17 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
     }
   };
 
-  const handleViewDetails = () => {
-    setShowScoreBreakdown(true);
-  };
-
-  const handleCloseScoreBreakdown = () => {
-    setShowScoreBreakdown(false);
-  };
-
   return (
     <div className="dashboard-card my-team-card" role="region" aria-label="My Team">
       {/* Card Header */}
       <div className="card-header">
         <h2 id="my-team-title">My Team</h2>
+        {!error && (soleSurvivor || (draftPicks && draftPicks.length > 0)) && (
+          <div className="team-total-score">
+            <span className="total-score-value">{totalScore}</span>
+            <span className="total-score-label">pts</span>
+          </div>
+        )}
       </div>
 
       {/* Card Body */}
@@ -128,13 +124,6 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
                   <span className="sole-survivor-score" aria-label={`${soleSurvivor.total_score || 0} points`}>
                     {soleSurvivor.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
                   </span>
-                  <span 
-                    className={`sole-survivor-status ${soleSurvivor.is_eliminated ? 'status-eliminated' : 'status-active'}`}
-                    role="status"
-                    aria-label={`Status: ${soleSurvivor.is_eliminated ? 'eliminated' : 'active'}`}
-                  >
-                    {soleSurvivor.is_eliminated ? 'Eliminated' : 'Active'}
-                  </span>
                 </div>
               </div>
               
@@ -164,47 +153,52 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
             </div>
           ) : (
             <div className="draft-picks-list" role="list" aria-labelledby="draft-picks-heading">
-              {draftPicks.map((contestant, index) => (
-                <ContestantRow
-                  key={contestant.id}
-                  rank={index + 1}
-                  name={contestant.name}
-                  profession={contestant.profession}
-                  totalScore={contestant.total_score}
-                  isEliminated={contestant.is_eliminated}
-                  imageUrl={contestant.image_url}
-                />
+              {draftPicks.map((contestant) => (
+                <div key={contestant.id} className="draft-pick-display" role="article" aria-label={`Draft pick: ${contestant.name}`}>
+                  <div className="draft-pick-left">
+                    {contestant.image_url ? (
+                      <img 
+                        src={contestant.image_url} 
+                        alt={`${contestant.name}'s profile picture`}
+                        className="draft-pick-image"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextElementSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className="draft-pick-initials"
+                      style={{ display: contestant.image_url ? 'none' : 'flex' }}
+                      aria-label={`${contestant.name} initials`}
+                    >
+                      {contestant.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <div className="draft-pick-info">
+                      <h4>{contestant.name}</h4>
+                      <p className="profession">{contestant.profession}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="draft-pick-stats">
+                    <span className="draft-pick-score" aria-label={`${contestant.total_score || 0} points`}>
+                      {contestant.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
+                    </span>
+                    <span
+                      className={`draft-pick-status ${contestant.is_eliminated ? 'status-eliminated' : 'status-active'}`}
+                      role="status"
+                      aria-label={`Status: ${contestant.is_eliminated ? 'eliminated' : 'active'}`}
+                    >
+                      {contestant.is_eliminated ? 'Eliminated' : 'Active'}
+                    </span>
+                  </div>
+                </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Total Team Score Section */}
-        <div className="team-section total-score-section" role="region" aria-labelledby="total-score-heading">
-          <div className="total-score-display">
-            <span className="trophy-icon" role="img" aria-label="Trophy icon">🏆</span>
-            <div className="total-score-content">
-              <h3 id="total-score-heading">Total Team Score</h3>
-              <div className="score-details">
-                <span className="total-points" aria-label={`Total score: ${totalScore} points`}>
-                  {totalScore} <span className="pts-label" aria-hidden="true">pts</span>
-                </span>
-                {weeklyChange !== undefined && weeklyChange !== 0 && (
-                  <span className="weekly-change" aria-label={`Increased by ${weeklyChange} points this week`}>
-                    <span className="up-arrow" role="img" aria-hidden="true">↑</span> +{weeklyChange} this week
-                  </span>
-                )}
-              </div>
-              <button 
-                className="view-details-btn"
-                onClick={handleViewDetails}
-                aria-label="View detailed score breakdown"
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-        </div>
+
         </>
         )}
       </div>
@@ -217,14 +211,6 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, weeklyChange, error,
         playerId={playerId}
         onSuccess={handleSoleSurvivorUpdated}
       />
-
-      {/* Score Breakdown Modal */}
-      {showScoreBreakdown && playerId && (
-        <ScoreBreakdown
-          playerId={playerId}
-          onClose={handleCloseScoreBreakdown}
-        />
-      )}
     </div>
   );
 };

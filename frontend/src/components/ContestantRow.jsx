@@ -19,19 +19,19 @@ const ContestantRow = ({ rank, name, profession, totalScore, isEliminated, image
   };
 
   return (
-    <div 
+    <div
       className={`contestant-row ${isEliminated ? 'eliminated' : ''}`}
       role="listitem"
       aria-label={`Draft pick ${rank}: ${name}, ${profession}, ${totalScore} points, ${isEliminated ? 'eliminated' : 'active'}`}
     >
-      <div 
-        className="contestant-rank-badge" 
+      <div
+        className="contestant-rank-badge"
         style={{ backgroundColor: getBadgeColor(rank) }}
         aria-label={`Draft pick ${rank}`}
       >
         {imageUrl ? (
-          <img 
-            src={imageUrl} 
+          <img
+            src={imageUrl}
             alt={`${name}'s profile picture`}
             className="contestant-badge-image"
             onError={(e) => {
@@ -40,7 +40,7 @@ const ContestantRow = ({ rank, name, profession, totalScore, isEliminated, image
             }}
           />
         ) : null}
-        <div 
+        <div
           className="contestant-initials"
           style={{ display: imageUrl ? 'none' : 'flex' }}
           aria-label={`${name} initials`}
@@ -48,17 +48,17 @@ const ContestantRow = ({ rank, name, profession, totalScore, isEliminated, image
           {getInitials(name)}
         </div>
       </div>
-      
+
       <div className="contestant-details">
         <h4 className="contestant-name">{name}</h4>
         <p className="contestant-profession">{profession}</p>
       </div>
-      
+
       <div className="contestant-stats">
         <span className="contestant-points" aria-label={`${totalScore} points`}>
           {totalScore} <span className="pts-label" aria-hidden="true">pts</span>
         </span>
-        <span 
+        <span
           className={`contestant-status ${isEliminated ? 'status-eliminated' : 'status-active'}`}
           role="status"
           aria-label={`Status: ${isEliminated ? 'eliminated' : 'active'}`}

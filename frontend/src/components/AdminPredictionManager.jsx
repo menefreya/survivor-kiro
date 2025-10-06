@@ -212,7 +212,7 @@ const AdminPredictionManager = () => {
                           <tr key={prediction.id}>
                             <td>
                               <div className="player-info">
-                                <strong>{prediction.player.username}</strong>
+                                <strong>{prediction.player.name}</strong>
                                 <span className="player-email">{prediction.player.email}</span>
                               </div>
                             </td>

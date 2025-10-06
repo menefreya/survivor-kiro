@@ -21,7 +21,6 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboardError, setLeaderboardError] = useState(null);
   const [teamError, setTeamError] = useState(null);
-  const [predictionAccuracy, setPredictionAccuracy] = useState(null);
 
   // Helper function to extract initials from name
   const getInitials = (name) => {
@@ -29,18 +28,6 @@ const Home = () => {
     const parts = name.trim().split(' ');
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-  };
-
-  // Fetch prediction accuracy
-  const fetchPredictionAccuracy = async () => {
-    try {
-      const response = await api.get('/predictions/accuracy');
-      setPredictionAccuracy(response.data);
-    } catch (err) {
-      console.error('Error fetching prediction accuracy:', err);
-      // Don't show error for predictions - it's optional
-      setPredictionAccuracy(null);
-    }
   };
 
   // Fetch leaderboard data
@@ -112,7 +99,6 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       fetchLeaderboard();
-      fetchPredictionAccuracy();
     }
   }, [user]);
 
@@ -121,7 +107,6 @@ const Home = () => {
     const interval = setInterval(() => {
       if (user) {
         fetchLeaderboard();
-        fetchPredictionAccuracy();
       }
     }, 30000);
 
@@ -131,7 +116,6 @@ const Home = () => {
   const handleRefresh = () => {
     setIsLoading(true);
     fetchLeaderboard();
-    fetchPredictionAccuracy();
   };
 
   if (isLoading) {
@@ -172,25 +156,6 @@ const Home = () => {
 
       {/* Current Episode Predictions */}
       <CurrentPredictionsCard />
-
-      {/* Prediction Accuracy Widget */}
-      {predictionAccuracy && predictionAccuracy.totalPredictions > 0 && (
-        <div className="prediction-accuracy-widget card">
-          <div className="prediction-accuracy-content">
-            <div className="prediction-accuracy-icon">🎯</div>
-            <div className="prediction-accuracy-stats">
-              <h3>Prediction Accuracy</h3>
-              <div className="accuracy-percentage">{predictionAccuracy.accuracy}%</div>
-              <div className="accuracy-count">
-                {predictionAccuracy.correctPredictions} / {predictionAccuracy.scoredPredictions} correct
-              </div>
-            </div>
-            <Link to="/predictions/history" className="btn-secondary btn-sm">
-              View History
-            </Link>
-          </div>
-        </div>
-      )}
       
       {/* Two-Column Layout */}
       <div className="dashboard-columns">

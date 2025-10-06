@@ -143,6 +143,33 @@
   outline-offset: 2px;
 }
 
+/* Mobile Menu Toggle - Hidden on Desktop */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  color: var(--color-text-inverse);
+  z-index: 1001;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 24px;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: var(--color-text-inverse);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
 /* ===========================
    Responsive Design - Tablet
    =========================== */
@@ -162,20 +189,54 @@
 @media (max-width: 640px) {
   .navigation {
     padding: var(--spacing-4);
+    position: relative;
   }
   
+  /* Show hamburger menu on mobile */
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  /* Hide menu by default on mobile */
   .navigation ul {
-    flex-wrap: wrap;
-    gap: var(--spacing-2);
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-2) 0;
+    z-index: 1000;
+  }
+  
+  /* Show menu when open */
+  .navigation ul.mobile-menu-open {
+    display: flex;
+  }
+  
+  .navigation ul li {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .navigation ul li:last-child {
+    margin-left: 0;
   }
 
-  .navigation a {
-    padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-sm);
+  .navigation a,
+  .navigation .logout-link {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    border-radius: 0;
+    justify-content: flex-start;
   }
 
   .navigation a.has-badge {
-    padding-right: var(--spacing-5);
+    padding-right: var(--spacing-6);
   }
 
   .nav-badge {
