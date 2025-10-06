@@ -167,6 +167,8 @@
   box-shadow: var(--shadow-sm);
   padding: var(--spacing-6);
   transition: box-shadow var(--transition-base);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dashboard-card:hover {
@@ -175,6 +177,17 @@
 
 .dashboard-card:focus-within {
   box-shadow: var(--shadow-md);
+}
+
+.dashboard-card .card-body {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dashboard-card .card-header,
+.dashboard-card .card-footer {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-header {
@@ -342,6 +355,8 @@
   padding: var(--spacing-4);
   border-radius: var(--radius-md);
   transition: background-color var(--transition-fast);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .player-row:hover {
@@ -485,6 +500,8 @@
 /* Expandable Player Row */
 .player-row-container {
   margin-bottom: var(--spacing-2);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .player-row-container.current-user .player-row {
@@ -517,6 +534,8 @@
   border-radius: var(--radius-md);
   margin-top: var(--spacing-2);
   animation: slideDown 0.2s ease-out;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes slideDown {
@@ -564,6 +583,8 @@
   background-color: white;
   border-radius: var(--radius-md);
   margin-bottom: var(--spacing-2);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .team-member-row:last-child {
@@ -1052,23 +1073,7 @@
     width: 100%;
   }
   
-  /* Ensure both card types have the same height on mobile */
-  .card,
-  .dashboard-card,
-  .leaderboard-card,
-  .my-team-card {
-    display: flex;
-    flex-direction: column;
-    min-height: 500px;
-  }
-  
-  /* Make card body flex to fill available space */
-  .card .card-body,
-  .dashboard-card .card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+  /* Remove fixed height constraints - let cards grow naturally */
   
   .dashboard-content {
     flex-direction: column;
@@ -1188,20 +1193,24 @@
 /* ===========================
    LeaderboardCard Specific Styles
    =========================== */
-.card {
-  background-color: var(--color-bg-primary);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--spacing-6);
-  transition: box-shadow var(--transition-base);
+.leaderboard-card,
+.my-team-card {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.card:hover {
-  box-shadow: var(--shadow-md);
+.leaderboard-card .card-body,
+.my-team-card .card-body {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.card:focus-within {
-  box-shadow: var(--shadow-md);
+.leaderboard-card .card-header,
+.leaderboard-card .card-footer,
+.my-team-card .card-header,
+.my-team-card .card-footer {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 
@@ -1237,6 +1246,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .user-stats {
