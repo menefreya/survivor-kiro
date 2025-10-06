@@ -1,0 +1,81 @@
+/**
+ * Demo Component Styles
+ * 
+ * Styles for development/testing demo components
+ */
+
+/* Demo Container */
+.demo-container {
+  padding: var(--spacing-8);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Demo Sections */
+.demo-section {
+  margin-bottom: var(--spacing-12);
+}
+
+.demo-section h2 {
+  margin-bottom: var(--spacing-6);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Spinner Demo Grid */
+.spinner-demo-grid {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.spinner-demo-item p {
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Spinner with Text Demo */
+.spinner-text-demo {
+  margin-bottom: var(--spacing-8);
+}
+
+.spinner-text-demo p {
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Loading Container Demo */
+.loading-container-demo {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  min-height: 300px;
+}
+
+/* Button Demo Grid */
+.button-demo-grid {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+/* Empty State Demo Container */
+.empty-state-demo-container {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-8);
+}
+
+/* Skeleton Demo Container */
+.skeleton-demo-container {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+}
+
+.skeleton-demo-cards {
+  margin-top: var(--spacing-4);
+}

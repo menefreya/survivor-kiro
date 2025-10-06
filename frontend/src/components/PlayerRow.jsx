@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
 const PlayerRow = ({ 
   rank, 
@@ -101,7 +101,6 @@ const PlayerRow = ({
         {/* Player Info */}
         <div className="player-info">
           <div className="player-name">{playerName}</div>
-          <div className="player-username">@{username}</div>
         </div>
 
         {/* Score */}

@@ -1,4 +1,4 @@
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
 const ContestantRow = ({ rank, name, profession, totalScore, isEliminated, imageUrl }) => {
   // Extract initials from name

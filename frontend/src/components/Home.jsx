@@ -9,7 +9,7 @@ import PredictionReminder from './PredictionReminder';
 import PredictionResultsNotification from './PredictionResultsNotification';
 import CurrentPredictionsCard from './CurrentPredictionsCard';
 import '../App.css';
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
 const Home = () => {
   const { user } = useContext(AuthContext);
@@ -157,7 +157,7 @@ const Home = () => {
       {/* Current Episode Predictions */}
       <CurrentPredictionsCard />
       
-      {/* Two-Column Layout */}
+      {/* Dashboard Layout */}
       <div className="dashboard-columns">
         {/* Left Column: Leaderboard */}
         <LeaderboardCard 

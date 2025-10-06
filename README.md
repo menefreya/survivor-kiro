@@ -59,6 +59,44 @@ The frontend will run on `http://localhost:5173`
 - **Frontend**: React, React Router, Axios, Vite
 - **Backend**: Node.js, Express, JWT, bcrypt
 - **Database**: Supabase (PostgreSQL)
+- **CSS Architecture**: Cascade-first design system with design tokens and BEM naming
+
+## CSS Architecture
+
+This project uses a modern, maintainable CSS architecture based on cascade layers and design tokens:
+
+### File Organization
+
+```
+frontend/src/styles/
+├── 01-reset.css              # CSS reset and normalize
+├── 02-tokens.css             # Design tokens (CSS variables)
+├── 03-base.css               # Base element styles
+├── 04-layout.css             # Layout utilities and grid
+├── 05-components/            # Component-specific styles
+├── 06-features/              # Feature-specific styles
+├── 07-pages/                 # Page-specific styles
+├── 08-utilities.css          # Utility classes
+└── 09-legacy.css             # Temporary legacy overrides
+```
+
+### Key Principles
+
+- **Cascade-first**: Import order in `App.css` must never be changed
+- **Design tokens**: All colors, spacing, and typography use CSS custom properties
+- **BEM naming**: Components use Block__Element--Modifier convention
+- **Utility classes**: Prefixed with `u-` for common patterns
+- **Low specificity**: Maximum 3 classes per selector (0,0,3,0)
+
+### Development Guidelines
+
+- Always use design tokens from `02-tokens.css`
+- Follow BEM naming for component CSS
+- Use utility classes for common layout patterns
+- Keep component CSS files under 200 lines
+- Run `npm run lint:css` before committing
+
+For detailed guidelines, see `frontend/src/styles/` documentation files.
 
 ## Environment Variables
 

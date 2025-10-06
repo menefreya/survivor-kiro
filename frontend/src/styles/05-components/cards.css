@@ -517,8 +517,8 @@
 /**
  * Ensure keyboard focus is visible
  */
-.card a:focus,
-.card button:focus {
+.card__link:focus,
+.card__button:focus {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
 }

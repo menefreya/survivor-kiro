@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
-import '../styles/Ranking.css';
+import '../styles/07-pages/ranking.css';
 
 const Ranking = () => {
   const { user } = useContext(AuthContext);

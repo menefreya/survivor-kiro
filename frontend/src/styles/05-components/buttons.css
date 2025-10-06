@@ -54,24 +54,28 @@
 /* Secondary Button */
 .btn-secondary {
   color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
-  border: 2px solid var(--color-border-medium);
-  box-shadow: none;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background-color: var(--color-bg-secondary);
+  border: none;
   box-shadow: var(--shadow-sm);
 }
 
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
 .btn-secondary:active:not(:disabled) {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-tertiary);
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Danger Button */

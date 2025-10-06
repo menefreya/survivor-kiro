@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * EventTypeButton - Button for toggling event types

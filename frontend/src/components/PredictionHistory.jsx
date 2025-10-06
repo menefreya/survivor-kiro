@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
 import EmptyState from './EmptyState';
-import '../styles/Predictions.css';
+// Prediction styles are included in dashboard.css and profile.css
 
 const PredictionHistory = () => {
   const [predictions, setPredictions] = useState([]);

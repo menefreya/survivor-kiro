@@ -1,0 +1,220 @@
+/**
+ * Navigation Component Styles
+ * 
+ * Main navigation bar with responsive mobile menu support.
+ * Uses BEM naming convention and design tokens.
+ */
+
+/* ===========================
+   Navigation Block
+   =========================== */
+.navigation {
+  background: var(--gradient-primary);
+  padding: var(--spacing-4) var(--spacing-8);
+  box-shadow: var(--shadow-sm);
+}
+
+.navigation__list {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navigation__item:last-child {
+  margin-left: auto;
+}
+
+/* ===========================
+   Navigation Links
+   =========================== */
+.navigation__link {
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+
+.navigation__link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navigation__link--active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navigation__link:focus-visible {
+  outline: 3px solid var(--color-text-inverse);
+  outline-offset: 2px;
+}
+
+/* ===========================
+   Navigation Badge
+   =========================== */
+.navigation__link--has-badge {
+  padding-right: var(--spacing-6);
+}
+
+.nav-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--color-danger);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+/* ===========================
+   Logout Button
+   =========================== */
+.navigation__logout-button {
+  color: var(--color-text-inverse);
+  background: none;
+  border: none;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: background-color var(--transition-fast);
+  min-height: 44px;
+}
+
+.navigation__logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navigation__logout-button:focus-visible {
+  outline: 3px solid var(--color-text-inverse);
+  outline-offset: 2px;
+}
+
+/* ===========================
+   Mobile Menu Toggle
+   =========================== */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  color: var(--color-text-inverse);
+  z-index: 1001;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 24px;
+}
+
+.hamburger-icon__line {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: var(--color-text-inverse);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ===========================
+   Responsive Design - Tablet
+   =========================== */
+@media (max-width: 1024px) {
+  .navigation__list {
+    gap: var(--spacing-6);
+  }
+}
+
+/* ===========================
+   Responsive Design - Mobile
+   =========================== */
+@media (max-width: 640px) {
+  .navigation {
+    padding: var(--spacing-4);
+    position: relative;
+  }
+  
+  /* Show hamburger menu on mobile */
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  /* Hide menu by default on mobile */
+  .navigation__list {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-2) 0;
+    z-index: 1000;
+  }
+  
+  /* Show menu when open */
+  .navigation__list--mobile-open {
+    display: flex;
+  }
+  
+  .navigation__item {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .navigation__item:last-child {
+    margin-left: 0;
+  }
+
+  .navigation__link,
+  .navigation__logout-button {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    border-radius: 0;
+    justify-content: flex-start;
+  }
+
+  .navigation__link--has-badge {
+    padding-right: var(--spacing-6);
+  }
+
+  .nav-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+}

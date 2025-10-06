@@ -326,12 +326,12 @@
   background-color: var(--color-primary-light);
 }
 
-.form-file input[type="file"]:focus + .form-file-label {
+.form-file-label--focused {
   outline: 3px solid var(--color-primary-light);
   outline-offset: 2px;
 }
 
-.form-file input[type="file"]:disabled + .form-file-label {
+.form-file-label--disabled {
   opacity: 0.6;
   cursor: not-allowed;
   border-color: var(--color-border-light);

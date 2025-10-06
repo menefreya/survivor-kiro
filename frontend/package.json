@@ -9,7 +9,14 @@
     "lint": "eslint .",
     "lint:css": "stylelint 'src/styles/**/*.css'",
     "lint:css:fix": "stylelint 'src/styles/**/*.css' --fix",
-    "preview": "vite preview"
+    "lint:all": "npm run lint && npm run lint:css",
+    "format:css": "stylelint 'src/styles/**/*.css' --fix",
+    "test:css-specificity": "node tools/css-specificity-audit.js",
+    "legacy:check": "node tools/legacy-css-monitor.js",
+    "legacy:audit": "node tools/legacy-css-audit.js",
+    "legacy:report": "node tools/legacy-css-report.js",
+    "preview": "vite preview",
+    "prebuild": "npm run lint:all && npm run legacy:check"
   },
   "dependencies": {
     "axios": "^1.12.2",

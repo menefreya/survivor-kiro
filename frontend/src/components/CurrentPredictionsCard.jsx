@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import '../styles/Predictions.css';
+// Prediction styles are included in dashboard.css
 
 const CurrentPredictionsCard = () => {
   const [predictions, setPredictions] = useState([]);
@@ -73,13 +73,7 @@ const CurrentPredictionsCard = () => {
       <div className="card-header">
         <div className="card-title-section">
           <h2>Episode {episodeNumber} Predictions</h2>
-          <span className={`lock-badge ${isLocked ? 'locked' : 'open'}`}>
-            {isLocked ? '🔒 Locked' : '🔓 Open'}
-          </span>
         </div>
-        <Link to="/predictions/history" className="btn-text">
-          View All →
-        </Link>
       </div>
 
       <div className="submitted-predictions-grid">

@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged to check staged files
+npx lint-staged
+
+# Run CSS specificity audit
+echo "Running CSS specificity audit..."
+(cd frontend && npm run test:css-specificity)
+
+# Ensure build still works
+echo "Testing build..."
+(cd frontend && npm run build)

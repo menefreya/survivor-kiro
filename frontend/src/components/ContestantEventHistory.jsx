@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
 import EmptyState from './EmptyState';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * ContestantEventHistory - Display all events for a contestant across episodes

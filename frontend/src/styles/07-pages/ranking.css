@@ -206,6 +206,9 @@
   border: 2px solid var(--color-success);
   border-radius: var(--radius-lg);
   padding: var(--spacing-4);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .survivor-image {
@@ -218,16 +221,28 @@
   border: 3px solid var(--color-success);
 }
 
+.survivor-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .survivor-info h4 {
   margin: 0 0 var(--spacing-2) 0;
   font-size: var(--font-size-2xl);
   color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .survivor-info p {
   margin: 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Submit button now uses btn-primary btn-block classes */
@@ -255,16 +270,63 @@
     height: 50px;
   }
 
+  .contestant-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .contestant-info-line {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
   .contestant-details h3 {
     font-size: var(--font-size-base);
+    margin: 0;
   }
 
   .contestant-details p {
     font-size: var(--font-size-xs);
+    margin: 0;
+  }
+
+  .contestant-separator {
+    display: none;
+  }
+
+  .eliminated-badge {
+    margin-top: var(--spacing-1);
+    align-self: flex-start;
   }
 
   .rank-number {
     font-size: var(--font-size-xl);
     min-width: 35px;
+    align-self: flex-start;
+  }
+
+  .survivor-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-3);
+  }
+
+  .survivor-image {
+    margin-right: 0;
+    margin-bottom: var(--spacing-2);
+    width: 60px;
+    height: 60px;
+  }
+
+  .survivor-info h4 {
+    font-size: var(--font-size-xl);
+  }
+
+  .survivor-info p {
+    font-size: var(--font-size-sm);
   }
 }

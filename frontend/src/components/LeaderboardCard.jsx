@@ -1,5 +1,5 @@
 import PlayerRow from './PlayerRow';
-import '../styles/Dashboard.css';
+import '../styles/07-pages/dashboard.css';
 
 const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUserId, error, onRetry }) => {
   return (

@@ -195,7 +195,7 @@ const AdminPredictionManager = () => {
             <div className="predictions-by-tribe">
               {tribes.map(tribe => (
                 <div key={tribe} className="tribe-predictions-section">
-                  <h4 className="tribe-header">{tribe} Tribe</h4>
+                  <h4 className={`tribe-header tribe-${tribe.toLowerCase()}`}>{tribe} Tribe</h4>
                   
                   <div className="predictions-table-container">
                     <table className="predictions-table">

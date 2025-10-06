@@ -3,7 +3,7 @@ import EventEntryGrid from './EventEntryGrid';
 import LoadingSpinner from './LoadingSpinner';
 import EmptyState from './EmptyState';
 import api from '../services/api';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * AdminEventEntry - Main page component for admin event entry

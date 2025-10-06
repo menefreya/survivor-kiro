@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ContestantEventRow from './ContestantEventRow';
 import LoadingSpinner from './LoadingSpinner';
 import api from '../services/api';
-import '../styles/EventEntry.css';
+import '../styles/06-features/event-entry.css';
 
 /**
  * EventEntryGrid - Grid component for managing events for all contestants

@@ -61,37 +61,39 @@ const Navigation = () => {
         aria-expanded={isMobileMenuOpen}
       >
         <span className="hamburger-icon">
-          <span></span>
-          <span></span>
-          <span></span>
+          <span className="hamburger-icon__line"></span>
+          <span className="hamburger-icon__line"></span>
+          <span className="hamburger-icon__line"></span>
         </span>
       </button>
 
       {/* Navigation Menu */}
-      <ul role="list" className={isMobileMenuOpen ? 'mobile-menu-open' : ''}>
-        <li>
+      <ul role="list" className={`navigation__list ${isMobileMenuOpen ? 'navigation__list--mobile-open' : ''}`}>
+        <li className="navigation__item">
           <Link 
             to="/home" 
+            className={`navigation__link ${isActive('/home') ? 'navigation__link--active' : ''}`}
             aria-current={isActive('/home') ? 'page' : undefined}
             onClick={closeMobileMenu}
           >
             Home
           </Link>
         </li>
-        <li>
+        <li className="navigation__item">
           <Link 
             to="/ranking" 
+            className={`navigation__link ${isActive('/ranking') ? 'navigation__link--active' : ''}`}
             aria-current={isActive('/ranking') ? 'page' : undefined}
             onClick={closeMobileMenu}
           >
             Ranking
           </Link>
         </li>
-        <li>
+        <li className="navigation__item">
           <Link 
             to="/predictions" 
+            className={`navigation__link ${isActive('/predictions') ? 'navigation__link--active' : ''} ${showPredictionBadge ? 'navigation__link--has-badge' : ''}`}
             aria-current={isActive('/predictions') ? 'page' : undefined}
-            className={showPredictionBadge ? 'has-badge' : ''}
             onClick={closeMobileMenu}
           >
             Predictions
@@ -103,9 +105,10 @@ const Navigation = () => {
           </Link>
         </li>
         {user?.is_admin && (
-          <li>
+          <li className="navigation__item">
             <Link 
               to="/admin" 
+              className={`navigation__link ${isActive('/admin') ? 'navigation__link--active' : ''}`}
               aria-current={isActive('/admin') ? 'page' : undefined}
               onClick={closeMobileMenu}
             >
@@ -113,19 +116,20 @@ const Navigation = () => {
             </Link>
           </li>
         )}
-        <li>
+        <li className="navigation__item">
           <Link 
             to="/profile" 
+            className={`navigation__link ${isActive('/profile') ? 'navigation__link--active' : ''}`}
             aria-current={isActive('/profile') ? 'page' : undefined}
             onClick={closeMobileMenu}
           >
             Profile
           </Link>
         </li>
-        <li>
+        <li className="navigation__item">
           <button 
             onClick={handleLogout} 
-            className="logout-link"
+            className="navigation__logout-button"
             aria-label="Logout from your account"
           >
             Logout

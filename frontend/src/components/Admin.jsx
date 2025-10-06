@@ -4,8 +4,8 @@ import AdminEventEntry from './AdminEventEntry';
 import ContestantEventHistory from './ContestantEventHistory';
 import AdminPredictionManager from './AdminPredictionManager';
 import AdminPredictionStatistics from './AdminPredictionStatistics';
-import '../styles/Admin.css';
-import '../styles/Predictions.css';
+import '../styles/07-pages/admin.css';
+// Prediction styles are included in admin.css
 
 const Admin = () => {
   // Tab State
@@ -269,7 +269,8 @@ const Admin = () => {
                 {contestants.length === 0 ? (
                   <p>No contestants added yet.</p>
                 ) : (
-                  <table className="contestants-table" role="table" aria-label="Contestants list">
+                  <div className="contestants-table-container">
+                    <table className="contestants-table" role="table" aria-label="Contestants list">
                     <thead>
                       <tr>
                         {bulkTribeMode && <th scope="col">Select</th>}
@@ -325,7 +326,7 @@ const Admin = () => {
                               </div>
                             ) : (
                               <div className="tribe-display">
-                                <span className={contestant.current_tribe ? 'tribe-badge' : 'tribe-none'}>
+                                <span className={contestant.current_tribe ? `tribe-badge tribe-${contestant.current_tribe.toLowerCase()}` : 'tribe-none'}>
                                   {contestant.current_tribe || 'No tribe'}
                                 </span>
                                 <button
@@ -367,7 +368,8 @@ const Admin = () => {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                    </table>
+                  </div>
                 )}
               </div>
             </section>

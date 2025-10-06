@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import '../styles/Predictions.css';
+// Prediction styles are included in dashboard.css
 
 const PredictionReminder = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -64,10 +64,6 @@ const PredictionReminder = () => {
     }
   };
 
-  const handleDismiss = () => {
-    setShowBanner(false);
-  };
-
   const handleMakePredictions = () => {
     navigate('/predictions');
   };
@@ -79,9 +75,11 @@ const PredictionReminder = () => {
   return (
     <div className={`prediction-reminder-banner ${isUrgent ? 'urgent' : ''}`}>
       <div className="prediction-reminder-content">
-        <div className="prediction-reminder-icon">
-          {isUrgent ? '⚠️' : '📊'}
-        </div>
+        {isUrgent && (
+          <div className="prediction-reminder-icon">
+            ⚠️
+          </div>
+        )}
         <div className="prediction-reminder-text">
           <strong>
             {isUrgent ? 'Urgent: ' : ''}
@@ -99,13 +97,6 @@ const PredictionReminder = () => {
             onClick={handleMakePredictions}
           >
             Make Predictions
-          </button>
-          <button 
-            className="btn-text"
-            onClick={handleDismiss}
-            aria-label="Dismiss reminder"
-          >
-            ✕
           </button>
         </div>
       </div>

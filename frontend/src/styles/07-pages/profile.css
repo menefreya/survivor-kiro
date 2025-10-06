@@ -4,7 +4,7 @@
   padding: var(--spacing-8);
 }
 
-.profile-container h2 {
+.profile-container__title {
   margin-bottom: var(--spacing-8);
   color: var(--color-text-primary);
   font-size: var(--font-size-4xl);
@@ -12,7 +12,7 @@
   line-height: var(--line-height-tight);
 }
 
-.profile-container h3 {
+.profile-container__subtitle {
   margin-bottom: var(--spacing-4);
   color: var(--color-text-secondary);
   font-size: var(--font-size-xl);
@@ -50,7 +50,7 @@
   width: 150px;
   height: 150px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,14 +73,14 @@
   align-items: center;
 }
 
-.profile-field label {
+.profile-field__label {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
   min-width: 80px;
   font-size: var(--font-size-sm);
 }
 
-.profile-field span {
+.profile-field__value {
   color: var(--color-text-primary);
   font-size: var(--font-size-lg);
 }
@@ -166,7 +166,7 @@
   padding: var(--spacing-6);
 }
 
-.profile-update-section form {
+.profile-update-section__form {
   max-width: 500px;
 }
 
@@ -191,12 +191,12 @@
     padding: var(--spacing-4);
   }
 
-  .profile-container h2 {
+  .profile-container__title {
     font-size: var(--font-size-3xl);
     margin-bottom: var(--spacing-6);
   }
 
-  .profile-container h3 {
+  .profile-container__subtitle {
     font-size: var(--font-size-lg);
   }
 
@@ -217,7 +217,7 @@
     gap: var(--spacing-1);
   }
 
-  .profile-field label {
+  .profile-field__label {
     min-width: auto;
   }
 

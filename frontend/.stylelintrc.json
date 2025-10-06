@@ -5,17 +5,64 @@
     "selector-max-specificity": "0,3,0",
     "selector-max-id": 0,
     "declaration-no-important": [true, {
-      "ignore": ["keyframes"]
+      "ignore": ["keyframes"],
+      "ignoreAtRules": ["media"]
     }],
     "custom-property-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
     "selector-class-pattern": "^([a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?|u-[a-z]+(-[a-z0-9]+)*)$",
-    "comment-pattern": "^(?:[A-Z][\\s\\S]*|TODO:|FIXME:|NOTE:)",
+    "comment-pattern": "^(?:[A-Z][\\s\\S]*|TODO:|FIXME:|NOTE:|\\*)",
     "declaration-block-no-duplicate-properties": true,
     "color-no-invalid-hex": true,
-    "unit-no-unknown": true
+    "unit-no-unknown": true,
+    "selector-no-qualifying-type": [true, {
+      "ignore": ["attribute", "class"]
+    }],
+    "selector-max-universal": 0,
+    "selector-max-attribute": 2,
+    "selector-max-class": 3,
+    "selector-max-combinators": 2,
+    "selector-max-compound-selectors": 3,
+    "selector-max-type": 1,
+    "declaration-block-single-line-max-declarations": 1,
+    "value-keyword-case": "lower",
+    "function-name-case": "lower",
+    "property-case": "lower",
+    "at-rule-name-case": "lower",
+    "color-function-notation": "modern",
+    "alpha-value-notation": "number",
+    "hue-degree-notation": "angle",
+    "shorthand-property-no-redundant-values": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "font-family-no-missing-generic-family-keyword": true,
+    "font-family-name-quotes": "always-where-recommended",
+    "string-quotes": "single",
+    "length-zero-no-unit": true,
+    "number-max-precision": 3,
+    "time-min-milliseconds": 100,
+    "media-feature-range-notation": "context",
+    "custom-media-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "keyframes-name-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "no-unknown-animations": true,
+    "comment-empty-line-before": ["always", {
+      "except": ["first-nested"],
+      "ignore": ["after-comment", "stylelint-commands"]
+    }],
+    "rule-empty-line-before": ["always-multi-line", {
+      "except": ["first-nested"],
+      "ignore": ["after-comment"]
+    }]
   },
   "ignoreFiles": [
     "dist/**/*",
-    "node_modules/**/*"
+    "node_modules/**/*",
+    "src/styles/09-legacy.css"
+  ],
+  "overrides": [
+    {
+      "files": ["**/06-features/accessibility.css"],
+      "rules": {
+        "declaration-no-important": null
+      }
+    }
   ]
 }

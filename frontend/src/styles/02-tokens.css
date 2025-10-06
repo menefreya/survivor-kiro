@@ -261,8 +261,11 @@
   --gradient-bronze: linear-gradient(135deg, #CD7F32, #B8860B);
   
   /* Avatar/initials gradients */
-  --gradient-avatar: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  --gradient-avatar: var(--gradient-secondary);
   --gradient-sole-survivor: linear-gradient(135deg, var(--color-gold), var(--color-primary));
+  
+  /* Progress bar gradients */
+  --gradient-progress: linear-gradient(90deg, var(--color-success), var(--color-primary));
   
   /* ============================================
      MEDAL COLORS
@@ -321,17 +324,18 @@
 /* ============================================
    DARK MODE SUPPORT (Optional - for future)
    ============================================ */
+/* Uncomment when implementing dark mode
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Uncomment and adjust when implementing dark mode */
-    /* --color-bg-primary: var(--color-gray-900);
+    --color-bg-primary: var(--color-gray-900);
     --color-bg-secondary: var(--color-gray-800);
     --color-bg-tertiary: var(--color-gray-700);
     --color-text-primary: var(--color-gray-50);
     --color-text-secondary: var(--color-gray-300);
-    --color-text-tertiary: var(--color-gray-400); */
+    --color-text-tertiary: var(--color-gray-400);
   }
 }
+*/
 
 /* ============================================
    REDUCED MOTION SUPPORT
