@@ -1,0 +1,23 @@
+/**
+ * Legacy CSS Overrides
+ * 
+ * Temporary overrides for safe migration. This file should be used sparingly
+ * and only for emergency fixes during the CSS refactoring process.
+ * 
+ * IMPORTANT: All rules in this file should be temporary and documented with:
+ * - TODO comment explaining what needs to be fixed
+ * - Issue/ticket number for tracking
+ * - Timeline for proper fix
+ * 
+ * Example:
+ * TODO: Refactor button component to use proper BEM classes - Issue #123
+ * Timeline: Remove by end of sprint
+ * .emergency-button-fix {
+ *   // temporary override
+ * }
+ */
+
+/* 
+ * This file is intentionally empty at the start of the migration.
+ * Add temporary overrides here only when absolutely necessary.
+ */
