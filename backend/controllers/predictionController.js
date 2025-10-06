@@ -411,15 +411,7 @@ async function getPredictionHistory(req, res) {
       });
     }
 
-    // Calculate accuracy statistics
-    const accuracy = await predictionScoringService.calculatePredictionAccuracy(playerId);
-
     res.json({
-      accuracy: {
-        total: accuracy.total,
-        correct: accuracy.correct,
-        percentage: accuracy.accuracy
-      },
       predictions: enrichedPredictions,
       pagination: {
         limit: limitNum,
@@ -471,7 +463,7 @@ async function getEpisodePredictions(req, res) {
         created_at,
         players (
           id,
-          username,
+          name,
           email
         ),
         contestants (
@@ -502,7 +494,7 @@ async function getEpisodePredictions(req, res) {
         id: prediction.id,
         player: {
           id: prediction.players.id,
-          username: prediction.players.username,
+          name: prediction.players.name,
           email: prediction.players.email
         },
         contestant: prediction.contestants,
@@ -694,94 +686,6 @@ async function getPredictionStatistics(req, res) {
   }
 }
 
-/**
- * Get prediction accuracy for current user
- * @route GET /api/predictions/accuracy
- * @access Protected
- */
-async function getPredictionAccuracy(req, res) {
-  try {
-    const playerId = req.user.id;
-
-    // Get all predictions for this player with related data
-    const { data: predictions, error: predictionsError } = await supabase
-      .from('elimination_predictions')
-      .select(`
-        id,
-        player_id,
-        episode_id,
-        tribe,
-        contestant_id,
-        is_correct,
-        scored_at,
-        created_at,
-        episodes (
-          episode_number,
-          air_date
-        ),
-        contestants (
-          name
-        )
-      `)
-      .eq('player_id', playerId)
-      .order('created_at', { ascending: false });
-
-    if (predictionsError) {
-      console.error('Error fetching predictions:', predictionsError);
-      console.error('Predictions error details:', JSON.stringify(predictionsError, null, 2));
-      return res.status(500).json({ 
-        error: 'Failed to fetch predictions',
-        details: process.env.NODE_ENV === 'development' ? predictionsError.message : undefined
-      });
-    }
-
-    // Handle case where there are no predictions
-    if (!predictions || predictions.length === 0) {
-      return res.json({
-        totalPredictions: 0,
-        scoredPredictions: 0,
-        correctPredictions: 0,
-        accuracy: 0,
-        totalPoints: 0,
-        recentPredictions: []
-      });
-    }
-
-    // Calculate accuracy stats
-    const totalPredictions = predictions.length;
-    const scoredPredictions = predictions.filter(p => p.is_correct !== null);
-    const correctPredictions = predictions.filter(p => p.is_correct === true);
-    
-    const accuracy = scoredPredictions.length > 0 
-      ? (correctPredictions.length / scoredPredictions.length * 100).toFixed(1)
-      : 0;
-
-    // Each correct prediction is worth 3 points
-    const totalPoints = correctPredictions.length * 3;
-
-    // Build recent predictions safely
-    const recentPredictions = predictions.slice(0, 5).map(p => ({
-      episodeNumber: p.episodes?.episode_number || 'Unknown',
-      contestantName: p.contestants?.name || 'Unknown',
-      isCorrect: p.is_correct,
-      pointsEarned: p.is_correct === true ? 3 : 0,
-      createdAt: p.created_at
-    }));
-
-    res.json({
-      totalPredictions,
-      scoredPredictions: scoredPredictions.length,
-      correctPredictions: correctPredictions.length,
-      accuracy: parseFloat(accuracy),
-      totalPoints,
-      recentPredictions
-    });
-  } catch (error) {
-    console.error('Error in getPredictionAccuracy:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
 module.exports = {
   getPredictionStatus,
   submitPredictions,
@@ -789,6 +693,5 @@ module.exports = {
   getPredictionHistory,
   getEpisodePredictions,
   togglePredictionLock,
-  getPredictionStatistics,
-  getPredictionAccuracy
+  getPredictionStatistics
 };

@@ -134,9 +134,9 @@ async function testLogout() {
 async function runTests() {
   console.log('Starting authentication endpoint tests...');
   console.log('Make sure the server is running on port 3001');
-  
+
   const results = [];
-  
+
   // Run tests in sequence
   results.push(await testSignup());
   results.push(await testDuplicateSignup());
@@ -145,13 +145,13 @@ async function runTests() {
   results.push(await testGetCurrentUser());
   results.push(await testGetCurrentUserWithoutToken());
   results.push(await testLogout());
-  
+
   // Summary
   console.log('\n=== Test Summary ===');
   const passed = results.filter(r => r).length;
   const total = results.length;
   console.log(`Passed: ${passed}/${total}`);
-  
+
   if (passed === total) {
     console.log('✓ All tests passed!');
   } else {

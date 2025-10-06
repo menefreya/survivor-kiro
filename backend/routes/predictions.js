@@ -8,8 +8,7 @@ const {
   getPredictionHistory,
   getEpisodePredictions,
   togglePredictionLock,
-  getPredictionStatistics,
-  getPredictionAccuracy
+  getPredictionStatistics
 } = require('../controllers/predictionController');
 
 /**
@@ -29,9 +28,6 @@ router.get('/current', authenticateToken, getCurrentPredictions);
 
 // Get prediction history for current user
 router.get('/history', authenticateToken, getPredictionHistory);
-
-// Get prediction accuracy for current user
-router.get('/accuracy', authenticateToken, getPredictionAccuracy);
 
 // Get prediction statistics (admin only)
 router.get('/statistics', authenticateToken, requireAdmin, getPredictionStatistics);

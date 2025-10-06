@@ -127,51 +127,6 @@ class PredictionScoringService {
   }
 
   /**
-   * Calculate prediction accuracy for a player
-   * @param {number} playerId - Player ID
-   * @returns {Promise<{total: number, correct: number, accuracy: number}>}
-   */
-  async calculatePredictionAccuracy(playerId) {
-    try {
-      // Query all scored predictions for this player
-      const { data: scoredPredictions, error } = await supabase
-        .from('elimination_predictions')
-        .select('is_correct')
-        .eq('player_id', playerId)
-        .not('is_correct', 'is', null); // Only scored predictions
-
-      if (error) {
-        throw new Error(`Failed to fetch scored predictions: ${error.message}`);
-      }
-
-      // If no scored predictions, return zeros
-      if (!scoredPredictions || scoredPredictions.length === 0) {
-        return {
-          total: 0,
-          correct: 0,
-          accuracy: 0
-        };
-      }
-
-      // Count total and correct predictions
-      const total = scoredPredictions.length;
-      const correct = scoredPredictions.filter(p => p.is_correct === true).length;
-
-      // Calculate accuracy percentage
-      const accuracy = total > 0 ? (correct / total) * 100 : 0;
-
-      return {
-        total,
-        correct,
-        accuracy: Math.round(accuracy * 10) / 10 // Round to 1 decimal place
-      };
-    } catch (error) {
-      console.error('Error calculating prediction accuracy:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Recalculate all prediction scores for an episode
    * Used when admin corrects elimination data
    * @param {number} episodeId - Episode ID

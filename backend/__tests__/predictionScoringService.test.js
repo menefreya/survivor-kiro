@@ -65,7 +65,7 @@ describe('PredictionScoringService', () => {
   });
 
   describe('scorePredictions', () => {
-    test('should award 5 points for each correct prediction', async () => {
+    test('should award 3 points for each correct prediction', async () => {
       // Mock predictions fetch
       mockIs.mockResolvedValueOnce({
         data: [
@@ -93,7 +93,7 @@ describe('PredictionScoringService', () => {
       expect(result).toEqual({
         correct: 2,
         incorrect: 1,
-        points_awarded: 10 // 2 correct * 5 points
+        points_awarded: 6 // 2 correct * 3 points
       });
 
       expect(mockFrom).toHaveBeenCalledWith('elimination_predictions');
@@ -149,7 +149,7 @@ describe('PredictionScoringService', () => {
       expect(firstResult).toEqual({
         correct: 1,
         incorrect: 1,
-        points_awarded: 5
+        points_awarded: 3
       });
 
       // Second elimination - no unscored predictions (is_correct is not null)
@@ -211,7 +211,7 @@ describe('PredictionScoringService', () => {
   });
 
   describe('getPredictionBonus', () => {
-    test('should calculate total bonus as 5 points per correct prediction', async () => {
+    test('should calculate total bonus as 3 points per correct prediction', async () => {
       // Setup mock chain for select().eq().eq()
       const mockEqChain = {
         eq: jest.fn().mockResolvedValue({
@@ -230,7 +230,7 @@ describe('PredictionScoringService', () => {
 
       const bonus = await predictionScoringService.getPredictionBonus(1);
 
-      expect(bonus).toBe(15); // 3 correct * 5 points
+      expect(bonus).toBe(9); // 3 correct * 3 points
       expect(mockFrom).toHaveBeenCalledWith('elimination_predictions');
     });
 
@@ -301,112 +301,7 @@ describe('PredictionScoringService', () => {
 
       const bonus = await predictionScoringService.getPredictionBonus(1);
 
-      expect(bonus).toBe(50); // 10 correct * 5 points
-    });
-  });
-
-  describe('calculatePredictionAccuracy', () => {
-    test('should calculate accuracy percentage correctly', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: [
-          { is_correct: true },
-          { is_correct: true },
-          { is_correct: false },
-          { is_correct: true },
-          { is_correct: false }
-        ],
-        error: null
-      });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(1);
-
-      expect(accuracy).toEqual({
-        total: 5,
-        correct: 3,
-        accuracy: 60.0 // 3/5 = 60%
-      });
-    });
-
-    test('should return zeros when player has no scored predictions', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: [],
-        error: null
-      });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(1);
-
-      expect(accuracy).toEqual({
-        total: 0,
-        correct: 0,
-        accuracy: 0
-      });
-    });
-
-    test('should handle 100% accuracy', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: [
-          { is_correct: true },
-          { is_correct: true },
-          { is_correct: true }
-        ],
-        error: null
-      });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(1);
-
-      expect(accuracy).toEqual({
-        total: 3,
-        correct: 3,
-        accuracy: 100.0
-      });
-    });
-
-    test('should handle 0% accuracy', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: [
-          { is_correct: false },
-          { is_correct: false }
-        ],
-        error: null
-      });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(1);
-
-      expect(accuracy).toEqual({
-        total: 2,
-        correct: 0,
-        accuracy: 0
-      });
-    });
-
-    test('should round accuracy to 1 decimal place', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: [
-          { is_correct: true },
-          { is_correct: false },
-          { is_correct: false }
-        ],
-        error: null
-      });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(1);
-
-      expect(accuracy).toEqual({
-        total: 3,
-        correct: 1,
-        accuracy: 33.3 // 1/3 = 33.333... rounded to 33.3
-      });
-    });
-
-    test('should throw error when database fetch fails', async () => {
-      mockNot.mockResolvedValueOnce({
-        data: null,
-        error: { message: 'Database error' }
-      });
-
-      await expect(
-        predictionScoringService.calculatePredictionAccuracy(1)
-      ).rejects.toThrow('Failed to fetch scored predictions');
+      expect(bonus).toBe(30); // 10 correct * 3 points
     });
   });
 
@@ -435,8 +330,8 @@ describe('PredictionScoringService', () => {
 
       // Mock scorePredictions calls
       const scorePredictionsSpy = jest.spyOn(predictionScoringService, 'scorePredictions')
-        .mockResolvedValueOnce({ correct: 2, incorrect: 1, points_awarded: 10 })
-        .mockResolvedValueOnce({ correct: 1, incorrect: 2, points_awarded: 5 });
+        .mockResolvedValueOnce({ correct: 2, incorrect: 1, points_awarded: 6 })
+        .mockResolvedValueOnce({ correct: 1, incorrect: 2, points_awarded: 3 });
 
       await predictionScoringService.recalculatePredictionScores(5);
 
@@ -470,7 +365,7 @@ describe('PredictionScoringService', () => {
       });
 
       const scorePredictionsSpy = jest.spyOn(predictionScoringService, 'scorePredictions')
-        .mockResolvedValue({ correct: 1, incorrect: 1, points_awarded: 5 });
+        .mockResolvedValue({ correct: 1, incorrect: 1, points_awarded: 3 });
 
       await predictionScoringService.recalculatePredictionScores(5);
 

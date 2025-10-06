@@ -80,7 +80,7 @@ describe('Prediction E2E Flow', () => {
       const scoringResult = {
         correct: 1,
         incorrect: 0,
-        points_awarded: 5
+        points_awarded: 3
       };
 
       jest.spyOn(predictionScoringService, 'scorePredictions')
@@ -100,7 +100,7 @@ describe('Prediction E2E Flow', () => {
         testTribe
       );
       expect(scoringResult.correct).toBe(1);
-      expect(scoringResult.points_awarded).toBe(5);
+      expect(scoringResult.points_awarded).toBe(3);
 
       // Step 5: Verify player score includes prediction bonus
       jest.spyOn(predictionScoringService, 'getPredictionBonus')
@@ -134,7 +134,7 @@ describe('Prediction E2E Flow', () => {
           predicted_contestant: { id: 10, name: 'Jonathan' },
           actual_eliminated: { id: 10, name: 'Jonathan' },
           is_correct: true,
-          points_earned: 5
+          points_earned: 3
         },
         {
           id: 102,
@@ -147,19 +147,11 @@ describe('Prediction E2E Flow', () => {
         }
       ];
 
-      // Mock accuracy calculation
-      jest.spyOn(predictionScoringService, 'calculatePredictionAccuracy')
-        .mockResolvedValue({
-          total: 2,
-          correct: 1,
-          accuracy: 50.0
-        });
-
-      const accuracy = await predictionScoringService.calculatePredictionAccuracy(testPlayerId);
-
-      expect(accuracy.total).toBe(2);
-      expect(accuracy.correct).toBe(1);
-      expect(accuracy.accuracy).toBe(50.0);
+      // Verify predictions were scored correctly
+      expect(mockHistory[0].is_correct).toBe(true);
+      expect(mockHistory[0].points_earned).toBe(3);
+      expect(mockHistory[1].is_correct).toBe(false);
+      expect(mockHistory[1].points_earned).toBe(0);
     });
 
     test('should handle tribe swap scenario', async () => {
@@ -186,7 +178,7 @@ describe('Prediction E2E Flow', () => {
         .mockResolvedValue({
           correct: 1,
           incorrect: 0,
-          points_awarded: 5
+          points_awarded: 3
         });
 
       // Score using original tribe from prediction
@@ -197,7 +189,7 @@ describe('Prediction E2E Flow', () => {
       );
 
       expect(result.correct).toBe(1);
-      expect(result.points_awarded).toBe(5);
+      expect(result.points_awarded).toBe(3);
     });
 
     test('should handle partial prediction submission', async () => {
@@ -223,12 +215,12 @@ describe('Prediction E2E Flow', () => {
 
       // Verify only submitted tribes are scored
       jest.spyOn(predictionScoringService, 'scorePredictions')
-        .mockResolvedValueOnce({ correct: 1, incorrect: 0, points_awarded: 5 })
+        .mockResolvedValueOnce({ correct: 1, incorrect: 0, points_awarded: 3 })
         .mockResolvedValueOnce({ correct: 0, incorrect: 1, points_awarded: 0 });
 
       // Score Taku tribe
       const takuResult = await predictionScoringService.scorePredictions(testEpisodeId, 10, 'Taku');
-      expect(takuResult.points_awarded).toBe(5);
+      expect(takuResult.points_awarded).toBe(3);
 
       // Score Vati tribe
       const vatiResult = await predictionScoringService.scorePredictions(testEpisodeId, 12, 'Vati');
@@ -327,7 +319,7 @@ describe('Prediction E2E Flow', () => {
         .mockResolvedValue({
           correct: 2,
           incorrect: 1,
-          points_awarded: 10
+          points_awarded: 6
         });
 
       // Recalculate all predictions for episode
@@ -341,13 +333,13 @@ describe('Prediction E2E Flow', () => {
     test('should handle multiple eliminations from same tribe', async () => {
       // Only first elimination should be scored per tribe
       jest.spyOn(predictionScoringService, 'scorePredictions')
-        .mockResolvedValueOnce({ correct: 1, incorrect: 2, points_awarded: 5 })
+        .mockResolvedValueOnce({ correct: 1, incorrect: 2, points_awarded: 3 })
         .mockResolvedValueOnce({ correct: 0, incorrect: 0, points_awarded: 0 });
 
       // First elimination - scores all predictions
       const firstResult = await predictionScoringService.scorePredictions(testEpisodeId, 10, 'Taku');
       expect(firstResult.correct).toBe(1);
-      expect(firstResult.points_awarded).toBe(5);
+      expect(firstResult.points_awarded).toBe(3);
 
       // Second elimination from same tribe - no unscored predictions
       const secondResult = await predictionScoringService.scorePredictions(testEpisodeId, 11, 'Taku');
