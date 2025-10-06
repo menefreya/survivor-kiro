@@ -40,3 +40,4 @@ backend/db
 # Scripts (keep deployment scripts)
 !scripts/
 
+
