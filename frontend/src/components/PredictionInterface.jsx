@@ -289,8 +289,8 @@ const PredictionInterface = () => {
                       <h4 className="contestant-card-name">{pred.contestant?.name || 'Unknown'}</h4>
                       <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                       <div className="contestant-card-details">
+                        {pred.contestant?.profession && <span className="detail-item">{pred.contestant.profession}</span>}
                         {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
-                        {pred.contestant?.occupation && <span className="detail-item">{pred.contestant.occupation}</span>}
                       </div>
                     </div>
                     
@@ -332,8 +332,8 @@ const PredictionInterface = () => {
                     <h4 className="contestant-card-name">{pred.contestant?.name || 'Unknown'}</h4>
                     <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                     <div className="contestant-card-details">
+                      {pred.contestant?.profession && <span className="detail-item">{pred.contestant.profession}</span>}
                       {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
-                      {pred.contestant?.occupation && <span className="detail-item">{pred.contestant.occupation}</span>}
                     </div>
                   </div>
                   
@@ -403,8 +403,8 @@ const PredictionInterface = () => {
                       <div className="contestant-card-info">
                         <h4 className="contestant-card-name">{contestant.name}</h4>
                         <div className="contestant-card-details">
+                          {contestant.profession && <span className="detail-item">{contestant.profession}</span>}
                           {contestant.age && <span className="detail-item">{contestant.age} years old</span>}
-                          {contestant.occupation && <span className="detail-item">{contestant.occupation}</span>}
                         </div>
                       </div>
                     </div>

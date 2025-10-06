@@ -11,10 +11,21 @@ const EventTypeButton = ({ eventType, isActive, onClick, count = 0 }) => {
   // Determine button class based on point value and active state
   const getButtonClass = () => {
     const baseClass = 'event-type-button';
-    const valueClass = point_value >= 0 ? 'positive' : 'negative';
-    const activeClass = isActive ? 'active' : '';
     
-    return `${baseClass} ${valueClass} ${activeClass}`.trim();
+    if (isActive) {
+      // When active, use specific color classes for bonus (green) and penalty (red)
+      if (point_value > 0) {
+        return `${baseClass} event-type-button--positive-active`;
+      } else if (point_value < 0) {
+        return `${baseClass} event-type-button--negative-active`;
+      } else {
+        return `${baseClass} active`;
+      }
+    } else {
+      // When inactive, use neutral styling with hover effects
+      const valueClass = point_value >= 0 ? 'positive' : 'negative';
+      return `${baseClass} ${valueClass}`;
+    }
   };
 
   // Format point value with + or - sign

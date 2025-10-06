@@ -212,20 +212,34 @@
   transform: translateY(-1px);
 }
 
-.event-type-button--positive-active {
-  background: var(--color-success);
-  box-shadow: var(--shadow-md);
-}
-
-.event-type-button--negative:hover {
+.event-type-button.negative:hover {
   background: var(--color-danger-light);
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
+/* Active state for positive/bonus events - GREEN */
+.event-type-button--positive-active {
+  background: var(--color-success);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.event-type-button--positive-active:hover {
+  background: var(--color-success-dark);
+  transform: translateY(-1px);
+}
+
+/* Active state for negative/penalty events - RED */
 .event-type-button--negative-active {
   background: var(--color-danger);
+  color: white;
   box-shadow: var(--shadow-md);
+}
+
+.event-type-button--negative-active:hover {
+  background: var(--color-danger-dark);
+  transform: translateY(-1px);
 }
 
 .event-name {
@@ -258,16 +272,18 @@
   font-weight: 700;
 }
 
-.event-type-button--active .event-count {
+.event-type-button.active .event-count {
   background: var(--color-bg-primary);
   color: var(--color-primary);
 }
 
 .event-type-button--positive-active .event-count {
+  background: var(--color-bg-primary);
   color: var(--color-success);
 }
 
 .event-type-button--negative-active .event-count {
+  background: var(--color-bg-primary);
   color: var(--color-danger);
 }
 

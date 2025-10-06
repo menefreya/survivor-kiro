@@ -920,6 +920,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  text-align: center;
 }
 
 .contestant-card-name {
@@ -927,6 +928,7 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
+  text-align: center;
 }
 
 .contestant-tribe-name {
@@ -1149,11 +1151,102 @@
   }
 
   .submitted-contestant-card {
-    padding: var(--spacing-3);
+    padding: var(--spacing-4);
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-4);
+    min-height: 80px;
+  }
+
+  .contestant-card-image-container {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .contestant-card-placeholder {
+    font-size: var(--font-size-xl);
+  }
+
+  .contestant-card-info {
+    flex: 1;
+    gap: var(--spacing-1);
   }
 
   .contestant-card-name {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--spacing-1);
+  }
+
+  .contestant-tribe-name {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-1) var(--spacing-2);
+    margin: 0;
+    margin-top: var(--spacing-1);
+  }
+
+  .contestant-card-details {
+    gap: var(--spacing-1);
+  }
+
+  .detail-item {
     font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .detail-item:first-child {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .prediction-result {
+    position: absolute;
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    background: none;
+    color: var(--color-text-primary);
+    padding: 0;
+    border-radius: 0;
+    text-align: right;
+    min-width: 60px;
+  }
+
+  .prediction-result.correct {
+    background: none;
+    color: var(--color-text-primary);
+  }
+
+  .prediction-result.incorrect {
+    background: none;
+    color: var(--color-text-primary);
+  }
+
+  /* Show only the points number on mobile */
+  .prediction-result.correct::before {
+    content: "3";
+  }
+
+  .prediction-result.incorrect::before {
+    content: "0";
+  }
+
+  .prediction-result.correct,
+  .prediction-result.incorrect {
+    font-size: 0; /* Hide the text */
+  }
+
+  .prediction-result.correct::after,
+  .prediction-result.incorrect::after {
+    content: " pts";
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-normal);
   }
 
   .card-title-section {
