@@ -1171,6 +1171,7 @@
   .contestant-card-info {
     flex: 1;
     gap: var(--spacing-1);
+    text-align: center;
   }
 
   .contestant-card-name {
@@ -1178,6 +1179,7 @@
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     margin-bottom: var(--spacing-1);
+    text-align: center;
   }
 
   .contestant-tribe-name {
