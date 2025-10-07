@@ -108,6 +108,19 @@
   z-index: 1;
 }
 
+.tagline-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-6);
+}
+
+.tagline-logo {
+  height: 140px;
+  width: auto;
+  flex-shrink: 0;
+}
+
 .tagline-text {
   font-family: var(--font-family-heading-primary);
   font-size: var(--font-size-4xl);
@@ -1262,6 +1275,15 @@
 
   .dashboard-container {
     padding: var(--spacing-4);
+  }
+
+  .tagline-content {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .tagline-logo {
+    height: 105px;
   }
 
   .btn-sm {

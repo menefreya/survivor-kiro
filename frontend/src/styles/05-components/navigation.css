@@ -11,6 +11,32 @@
 .navigation {
   position: relative;
   z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+/* ===========================
+   Navigation Logo
+   =========================== */
+.navigation__logo {
+  flex-shrink: 0;
+}
+
+.navigation__logo-link {
+  display: block;
+  text-decoration: none;
+}
+
+.navigation__logo-image {
+  height: 70px;
+  width: auto;
+  display: block;
+  transition: var(--transition-opacity);
+}
+
+.navigation__logo-image:hover {
+  opacity: 0.8;
 }
 
 /* Removed backdrop-filter fallback - no background needed */
@@ -23,6 +49,7 @@
   margin: 0;
   padding: 0;
   align-items: center;
+  flex: 1;
 }
 
 .navigation__item:last-child {
@@ -208,9 +235,16 @@
     position: sticky;
     top: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     z-index: var(--z-sticky);
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--color-bg-primary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .navigation__logo-image {
+    height: 56px;
   }
 
   /* Show hamburger menu on mobile */

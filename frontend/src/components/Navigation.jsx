@@ -53,6 +53,17 @@ const Navigation = () => {
 
   return (
     <nav className="navigation" aria-label="Main navigation">
+      {/* App Logo */}
+      <div className="navigation__logo">
+        <Link to="/home" className="navigation__logo-link" onClick={closeMobileMenu}>
+          <img 
+            src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/survivor-49.png"
+            alt="Survivor 49 Fantasy League"
+            className="navigation__logo-image"
+          />
+        </Link>
+      </div>
+
       {/* Hamburger Menu Button - Mobile Only */}
       <button 
         className="mobile-menu-toggle"

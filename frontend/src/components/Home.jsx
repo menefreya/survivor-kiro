@@ -143,11 +143,18 @@ const Home = () => {
 
         {/* Survivor Tagline */}
         <div className="survivor-tagline">
-          <h1 className="tagline-text">
-            <span className="tagline-white">OUTWIT. OUTPLAY.</span>
-            <br />
-            <span className="tagline-orange">OUTLAST.</span>
-          </h1>
+          <div className="tagline-content">
+            <img 
+              src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/survivor-49.png"
+              alt="Survivor 49"
+              className="tagline-logo"
+            />
+            <h1 className="tagline-text">
+              <span className="tagline-white">OUTWIT. OUTPLAY.</span>
+              <br />
+              <span className="tagline-orange">OUTLAST.</span>
+            </h1>
+          </div>
         </div>
 
 
