@@ -4,6 +4,7 @@ const ContestantRow = ({
   contestant, 
   showCrown = false, 
   isSoleSurvivor = false,
+  customStats = null, // Custom content to replace the default stats area
   // Legacy props for backward compatibility
   rank, 
   name, 
@@ -85,17 +86,23 @@ const ContestantRow = ({
       </div>
 
       <div className="contestant-stats">
-        <span className="contestant-points" aria-label={`${contestantData.total_score || 0} points`}>
-          {contestantData.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
-        </span>
-        {contestantData.is_eliminated && (
-          <span
-            className="contestant-status status-eliminated"
-            role="status"
-            aria-label="Status: eliminated"
-          >
-            Eliminated
-          </span>
+        {customStats ? (
+          customStats
+        ) : (
+          <>
+            <span className="contestant-points" aria-label={`${contestantData.total_score || 0} points`}>
+              {contestantData.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
+            </span>
+            {contestantData.is_eliminated && (
+              <span
+                className="contestant-status status-eliminated"
+                role="status"
+                aria-label="Status: eliminated"
+              >
+                Eliminated
+              </span>
+            )}
+          </>
         )}
       </div>
     </div>

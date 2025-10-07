@@ -157,31 +157,37 @@ const Home = () => {
         {/* Prediction Reminder Banner */}
         <PredictionReminder />
 
-        {/* Current Episode Predictions */}
-        <CurrentPredictionsCard />
-        
-        {/* Dashboard Layout */}
-        <div className="dashboard-columns">
+        {/* Dashboard Layout - 3 Columns */}
+        <div className="dashboard-columns dashboard-columns--three">
           {/* Left Column: Leaderboard */}
-          <LeaderboardCard 
-            players={leaderboard}
-            userPosition={userPosition}
-            pointsBehindLeader={pointsBehindLeader}
-            currentUserId={user?.id}
-            error={leaderboardError}
-            onRetry={handleRefresh}
-          />
+          <div className="dashboard-column">
+            <LeaderboardCard 
+              players={leaderboard}
+              userPosition={userPosition}
+              pointsBehindLeader={pointsBehindLeader}
+              currentUserId={user?.id}
+              error={leaderboardError}
+              onRetry={handleRefresh}
+            />
+          </div>
 
-          {/* Right Column: My Team */}
-          <MyTeamCard
-            soleSurvivor={myTeam?.sole_survivor || null}
-            draftPicks={myTeam?.drafted_contestants || []}
-            totalScore={myTeam?.total_score || 0}
-            weeklyChange={weeklyChange}
-            error={teamError}
-            onRetry={handleRefresh}
-            playerId={user?.id}
-          />
+          {/* Center Column: My Team */}
+          <div className="dashboard-column">
+            <MyTeamCard
+              soleSurvivor={myTeam?.sole_survivor || null}
+              draftPicks={myTeam?.drafted_contestants || []}
+              totalScore={myTeam?.total_score || 0}
+              weeklyChange={weeklyChange}
+              error={teamError}
+              onRetry={handleRefresh}
+              playerId={user?.id}
+            />
+          </div>
+
+          {/* Right Column: Episode Predictions */}
+          <div className="dashboard-column">
+            <CurrentPredictionsCard />
+          </div>
         </div>
       </div>
     </div>

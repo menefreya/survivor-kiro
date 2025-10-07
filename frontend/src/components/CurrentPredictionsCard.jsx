@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import ContestantRow from './ContestantRow';
 // Prediction styles are included in dashboard.css
 
 const CurrentPredictionsCard = () => {
@@ -51,72 +52,71 @@ const CurrentPredictionsCard = () => {
     return null;
   }
 
-  const getScoringBadge = (prediction) => {
-    if (prediction.is_correct === null) {
-      return <span className="status-badge status-pending">Pending</span>;
-    }
-    return prediction.is_correct 
-      ? <span className="status-badge status-correct">✓ Correct (+3)</span>
-      : <span className="status-badge status-incorrect">✗ Incorrect</span>;
-  };
 
-  const getTribeClass = (tribeName) => {
-    const tribe = tribeName.toLowerCase();
-    if (tribe === 'kele') return 'tribe-kele';
-    if (tribe === 'hina') return 'tribe-hina';
-    if (tribe === 'uli') return 'tribe-uli';
-    return '';
-  };
 
   return (
-    <div className="current-predictions-card card">
+    <div className="dashboard-card current-predictions-card" role="region" aria-label="Current Episode Predictions">
       <div className="card-header">
-        <div className="card-title-section">
-          <h2>Episode {episodeNumber} Predictions</h2>
-        </div>
+        <h2 id="predictions-title">Episode {episodeNumber} Predictions</h2>
       </div>
 
-      <div className="submitted-predictions-grid">
-        {predictions.map((prediction, index) => (
-          <div key={index} className="submitted-contestant-card">
-            <div className="contestant-card-image-container">
-              {prediction.contestant?.image_url ? (
-                <img
-                  src={prediction.contestant.image_url}
-                  alt={prediction.contestant.name}
-                  className="contestant-card-image"
-                />
-              ) : (
-                <div className="contestant-card-placeholder">
-                  {prediction.contestant?.name?.charAt(0) || '?'}
+      <div className="card-body">
+        <div className="team-contestants-list" role="list" aria-labelledby="predictions-title">
+          {predictions.map((prediction, index) => {
+            const getTribeClass = (tribeName) => {
+              const tribe = tribeName.toLowerCase();
+              if (tribe === 'kele') return 'tribe-kele';
+              if (tribe === 'hina') return 'tribe-hina';
+              if (tribe === 'uli') return 'tribe-uli';
+              return '';
+            };
+
+            // Create contestant object with prediction-specific data
+            const contestantWithPrediction = {
+              ...prediction.contestant,
+              // Show just the occupation without "Contestant" fallback
+              profession: prediction.contestant?.occupation || prediction.contestant?.profession,
+              // Show actual contestant total score, not prediction scoring
+              total_score: prediction.contestant?.total_score || 0,
+              // Don't show elimination status for predictions
+              is_eliminated: false
+            };
+
+            // Create custom stats content with tribe pill
+            const customStats = (
+              <div className="prediction-stats">
+                <div className={`tribe-pill ${getTribeClass(prediction.tribe)}`}>
+                  {prediction.tribe}
                 </div>
-              )}
-            </div>
-            
-            <div className="contestant-card-info">
-              <h4 className="contestant-card-name">{prediction.contestant?.name || 'Unknown'}</h4>
-              <div className={`contestant-tribe-name ${getTribeClass(prediction.tribe)}`}>{prediction.tribe} Tribe</div>
-              <div className="contestant-card-details">
-                {prediction.contestant?.occupation && <span className="detail-item">{prediction.contestant.occupation}</span>}
+                {prediction.is_correct !== null && (
+                  <div className={`prediction-result-badge ${prediction.is_correct ? 'correct' : 'incorrect'}`}>
+                    {prediction.is_correct ? '✓ Correct (+3)' : '✗ Incorrect'}
+                  </div>
+                )}
               </div>
-            </div>
-            
-            {prediction.is_correct !== null && (
-              <div className={`prediction-result ${prediction.is_correct ? 'correct' : 'incorrect'}`}>
-                {prediction.is_correct ? '✓ Correct (+3)' : '✗ Incorrect'}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+            );
 
-      {!isLocked && (
-        <div className="prediction-info-footer">
-          <p className="info-text">
-            💡 Predictions will be scored after the episode airs
-          </p>
+            return (
+              <div key={index} className="prediction-contestant-wrapper">
+                <ContestantRow
+                  contestant={contestantWithPrediction}
+                  showCrown={false}
+                  isSoleSurvivor={false}
+                  customStats={customStats}
+                />
+              </div>
+            );
+          })}
         </div>
-      )}
+
+        {!isLocked && (
+          <div className="prediction-info-footer">
+            <p className="info-text">
+              💡 Predictions will be scored after the episode airs
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

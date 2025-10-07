@@ -123,6 +123,20 @@
   max-width: 100%;
 }
 
+/* 3-Column Layout */
+.dashboard-columns--three {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-6);
+  max-width: 1600px;
+}
+
+.dashboard-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .dashboard-vertical {
   display: flex;
   flex-direction: column;
@@ -1080,6 +1094,12 @@
     align-items: start;
   }
   
+  .dashboard-columns--three {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+  
   .dashboard-columns > section {
     padding: var(--spacing-6);
   }
@@ -1157,11 +1177,23 @@
     align-items: start;
   }
   
+  .dashboard-columns--three {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--spacing-6);
+    align-items: start;
+  }
+  
   /* Three-column layout for ultra-wide screens */
   @media (min-width: 1400px) {
     .dashboard-columns {
       grid-template-columns: 1fr 1fr 1fr;
       gap: var(--spacing-6);
+    }
+    
+    .dashboard-columns--three {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--spacing-8);
     }
   }
   
@@ -1210,7 +1242,9 @@
     width: 100%;
   }
   
-  .dashboard-columns {
+  .dashboard-columns,
+  .dashboard-columns--three {
+    display: flex;
     flex-direction: column;
     gap: var(--spacing-6);
   }
@@ -2757,4 +2791,81 @@
     padding: var(--spacing-4);
     font-size: var(--font-size-base);
   }
+}
+
+/* Prediction Result Styles */
+.prediction-contestant-wrapper {
+  position: relative;
+}
+
+/* Prediction Stats Container */
+.prediction-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+}
+
+/* Tribe Pill in Stats Area */
+.tribe-pill {
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.tribe-pill.tribe-kele {
+  color: var(--tribe-kele-dark);
+  background-color: var(--tribe-kele-light);
+  border: 1px solid var(--tribe-kele);
+}
+
+.tribe-pill.tribe-hina {
+  color: var(--tribe-hina-dark);
+  background-color: var(--tribe-hina-light);
+  border: 1px solid var(--tribe-hina);
+}
+
+.tribe-pill.tribe-uli {
+  color: var(--tribe-uli-dark);
+  background-color: var(--tribe-uli-light);
+  border: 1px solid var(--tribe-uli);
+}
+
+/* Prediction Result Badge in Stats Area */
+.prediction-result-badge {
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.prediction-result-badge.correct {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+  border: 1px solid var(--color-success);
+}
+
+.prediction-result-badge.incorrect {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+  border: 1px solid var(--color-danger);
+}
+
+/* Adjust contestant row for predictions - match team card spacing */
+.prediction-contestant-wrapper {
+  margin-bottom: var(--spacing-3);
+}
+
+.prediction-contestant-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+/* Remove margin from contestant rows inside prediction wrappers */
+.current-predictions-card .contestant-row {
+  margin-bottom: 0;
 }
