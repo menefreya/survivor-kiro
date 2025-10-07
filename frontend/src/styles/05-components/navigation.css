@@ -29,9 +29,8 @@
 }
 
 .navigation__logo-image {
-  height: 40px;
+  height: 70px;
   width: auto;
-  max-width: 200px;
   display: block;
   transition: var(--transition-opacity);
 }
@@ -244,8 +243,7 @@
   }
 
   .navigation__logo-image {
-    height: 32px;
-    max-width: 150px;
+    height: 56px;
   }
 
   /* Show hamburger menu on mobile */

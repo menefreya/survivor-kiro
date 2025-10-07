@@ -1116,7 +1116,7 @@
 
 /* Gradient background utilities */
 .u-bg-gradient-primary {
-  background: var(--color-bg-primary);
+  background: var(--gradient-primary);
 }
 
 .u-bg-gradient-secondary {
