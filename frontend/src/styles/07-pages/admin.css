@@ -201,10 +201,11 @@
 
 .contestants-table th,
 .contestants-table td {
-  padding: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
   text-align: left;
   border-bottom: 1px solid var(--color-border-subtle);
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .contestants-table th {
@@ -216,11 +217,34 @@
   top: 0;
   z-index: 1;
   border-bottom: 2px solid var(--color-border-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .contestants-table td {
   color: var(--color-text-primary);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
+}
+
+/* Compact table cells for specific columns */
+.contestants-table .col-actions {
+  width: 120px;
+  padding-right: var(--spacing-2);
+}
+
+.contestants-table .col-status {
+  width: 80px;
+  text-align: center;
+}
+
+.contestants-table .col-score {
+  width: 80px;
+  text-align: right;
+  font-weight: var(--font-weight-semibold);
+}
+
+.contestants-table .col-tribe {
+  width: 100px;
 }
 
 .contestants-table tr:hover {
@@ -233,17 +257,187 @@
   color: var(--color-text-tertiary);
 }
 
-/* Action Buttons in Table */
+/* Action Buttons in Table - Compact Design */
 .action-buttons {
   display: flex;
-  gap: var(--spacing-2);
-  flex-wrap: wrap;
+  gap: var(--spacing-1);
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .btn-sm {
   padding: var(--spacing-2) var(--spacing-3);
   font-size: var(--font-size-sm);
   white-space: nowrap;
+  min-height: 32px;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Compact icon buttons for common actions */
+.btn-icon-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  font-size: var(--font-size-sm);
+}
+
+.btn-icon-sm:hover {
+  background: var(--color-bg-quaternary);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.btn-icon-sm:focus {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Action button variants */
+.btn-action-view {
+  background: var(--color-info-light);
+  color: var(--color-info);
+  border: 1px solid var(--color-info);
+}
+
+.btn-action-view:hover {
+  background: var(--color-info);
+  color: white;
+}
+
+.btn-action-edit {
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+}
+
+.btn-action-edit:hover {
+  background: var(--color-warning);
+  color: var(--color-text-primary);
+}
+
+.btn-action-delete {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.btn-action-delete:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+/* Compact button group */
+.btn-group-compact {
+  display: flex;
+  gap: 1px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-group-compact .btn-sm {
+  border-radius: 0;
+  border-right: 1px solid var(--color-border-subtle);
+}
+
+.btn-group-compact .btn-sm:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.btn-group-compact .btn-sm:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-right: none;
+}
+
+/* Utility classes for better layouts */
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.admin-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.admin-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* Compact form controls */
+.form-control-compact {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  height: 36px;
+  border-radius: var(--radius-sm);
+}
+
+/* Space-saving table layout */
+.table-compact {
+  font-size: var(--font-size-sm);
+}
+
+.table-compact th,
+.table-compact td {
+  padding: var(--spacing-2);
+}
+
+.table-compact .col-narrow {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table-compact .col-actions {
+  width: 100px;
+}
+
+/* Inline editing improvements */
+.inline-edit-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.inline-edit-input {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-width: 80px;
+}
+
+.inline-edit-actions {
+  display: flex;
+  gap: 1px;
+}
+
+.inline-edit-actions .btn-icon-sm {
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-xs);
 }
 
 /* Draft Status */
@@ -308,23 +502,39 @@
   opacity: 0.9;
 }
 
-/* Status Badges */
+/* Status Badges - Compact Design */
 .status-badge {
-  display: inline-block;
-  padding: var(--spacing-1) var(--spacing-3);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 .status-submitted {
-  background-color: var(--color-success);
-  color: white;
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
 }
 
 .status-pending {
-  background-color: var(--color-warning);
-  color: var(--color-text-primary);
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+}
+
+/* Status icons */
+.status-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background-color: currentColor;
 }
 
 /* Score Entry */
@@ -519,14 +729,14 @@
   }
 }
 
-/* Tribe Management */
+/* Tribe Management - Compact Layout */
 .tribe-management-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
   align-items: center;
-  margin-bottom: var(--spacing-6);
-  padding: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
   background-color: var(--color-bg-tertiary);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
@@ -536,7 +746,7 @@
 .bulk-tribe-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-3);
+  gap: var(--spacing-2);
   align-items: center;
   flex: 1;
 }
@@ -675,10 +885,10 @@
 .prediction-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-4);
-  align-items: flex-end;
-  margin-bottom: var(--spacing-6);
-  padding: var(--spacing-4);
+  gap: var(--spacing-3);
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
   background-color: var(--color-bg-tertiary);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
@@ -686,14 +896,15 @@
 }
 
 .episode-selector {
-  min-width: 200px;
-  padding: var(--spacing-3) var(--spacing-4);
+  min-width: 180px;
+  padding: var(--spacing-2) var(--spacing-3);
   border: 2px solid var(--color-border-medium);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   background-color: var(--color-bg-secondary);
   transition: all var(--transition-fast);
+  height: 36px;
 }
 
 .episode-selector:hover:not(:disabled) {
@@ -864,13 +1075,30 @@
   }
 
   .action-buttons {
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--spacing-1);
+    justify-content: center;
   }
 
   .btn-sm {
     font-size: var(--font-size-xs);
     padding: var(--spacing-1) var(--spacing-2);
+    min-width: 60px;
+  }
+
+  .btn-icon-sm {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-xs);
+  }
+
+  /* Use icon-only buttons on mobile to save space */
+  .btn-sm .btn-text {
+    display: none;
+  }
+
+  .btn-sm .btn-icon {
+    display: inline;
   }
 
   .tribe-edit-inline {

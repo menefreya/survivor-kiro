@@ -28,7 +28,7 @@
 .navigation__list {
   list-style: none;
   display: flex;
-  gap: var(--spacing-8);
+  gap: 0; /* No gap between nav items */
   margin: 0;
   padding: 0;
   align-items: center;
@@ -42,10 +42,16 @@
    Navigation Links
    =========================== */
 .navigation__link {
+  /* Use H3 styling from base.css */
+  font-family: var(--font-family-heading-tertiary);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--font-size-xl);
+  
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3); /* Reduced padding for closer spacing */
   border-radius: var(--radius-sm);
   transition: var(--transition-colors), box-shadow var(--transition-base);
   min-height: 44px;
@@ -117,15 +123,19 @@
    Logout Button
    =========================== */
 .navigation__logout-button {
+  /* Use H3 styling from base.css */
+  font-family: var(--font-family-heading-tertiary);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--font-size-xl);
+  
   color: var(--color-text-secondary);
   background: none;
   border: none;
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3); /* Reduced padding for closer spacing */
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: var(--font-size-base);
-  font-family: inherit;
   transition: var(--transition-colors), box-shadow var(--transition-base);
   min-height: 44px;
 }
@@ -202,7 +212,7 @@
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-lg);
   }
 }
 
@@ -286,7 +296,7 @@
   .navigation__logout-button {
     width: 100%;
     padding: var(--spacing-4);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     border-radius: 0;
     justify-content: flex-start;
     min-height: 48px; /* Larger touch target on mobile */
@@ -359,7 +369,7 @@
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-lg);
   }
 }
 /* ===

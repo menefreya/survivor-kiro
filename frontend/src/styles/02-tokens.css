@@ -9,8 +9,18 @@
   /* ============================================
      TYPOGRAPHY SCALE (1.25 ratio)
      ============================================ */
+  
+  /* Font Families */
+  --font-family-heading-primary: 'Permanent Marker', cursive;  /* H1 & H2 */
+  --font-family-heading-secondary: 'Permanent Marker', cursive; /* H2 */
+  --font-family-heading-tertiary: 'Bebas Neue', cursive;      /* H3-H6 */
+  --font-family-body: 'Lato', sans-serif;                     /* Body text */
+  --font-family-mono: 'SF Mono', Monaco, 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+  
+  /* Font Sizes */
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-13: 0.8125rem;  /* 13px - for contestant names */
   --font-size-base: 1rem;     /* 16px */
   --font-size-lg: 1.125rem;   /* 18px */
   --font-size-xl: 1.25rem;    /* 20px */
@@ -32,6 +42,9 @@
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
+  
+  /* Heading Colors */
+  --color-heading-primary: #FF6B35;       /* Flat orange for all headings */
   
   /* Text Shadows for Dramatic Effects */
   --text-shadow-glow: 0 0 10px rgba(255, 107, 53, 0.3);

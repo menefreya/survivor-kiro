@@ -143,16 +143,16 @@ const Home = () => {
         {/* Prediction Results Notification (Fixed Position) */}
         <PredictionResultsNotification />
 
-        {/* Dashboard Header */}
-        <header className="dashboard-header">
-          <h1 className="dashboard-title">Season 49 Dashboard</h1>
-          <p className="body-text welcome-message" role="status" aria-live="polite">
-            {hasCompletedRankings 
-              ? `Welcome back, ${user?.username || user?.email}! Track your team's performance below.`
-              : "Welcome to Survivor Season 49! Complete your draft and sole survivor pick to get started."
-            }
-          </p>
-        </header>
+        {/* Survivor Tagline */}
+        <div className="survivor-tagline">
+          <h1 className="tagline-text">
+            <span className="tagline-white">OUTWIT. OUTPLAY.</span>
+            <br />
+            <span className="tagline-orange">OUTLAST.</span>
+          </h1>
+        </div>
+
+
 
         {/* Prediction Reminder Banner */}
         <PredictionReminder />

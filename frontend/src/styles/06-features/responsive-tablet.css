@@ -55,7 +55,7 @@
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-3) var(--spacing-4);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
   }

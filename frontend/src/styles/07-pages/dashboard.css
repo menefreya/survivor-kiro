@@ -17,10 +17,9 @@
    =========================== */
 .dashboard-title {
   font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin: 0 0 var(--spacing-4) 0;
-  text-shadow: var(--text-shadow-subtle);
+  text-align: center;
+  margin: var(--spacing-8) 0;
+  /* H1 styles will be applied from base.css */
 }
 
 .dashboard-subtitle {
@@ -63,6 +62,57 @@
 }
 
 /* ===========================
+   Survivor Tagline
+   =========================== */
+.survivor-tagline {
+  text-align: center;
+  margin: var(--spacing-8) 0 var(--spacing-12) 0;
+  transform: rotate(-2deg); /* Slight angle like in the photo */
+  position: relative;
+  z-index: 1;
+}
+
+.tagline-text {
+  font-family: var(--font-family-heading-primary);
+  font-size: var(--font-size-4xl);
+  margin: 0;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.tagline-white {
+  color: var(--color-text-primary); /* White text */
+}
+
+.tagline-orange {
+  color: var(--color-heading-primary); /* Orange text */
+}
+
+/* Make it larger on desktop */
+@media (min-width: 1025px) {
+  .tagline-text {
+    font-size: var(--font-size-5xl);
+    letter-spacing: 2px;
+  }
+}
+
+/* Adjust for mobile */
+@media (max-width: 640px) {
+  .survivor-tagline {
+    margin: var(--spacing-6) 0 var(--spacing-8) 0;
+    transform: rotate(-1deg); /* Less angle on mobile */
+  }
+  
+  .tagline-text {
+    font-size: var(--font-size-2xl);
+    letter-spacing: 0.5px;
+  }
+}
+
+/* ===========================
    Dashboard Layout
    =========================== */
 .dashboard-container {
@@ -86,10 +136,6 @@
   margin-bottom: var(--spacing-8);
   text-align: center;
   padding: var(--spacing-6) 0;
-  border-radius: var(--radius-lg);
-  background: var(--gradient-bg-card);
-  border: 1px solid var(--color-border-subtle);
-  box-shadow: var(--shadow-card);
   /* Smooth transition from hero section */
   margin-top: var(--spacing-8);
 }
@@ -448,9 +494,8 @@
 }
 
 .player-name {
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin: 0;
+  /* H4 styling will be applied from base.css */
+  margin: 0; /* Override default H4 margin */
 }
 
 .player-username {
@@ -685,10 +730,8 @@
 }
 
 .team-member-name {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-1);
+  /* H5 styling will be applied from base.css */
+  margin: 0 0 var(--spacing-1) 0; /* Override default H5 margin */
 }
 
 .team-member-profession {

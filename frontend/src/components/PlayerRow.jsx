@@ -100,7 +100,7 @@ const PlayerRow = ({
 
         {/* Player Info */}
         <div className="player-info">
-          <div className="player-name">{playerName}</div>
+          <h4 className="player-name">{playerName}</h4>
         </div>
 
         {/* Score */}
@@ -172,7 +172,7 @@ const PlayerRow = ({
                     {getInitials(soleSurvivor.name)}
                   </div>
                   <div className="team-member-info">
-                    <div className="team-member-name">{soleSurvivor.name}</div>
+                    <h5 className="team-member-name">{soleSurvivor.name}</h5>
                     <div className="team-member-profession">{soleSurvivor.profession}</div>
                   </div>
                 </div>
@@ -214,7 +214,7 @@ const PlayerRow = ({
                       {getInitials(contestant.name)}
                     </div>
                     <div className="team-member-info">
-                      <div className="team-member-name">{contestant.name}</div>
+                      <h5 className="team-member-name">{contestant.name}</h5>
                       <div className="team-member-profession">{contestant.profession}</div>
                     </div>
                   </div>
