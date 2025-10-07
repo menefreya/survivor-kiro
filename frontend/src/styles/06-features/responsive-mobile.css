@@ -301,12 +301,18 @@
   }
   
   .btn-primary {
-    background: var(--color-primary);
-    box-shadow: none;
+    background: var(--gradient-primary);
+    box-shadow: 
+      var(--shadow-button),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
   }
   
   .btn-primary:hover:not(:disabled) {
-    background: var(--color-primary-hover);
+    box-shadow: 
+      var(--shadow-button-hover),
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      var(--glow-primary-intense);
+    transform: translateY(-2px);
   }
   
   .btn-secondary {

@@ -68,16 +68,21 @@
 .form-input.error,
 .form-select.error,
 .form-textarea.error {
-  border-color: var(--color-border-medium);
-  background-color: var(--color-bg-tertiary);
-  box-shadow: none;
+  border-color: var(--color-danger);
+  background-color: var(--color-danger-light);
+  box-shadow: 
+    0 0 8px rgba(255, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .form-input.error:focus,
 .form-select.error:focus,
 .form-textarea.error:focus {
-  border-color: var(--color-border-medium);
-  box-shadow: none;
+  border-color: var(--color-danger);
+  box-shadow: 
+    0 0 0 3px var(--color-accent-glow),
+    var(--glow-accent),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Success State (Dark Theme - Simple Gray) */
@@ -460,17 +465,21 @@
 .form-input:invalid:not(:focus):not(:placeholder-shown),
 .form-select:invalid:not(:focus),
 .form-textarea:invalid:not(:focus):not(:placeholder-shown) {
-  border-color: var(--color-border-medium);
-  background-color: var(--color-bg-tertiary);
-  box-shadow: none;
+  border-color: var(--color-danger);
+  background-color: var(--color-danger-light);
+  box-shadow: 
+    0 0 8px rgba(255, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .form-input:valid:not(:focus):not(:placeholder-shown),
 .form-select:valid:not(:focus),
 .form-textarea:valid:not(:focus):not(:placeholder-shown) {
-  border-color: var(--color-border-medium);
-  background-color: var(--color-bg-tertiary);
-  box-shadow: none;
+  border-color: var(--color-success);
+  background-color: var(--color-success-light);
+  box-shadow: 
+    0 0 8px rgba(0, 208, 132, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Form Field Required Indicator Enhancement */
