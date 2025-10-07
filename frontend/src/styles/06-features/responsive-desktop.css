@@ -38,13 +38,7 @@
    ============================================ */
 
 @media (min-width: 1025px) {
-  .navigation {
-    padding: var(--spacing-4) var(--spacing-8);
-    background: var(--color-bg-overlay);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--color-border-medium);
-    box-shadow: var(--shadow-navigation);
-  }
+  /* Navigation container styles removed - no background or borders */
   
   .navigation__list {
     gap: var(--spacing-8);
@@ -750,14 +744,5 @@
     will-change: transform, box-shadow;
   }
   
-  /* Enhanced backdrop blur for desktop */
-  .navigation {
-    backdrop-filter: blur(16px);
-  }
-  
-  @supports not (backdrop-filter: blur(16px)) {
-    .navigation {
-      background: rgba(10, 10, 11, 0.95);
-    }
-  }
+  /* Removed backdrop blur for desktop - no background needed */
 }

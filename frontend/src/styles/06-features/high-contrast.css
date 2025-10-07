@@ -215,12 +215,7 @@
     box-shadow: none;
   }
   
-  /* Navigation */
-  .navigation {
-    background-color: var(--hc-bg-secondary);
-    border-bottom: var(--hc-border-width) solid var(--hc-border-primary);
-    backdrop-filter: none;
-  }
+  /* Navigation - no container styling */
   
   .navigation__link {
     color: var(--hc-text-primary);
@@ -229,11 +224,8 @@
   
   .navigation__link:hover,
   .navigation__link--active {
-    background-color: var(--color-primary);
     color: var(--hc-bg-primary);
     border-color: var(--color-primary);
-    box-shadow: none;
-    text-shadow: none;
   }
   
   .navigation__link:focus-visible {

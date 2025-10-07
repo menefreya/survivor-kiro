@@ -41,12 +41,7 @@
    ============================================ */
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .navigation {
-    padding: var(--spacing-4) var(--spacing-6);
-    background: var(--color-bg-overlay);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border-medium);
-  }
+  /* Tablet navigation - no container styling */
   
   .navigation__list {
     gap: var(--spacing-6);
@@ -62,19 +57,12 @@
   
   .navigation__link:hover,
   .navigation__logout-button:hover {
-    background: rgba(255, 107, 53, 0.15);
-    box-shadow: var(--glow-primary);
     text-shadow: var(--text-shadow-glow);
-    transform: translateY(-1px);
   }
   
   .navigation__link--active {
-    background: rgba(255, 107, 53, 0.2);
     color: var(--color-primary);
     font-weight: var(--font-weight-semibold);
-    box-shadow: 
-      0 0 0 1px var(--color-primary),
-      var(--glow-primary);
   }
 }
 
@@ -502,10 +490,7 @@
     gap: var(--spacing-4);
   }
   
-  /* Compact navigation for landscape */
-  .navigation {
-    padding: var(--spacing-3) var(--spacing-6);
-  }
+  /* Compact navigation for landscape - no container styling */
   
   .navigation__link,
   .navigation__logout-button {
@@ -579,14 +564,5 @@
     box-shadow: var(--shadow-card-hover);
   }
   
-  /* Optimize backdrop blur for tablet */
-  .navigation {
-    backdrop-filter: blur(12px);
-  }
-  
-  @supports not (backdrop-filter: blur(12px)) {
-    .navigation {
-      background: rgba(10, 10, 11, 0.95);
-    }
-  }
+  /* Removed backdrop blur for tablet - no container styling */
 }

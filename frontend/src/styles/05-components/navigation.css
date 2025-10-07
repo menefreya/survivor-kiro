@@ -9,26 +9,17 @@
    Navigation Block
    =========================== */
 .navigation {
-  background: var(--color-bg-overlay);
-  backdrop-filter: var(--backdrop-blur);
-  padding: var(--spacing-4) var(--spacing-8);
-  box-shadow: var(--shadow-navigation);
-  border-bottom: 1px solid var(--color-border-subtle);
   position: relative;
   z-index: var(--z-sticky);
 }
 
-/* Fallback for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(10px)) {
-  .navigation {
-    background: rgba(10, 10, 11, 0.98);
-  }
-}
+/* Removed backdrop-filter fallback - no background needed */
 
 .navigation__list {
   list-style: none;
   display: flex;
-  gap: 0; /* No gap between nav items */
+  gap: 0;
+  /* No gap between nav items */
   margin: 0;
   padding: 0;
   align-items: center;
@@ -48,12 +39,12 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: var(--font-size-xl);
-  
+
   color: var(--color-text-secondary);
   text-decoration: none;
-  padding: var(--spacing-2) var(--spacing-3); /* Reduced padding for closer spacing */
-  border-radius: var(--radius-sm);
-  transition: var(--transition-colors), box-shadow var(--transition-base);
+  padding: var(--spacing-2) var(--spacing-3);
+  /* Reduced padding for closer spacing */
+  transition: var(--transition-colors);
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -62,14 +53,11 @@
 
 .navigation__link:hover {
   color: var(--color-primary);
-  background-color: rgba(255, 107, 53, 0.1);
-  box-shadow: var(--glow-primary);
   text-shadow: var(--text-shadow-glow);
 }
 
 .navigation__link--active {
   color: var(--color-primary);
-  background-color: rgba(255, 107, 53, 0.15);
   text-shadow: var(--text-shadow-glow);
 }
 
@@ -107,11 +95,14 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
     box-shadow: var(--glow-accent);
   }
+
   50% {
     transform: scale(1.1);
     opacity: 0.9;
@@ -129,21 +120,19 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: var(--font-size-xl);
-  
+
   color: var(--color-text-secondary);
   background: none;
   border: none;
-  padding: var(--spacing-2) var(--spacing-3); /* Reduced padding for closer spacing */
-  border-radius: var(--radius-sm);
+  padding: var(--spacing-2) var(--spacing-3);
+  /* Reduced padding for closer spacing */
   cursor: pointer;
-  transition: var(--transition-colors), box-shadow var(--transition-base);
+  transition: var(--transition-colors);
   min-height: 44px;
 }
 
 .navigation__logout-button:hover {
   color: var(--color-primary);
-  background-color: rgba(255, 107, 53, 0.1);
-  box-shadow: var(--glow-primary);
   text-shadow: var(--text-shadow-glow);
 }
 
@@ -165,14 +154,11 @@
   color: var(--color-text-secondary);
   z-index: var(--z-modal);
   position: relative;
-  border-radius: var(--radius-sm);
-  transition: var(--transition-colors), box-shadow var(--transition-base);
+  transition: var(--transition-colors);
 }
 
 .mobile-menu-toggle:hover {
   color: var(--color-primary);
-  background-color: rgba(255, 107, 53, 0.1);
-  box-shadow: var(--glow-primary);
 }
 
 .mobile-menu-toggle:focus-visible {
@@ -201,14 +187,12 @@
    Responsive Design - Tablet
    =========================== */
 @media (max-width: 1024px) {
-  .navigation {
-    padding: var(--spacing-4) var(--spacing-6);
-  }
-  
+  /* Navigation container styles removed */
+
   .navigation__list {
     gap: var(--spacing-6);
   }
-  
+
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-2) var(--spacing-3);
@@ -221,7 +205,6 @@
    =========================== */
 @media (max-width: 640px) {
   .navigation {
-    padding: var(--spacing-4);
     position: sticky;
     top: 0;
     display: flex;
@@ -229,12 +212,12 @@
     align-items: center;
     z-index: var(--z-sticky);
   }
-  
+
   /* Show hamburger menu on mobile */
   .mobile-menu-toggle {
     display: block;
   }
-  
+
   /* Hide menu by default on mobile */
   .navigation__list {
     display: none;
@@ -255,38 +238,39 @@
     max-height: 80vh;
     overflow-y: auto;
   }
-  
+
   /* Fallback for mobile menu without backdrop-filter */
   @supports not (backdrop-filter: blur(10px)) {
     .navigation__list {
       background: rgba(10, 10, 11, 0.98);
     }
   }
-  
+
   /* Show menu when open with smooth animation */
   .navigation__list--mobile-open {
     display: flex;
     animation: slideDown var(--transition-base) ease-out;
     z-index: var(--z-modal);
   }
-  
+
   @keyframes slideDown {
     from {
       opacity: 0;
       transform: translateY(-10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   .navigation__item {
     width: 100%;
     margin: 0;
     border-bottom: 1px solid var(--color-border-subtle);
   }
-  
+
   .navigation__item:last-child {
     margin-left: 0;
     border-bottom: none;
@@ -297,22 +281,20 @@
     width: 100%;
     padding: var(--spacing-4);
     font-size: var(--font-size-lg);
-    border-radius: 0;
     justify-content: flex-start;
-    min-height: 48px; /* Larger touch target on mobile */
-    transition: var(--transition-colors), background-color var(--transition-base);
+    min-height: 48px;
+    /* Larger touch target on mobile */
+    transition: var(--transition-colors);
   }
-  
-  /* Enhanced mobile hover/active states */
+
+  /* Enhanced mobile hover/active states - no backgrounds */
   .navigation__link:hover,
   .navigation__logout-button:hover {
-    background-color: rgba(255, 107, 53, 0.15);
-    box-shadow: inset 4px 0 0 var(--color-primary);
+    color: var(--color-primary);
   }
-  
+
   .navigation__link--active {
-    background-color: rgba(255, 107, 53, 0.2);
-    box-shadow: inset 4px 0 0 var(--color-primary);
+    color: var(--color-primary);
   }
 
   .navigation__link--has-badge {
@@ -325,13 +307,13 @@
     font-size: var(--font-size-xs);
     right: var(--spacing-4);
   }
-  
+
   /* Improve mobile menu visibility */
   .navigation__link,
   .navigation__logout-button {
     color: var(--color-text-primary);
   }
-  
+
   .navigation__link:hover,
   .navigation__logout-button:hover,
   .navigation__link--active {
@@ -344,9 +326,10 @@
    =========================== */
 @media (max-width: 640px) and (orientation: landscape) {
   .navigation__list {
-    max-height: 60vh; /* Reduce height in landscape */
+    max-height: 60vh;
+    /* Reduce height in landscape */
   }
-  
+
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-3) var(--spacing-4);
@@ -358,20 +341,19 @@
    Large Mobile Screens
    =========================== */
 @media (min-width: 641px) and (max-width: 767px) {
-  .navigation {
-    padding: var(--spacing-4) var(--spacing-6);
-  }
-  
+  /* Navigation container styles removed */
+
   .navigation__list {
     gap: var(--spacing-4);
   }
-  
+
   .navigation__link,
   .navigation__logout-button {
     padding: var(--spacing-2) var(--spacing-3);
     font-size: var(--font-size-lg);
   }
 }
+
 /* ===
 ========================
    Accessibility Enhancements
@@ -379,29 +361,24 @@
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .navigation {
-    border-bottom: 2px solid var(--color-text-primary);
-  }
-  
+  /* Navigation border removed */
+
   .navigation__link,
   .navigation__logout-button,
   .mobile-menu-toggle {
     border: 1px solid transparent;
   }
-  
+
   .navigation__link:hover,
   .navigation__logout-button:hover,
   .mobile-menu-toggle:hover {
     border-color: var(--color-primary);
-    background-color: transparent;
-    box-shadow: none;
   }
-  
+
   .navigation__link--active {
     border-color: var(--color-primary);
-    background-color: transparent;
   }
-  
+
   .nav-badge {
     border: 2px solid var(--color-text-primary);
     box-shadow: none;
@@ -410,28 +387,31 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   .navigation__link,
   .navigation__logout-button,
   .mobile-menu-toggle,
   .hamburger-icon__line {
     transition: none;
   }
-  
+
   .nav-badge {
     animation: none;
   }
-  
+
   .navigation__list--mobile-open {
     animation: none;
   }
-  
+
   @keyframes slideDown {
-    from, to {
+
+    from,
+    to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   /* Remove glow effects for reduced motion */
   .navigation__link:hover,
   .navigation__logout-button:hover,
@@ -450,30 +430,25 @@
 
 /* Ensure sufficient color contrast */
 @media (forced-colors: active) {
-  .navigation {
-    background: Canvas;
-    border-bottom: 1px solid CanvasText;
-  }
-  
+  /* Navigation container styles removed */
+
   .navigation__link,
   .navigation__logout-button,
   .mobile-menu-toggle {
     color: CanvasText;
     forced-color-adjust: none;
   }
-  
+
   .navigation__link:hover,
   .navigation__logout-button:hover,
   .mobile-menu-toggle:hover {
-    background: Highlight;
     color: HighlightText;
   }
-  
+
   .navigation__link--active {
-    background: Highlight;
     color: HighlightText;
   }
-  
+
   .nav-badge {
     background: Highlight;
     color: HighlightText;

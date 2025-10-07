@@ -22,9 +22,9 @@ body {
 
 /* Typography Hierarchy */
 
-/* H1 - Permanent Marker with flat orange color */
+/* H1 - Brushed font with flat orange color */
 h1 {
-  font-family: var(--font-family-heading-primary);
+  font-family: var(--font-family-heading-primary) !important;
   font-weight: var(--font-weight-normal);
   color: var(--color-heading-primary); /* Flat orange color */
   line-height: var(--line-height-tight);

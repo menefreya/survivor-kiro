@@ -120,12 +120,12 @@
   line-height: 1.2;
 }
 
-.tagline-white {
-  color: var(--color-text-primary); /* White text */
+.tagline-text .tagline-white {
+  color: var(--color-text-primary) !important; /* White text - override h1 global style */
 }
 
-.tagline-orange {
-  color: var(--color-heading-primary); /* Orange text */
+.tagline-text .tagline-orange {
+  color: var(--color-heading-primary) !important; /* Orange text - explicit override */
 }
 
 /* Make it larger on desktop */

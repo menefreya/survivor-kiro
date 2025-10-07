@@ -1593,3 +1593,78 @@
     animation: none;
   }
 }
+/
+* ============================================
+   HONK VARIABLE FONT UTILITIES
+   ============================================ */
+
+/* Honk font family utility */
+.u-font-honk {
+  font-family: var(--font-family-honk) !important;
+}
+
+/* Honk morph variations using font-variation-settings */
+.u-honk-normal {
+  font-family: var(--font-family-honk) !important;
+  font-variation-settings: "MORF" var(--honk-morph-normal) !important;
+}
+
+.u-honk-slight {
+  font-family: var(--font-family-honk) !important;
+  font-variation-settings: "MORF" var(--honk-morph-slight) !important;
+}
+
+.u-honk-medium {
+  font-family: var(--font-family-honk) !important;
+  font-variation-settings: "MORF" var(--honk-morph-medium) !important;
+}
+
+.u-honk-heavy {
+  font-family: var(--font-family-honk) !important;
+  font-variation-settings: "MORF" var(--honk-morph-heavy) !important;
+}
+
+/* Honk with custom morph value (use with inline style) */
+.u-honk-custom {
+  font-family: var(--font-family-honk) !important;
+  /* Use with style="font-variation-settings: 'MORF' 15;" for custom values */
+}
+
+/* Honk hover effects */
+.u-honk-hover-morph:hover {
+  font-variation-settings: "MORF" var(--honk-morph-medium) !important;
+  transition: font-variation-settings var(--transition-base) !important;
+}
+
+.u-honk-hover-heavy:hover {
+  font-variation-settings: "MORF" var(--honk-morph-heavy) !important;
+  transition: font-variation-settings var(--transition-base) !important;
+}
+
+/* Honk animation - morphs from normal to heavy and back */
+.u-honk-animate {
+  font-family: var(--font-family-honk) !important;
+  animation: honk-morph 3s ease-in-out infinite !important;
+}
+
+@keyframes honk-morph {
+  0%, 100% {
+    font-variation-settings: "MORF" var(--honk-morph-normal);
+  }
+  50% {
+    font-variation-settings: "MORF" var(--honk-morph-heavy);
+  }
+}
+
+/* Disable Honk animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .u-honk-animate {
+    animation: none !important;
+    font-variation-settings: "MORF" var(--honk-morph-normal) !important;
+  }
+  
+  .u-honk-hover-morph:hover,
+  .u-honk-hover-heavy:hover {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,24 @@
+/* Local Font Declarations */
+@font-face {
+  font-family: 'Brushed';
+  src: url('./Brushed.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Painterz';
+  src: url('./Painterz.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik Glitch';
+  src: url('./RubikGlitch-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
