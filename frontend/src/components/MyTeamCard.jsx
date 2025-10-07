@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
 import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
 import '../styles/07-pages/dashboard.css';
@@ -113,6 +113,17 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
                 </button>
               </div>
             )}
+
+            {/* Draft Link */}
+            <div className="team-draft-link">
+              <Link 
+                to="/ranking"
+                className="draft-link"
+                aria-label="View and update your draft rankings"
+              >
+                See Draft
+              </Link>
+            </div>
           </>
         )}
       </div>

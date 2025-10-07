@@ -79,16 +79,7 @@ const Navigation = () => {
             Home
           </Link>
         </li>
-        <li className="navigation__item">
-          <Link 
-            to="/ranking" 
-            className={`navigation__link ${isActive('/ranking') ? 'navigation__link--active' : ''}`}
-            aria-current={isActive('/ranking') ? 'page' : undefined}
-            onClick={closeMobileMenu}
-          >
-            Ranking
-          </Link>
-        </li>
+
         <li className="navigation__item">
           <Link 
             to="/predictions" 

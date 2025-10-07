@@ -1,15 +1,19 @@
 /* ===========================
-   Dashboard-Specific Variables
+   Dashboard Variables & Base Layout
    =========================== */
 .dashboard-container {
-  /* Badge Sizes */
   --badge-size: 40px;
   --initials-badge-size: 48px;
-  
-  /* Dashboard-scoped medal colors */
   --dashboard-gold: var(--color-gold);
   --dashboard-silver: var(--color-silver);
   --dashboard-bronze: var(--color-bronze);
+
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-8);
+  background-color: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 /* ===========================
@@ -19,7 +23,6 @@
   font-size: var(--font-size-4xl);
   text-align: center;
   margin: var(--spacing-8) 0;
-  /* H1 styles will be applied from base.css */
 }
 
 .dashboard-subtitle {
@@ -28,18 +31,20 @@
   margin: 0 0 var(--spacing-8) 0;
 }
 
-.card-title {
-  font-size: var(--font-size-2xl);
+.card-title,
+.section-title {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin: 0;
 }
 
+.card-title {
+  font-size: var(--font-size-2xl);
+}
+
 .section-title {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin: 0 0 var(--spacing-4) 0;
+  margin-bottom: var(--spacing-4);
 }
 
 .large-number {
@@ -54,10 +59,9 @@
 }
 
 /* ===========================
-   Home Page Layout (with Hero Section)
+   Home Page Layout
    =========================== */
 .home-page {
-  background-color: var(--color-bg-primary);
   background-color: var(--color-bg-primary);
   background-size: cover;
   background-position: center center;
@@ -67,14 +71,12 @@
   position: relative;
 }
 
-/* Fallback for browsers that don't support background-attachment: fixed */
 @supports not (background-attachment: fixed) {
   .home-page {
     background-attachment: scroll;
   }
 }
 
-/* Additional overlay for better text readability */
 .home-page::before {
   content: '';
   position: fixed;
@@ -82,29 +84,26 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 11, 0.7) 0%,
-    rgba(10, 10, 11, 0.85) 50%,
-    rgba(10, 10, 11, 0.9) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(10, 10, 11, 0.7) 0%,
+      rgba(10, 10, 11, 0.85) 50%,
+      rgba(10, 10, 11, 0.9) 100%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Ensure content is above the overlay */
-.home-page > * {
+.home-page>* {
   position: relative;
   z-index: 1;
 }
 
 /* ===========================
-   Survivor Tagline
+   Survivor Tagline & Dashboard Layout
    =========================== */
 .survivor-tagline {
   text-align: center;
   margin: var(--spacing-8) 0 var(--spacing-12) 0;
-  transform: rotate(-2deg); /* Slight angle like in the photo */
+  transform: rotate(-2deg);
   position: relative;
   z-index: 1;
 }
@@ -121,45 +120,11 @@
 }
 
 .tagline-text .tagline-white {
-  color: var(--color-text-primary) !important; /* White text - override h1 global style */
+  color: var(--color-text-primary) !important;
 }
 
 .tagline-text .tagline-orange {
-  color: var(--color-heading-primary) !important; /* Orange text - explicit override */
-}
-
-/* Make it larger on desktop */
-@media (min-width: 1025px) {
-  .tagline-text {
-    font-size: var(--font-size-5xl);
-    letter-spacing: 2px;
-  }
-}
-
-/* Adjust for mobile */
-@media (max-width: 640px) {
-  .survivor-tagline {
-    margin: var(--spacing-6) 0 var(--spacing-8) 0;
-    transform: rotate(-1deg); /* Less angle on mobile */
-  }
-  
-  .tagline-text {
-    font-size: var(--font-size-2xl);
-    letter-spacing: 0.5px;
-  }
-}
-
-/* ===========================
-   Dashboard Layout
-   =========================== */
-.dashboard-container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: var(--spacing-8);
-  background-color: transparent;
-  /* Smooth transition from hero section */
-  position: relative;
-  z-index: 2;
+  color: var(--color-heading-primary) !important;
 }
 
 .btn-sm {
@@ -168,11 +133,9 @@
 }
 
 .dashboard-header {
-  margin-bottom: var(--spacing-8);
+  margin: var(--spacing-8) 0;
   text-align: center;
   padding: var(--spacing-6) 0;
-  /* Smooth transition from hero section */
-  margin-top: var(--spacing-8);
 }
 
 .dashboard-header h1 {
@@ -198,16 +161,15 @@
   margin: 0 auto;
 }
 
-.dashboard-columns > * {
+.dashboard-columns>* {
   flex: 1 1 0;
   min-width: 0;
   max-width: 100%;
 }
 
-/* 3-Column Layout */
 .dashboard-columns--three {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-6);
   max-width: 1600px;
 }
@@ -226,7 +188,7 @@
   margin: 0 auto;
 }
 
-.dashboard-vertical > * {
+.dashboard-vertical>* {
   width: 100%;
 }
 
@@ -234,11 +196,6 @@
   display: flex;
   gap: var(--spacing-8);
   align-items: flex-start;
-}
-
-.dashboard-column {
-  flex: 1;
-  min-width: 0;
 }
 
 /* ===========================
@@ -256,24 +213,17 @@
   box-sizing: border-box;
 }
 
-/* Fallback for browsers that don't support backdrop-filter */
 @supports not (backdrop-filter: blur(10px)) {
   .dashboard-card {
     background-color: rgba(26, 26, 28, 0.98);
   }
 }
 
-/* Removed dashboard card hover effects - containers should not have hover states */
-
 .dashboard-card:focus-within {
   box-shadow: var(--shadow-md);
 }
 
-.dashboard-card .card-body {
-  width: 100%;
-  box-sizing: border-box;
-}
-
+.dashboard-card .card-body,
 .dashboard-card .card-header,
 .dashboard-card .card-footer {
   width: 100%;
@@ -327,7 +277,15 @@
   align-items: center;
 }
 
-.card-link {
+.team-draft-link {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-4);
+}
+
+.card-link,
+.link-button,
+.btn-text {
   color: var(--color-primary);
   text-decoration: none;
   font-size: var(--font-size-sm);
@@ -335,37 +293,53 @@
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.card-link:hover {
+.card-link:hover,
+.link-button:hover,
+.btn-text:hover {
   opacity: 0.8;
   text-decoration: underline;
   background-color: var(--color-primary-light);
 }
 
-.card-link:focus {
+.card-link:focus,
+.link-button:focus,
+.btn-text:focus {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
 }
 
-.card-link:active {
+.card-link:active,
+.link-button:active,
+.btn-text:active {
   transform: translateY(1px);
 }
 
 /* ===========================
-   Rank Badges
+   Badges & Avatars
    =========================== */
-.rank-badge {
-  width: var(--badge-size);
-  height: var(--badge-size);
-  border-radius: var(--radius-full);
+.rank-badge,
+.rank-badge-gold,
+.rank-badge-silver,
+.rank-badge-bronze,
+.rank-badge-blue {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  color: white;
+  border-radius: var(--radius-full);
   flex-shrink: 0;
+}
+
+.rank-badge {
+  width: var(--badge-size);
+  height: var(--badge-size);
+  font-size: var(--font-size-xl);
+  color: white;
 }
 
 .rank-badge.gold {
@@ -380,82 +354,46 @@
 
 .rank-badge.bronze {
   background-color: var(--dashboard-bronze);
-  color: white;
 }
 
 .rank-badge.blue {
   background-color: var(--color-secondary);
-  color: white;
 }
 
-/* Rank badge variants - enhanced for dark theme visibility */
-.rank-badge-gold {
+.rank-badge-gold,
+.rank-badge-silver,
+.rank-badge-bronze,
+.rank-badge-blue {
   min-width: 32px;
   height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
+  margin-right: var(--spacing-3);
+}
+
+.rank-badge-gold {
   color: var(--color-text-inverse);
   background: var(--gradient-gold);
-  border-radius: var(--radius-full);
-  margin-right: var(--spacing-3);
   box-shadow: var(--shadow-sm);
 }
 
 .rank-badge-silver {
-  min-width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
   color: var(--color-text-inverse);
   background: var(--gradient-silver);
-  border-radius: var(--radius-full);
-  margin-right: var(--spacing-3);
   box-shadow: var(--shadow-sm);
 }
 
 .rank-badge-bronze {
-  min-width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
   color: var(--color-text-inverse);
   background: var(--gradient-bronze);
-  border-radius: var(--radius-full);
-  margin-right: var(--spacing-3);
   box-shadow: var(--shadow-sm);
 }
 
 .rank-badge-blue {
-  min-width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
   color: var(--color-text-primary);
   background-color: var(--color-bg-tertiary);
   border: 2px solid var(--color-border-medium);
-  border-radius: var(--radius-full);
-  margin-right: var(--spacing-3);
 }
 
-/* ===========================
-   Initials Badges
-   =========================== */
 .initials-badge {
   width: var(--initials-badge-size);
   height: var(--initials-badge-size);
@@ -471,19 +409,19 @@
 }
 
 /* ===========================
-   Player/Contestant Rows
+   Player & Contestant Rows
    =========================== */
-.player-row {
+.player-row,
+.contestant-row {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 6px;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
   border-radius: var(--radius-md);
   transition: background-color var(--transition-fast), border-color var(--transition-colors);
   width: 100%;
   box-sizing: border-box;
   border: 1px solid transparent;
-  /* Aggressive iOS Safari button reset for role="button" elements */
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
@@ -492,18 +430,13 @@
   outline: none !important;
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
-  /* Additional iOS-specific resets */
   -webkit-user-select: none !important;
   -webkit-text-size-adjust: none !important;
 }
 
-.player-row:hover {
+.player-row:hover,
+.contestant-row:hover {
   background-color: var(--color-bg-tertiary);
-  border-color: var(--color-border-medium);
-}
-
-/* Non-expandable rows keep the subtle border on hover */
-.player-row:not(.expandable):hover {
   border-color: var(--color-border-medium);
 }
 
@@ -512,8 +445,8 @@
   border-color: var(--color-warning);
 }
 
-/* Player Avatar */
-.player-avatar {
+.player-avatar,
+.contestant-avatar {
   position: relative;
   width: var(--initials-badge-size);
   height: var(--initials-badge-size);
@@ -522,7 +455,8 @@
   overflow: hidden;
 }
 
-.player-avatar img {
+.player-avatar img,
+.contestant-avatar-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -530,7 +464,8 @@
   display: block;
 }
 
-.player-avatar .avatar-initial {
+.player-avatar .avatar-initial,
+.contestant-initials {
   width: 100%;
   height: 100%;
   display: flex;
@@ -542,31 +477,35 @@
   background: var(--gradient-avatar);
 }
 
-.player-info {
+.player-info,
+.contestant-info {
   flex: 1;
   min-width: 0;
   margin-right: var(--spacing-4);
 }
 
-.player-name {
-  /* H4 styling will be applied from base.css */
-  margin: 0; /* Override default H4 margin */
+.player-name,
+.contestant-name {
+  margin: 0;
 }
 
-.player-username {
+.player-username,
+.contestant-profession {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: 0;
 }
 
-.player-score {
+.player-score,
+.contestant-score {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   flex-shrink: 0;
 }
 
-.player-score .score-value {
+.player-score .score-value,
+.contestant-score {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
@@ -592,7 +531,7 @@
   color: var(--color-danger);
 }
 
-/* Prediction Bonus Indicator */
+/* Expandable & Interactive Elements */
 .prediction-bonus-indicator {
   position: relative;
   display: flex;
@@ -607,13 +546,13 @@
   cursor: help;
 }
 
-.bonus-icon {
-  font-size: var(--font-size-base);
+.bonus-icon,
+.bonus-value {
   line-height: 1;
 }
 
-.bonus-value {
-  line-height: 1;
+.bonus-icon {
+  font-size: var(--font-size-base);
 }
 
 .bonus-tooltip {
@@ -642,43 +581,29 @@
   border-top-color: var(--color-bg-primary);
 }
 
-/* Expandable Player Row */
 .player-row-container {
   margin-bottom: var(--spacing-2);
   width: 100%;
   box-sizing: border-box;
 }
 
-.player-row--current-user {
-  background-color: var(--color-warning-light);
-}
-
 .player-row.expandable {
   cursor: pointer;
   user-select: none;
-  /* iOS Safari button reset */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: none;
-  border: none;
-  outline: none;
-  /* Prevent iOS Safari blue highlight */
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  /* Force style recalculation on iOS */
   animation: ios-fix 0.001s ease-in-out;
 }
 
-/* Micro animation to force iOS style recalculation */
 @keyframes ios-fix {
-  0% { opacity: 0.999; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.999;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-/* Expandable rows get orange border on hover to indicate interactivity */
 .player-row.expandable:hover {
-  background-color: var(--color-bg-tertiary);
   border-color: var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary-glow);
 }
@@ -693,20 +618,10 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin-left: var(--spacing-2);
-  /* Ensure no button styling on iOS */
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  background: none !important;
-  background-color: transparent !important;
-  border: none !important;
-  outline: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
-  pointer-events: none; /* Prevent direct interaction */
+  pointer-events: none;
 }
 
-/* Team Details Expansion */
+/* Team Details & Member Rows */
 .player-team-details {
   padding: var(--spacing-4);
   background-color: var(--color-bg-tertiary);
@@ -723,6 +638,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -785,19 +701,20 @@
   min-width: 0;
 }
 
-.team-member-image {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  object-fit: cover;
-  object-position: top;
-  flex-shrink: 0;
-}
-
+.team-member-image,
 .team-member-initials {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.team-member-image {
+  object-fit: cover;
+  object-position: top;
+}
+
+.team-member-initials {
   background: var(--gradient-avatar);
   color: white;
   display: flex;
@@ -805,7 +722,6 @@
   justify-content: center;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  flex-shrink: 0;
 }
 
 .team-member-info {
@@ -814,8 +730,7 @@
 }
 
 .team-member-name {
-  /* H5 styling will be applied from base.css */
-  margin: 0 0 var(--spacing-1) 0; /* Override default H5 margin */
+  margin: 0 0 var(--spacing-1) 0;
 }
 
 .team-member-profession {
@@ -836,7 +751,8 @@
   color: var(--color-text-primary);
 }
 
-.team-member-status {
+.team-member-status,
+.contestant-status {
   font-size: var(--font-size-xs);
   padding: var(--spacing-1) var(--spacing-2);
   border-radius: var(--radius-sm);
@@ -844,70 +760,24 @@
   text-align: center;
 }
 
-.team-member-status.status-active {
+.team-member-status.status-active,
+.contestant-status.active,
+.status-active {
   background-color: var(--color-success-light);
   color: var(--color-success);
 }
 
-.team-member-status.status-eliminated {
+.team-member-status.status-eliminated,
+.contestant-status.eliminated,
+.status-eliminated {
   background-color: var(--color-danger-light);
   color: var(--color-danger);
 }
 
-/* ===========================
-   Contestant Rows
-   =========================== */
-.contestant-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-4);
-  padding: var(--spacing-4);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-2);
-}
 
-.contestant-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.contestant-name {
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
-.contestant-profession {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-.contestant-score {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-}
-
-.contestant-status {
-  font-size: var(--font-size-xs);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm);
-  font-weight: var(--font-weight-semibold);
-}
-
-.contestant-status.active {
-  background-color: var(--color-success-light);
-  color: var(--color-success);
-}
-
-.contestant-status.eliminated {
-  background-color: var(--color-danger-light);
-  color: var(--color-danger);
-}
 
 /* ===========================
-   Icons
+   Icons & Sections
    =========================== */
 .icon {
   display: inline-flex;
@@ -917,24 +787,32 @@
   height: 24px;
 }
 
-.icon.crown {
+.icon.crown,
+.icon.trophy,
+.crown-icon,
+.trophy-icon {
   color: var(--dashboard-gold);
   font-size: var(--font-size-2xl);
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-.icon.trophy {
-  color: var(--dashboard-gold);
-  font-size: var(--font-size-2xl);
+.crown-icon-large {
+  font-size: 3rem;
+  opacity: 0.3;
+  margin-bottom: var(--spacing-sm);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.icon.arrow-up {
+.icon.arrow-up,
+.up-arrow,
+.change-arrow {
   color: var(--color-success);
   font-size: var(--font-size-base);
+  font-weight: bold;
+  display: inline-block;
 }
 
-/* ===========================
-   Sections
-   =========================== */
 .dashboard-section {
   margin-bottom: var(--spacing-8);
 }
@@ -950,17 +828,7 @@
 }
 
 /* ===========================
-   Empty States - Use design system loading.css
-   =========================== */
-/* Use empty-state classes from loading.css */
-
-/* ===========================
-   Loading States - Use design system loading.css
-   =========================== */
-/* Use loading-container, spinner, and skeleton classes from loading.css */
-
-/* ===========================
-   Error States - Dark Theme
+   Error States & Empty States
    =========================== */
 .error-state {
   text-align: center;
@@ -977,18 +845,60 @@
   border-left: 4px solid var(--color-danger);
   margin-bottom: var(--spacing-6);
   text-align: left;
-  /* Add subtle glow for better visibility */
-  box-shadow: 
-    0 4px 12px rgba(255, 68, 68, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Retry button - use btn-danger from design system */
+.complete-empty-state {
+  text-align: center;
+  padding: var(--spacing-8) var(--spacing-4);
+  background-color: var(--color-bg-tertiary);
+  border: 2px dashed var(--color-border-medium);
+  border-radius: var(--radius-lg);
+}
 
-/* ===========================
-   Buttons - Use design system btn-primary
-   =========================== */
-/* Legacy button classes removed - use btn-primary, btn-danger from buttons.css */
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-4);
+  display: block;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-3) 0;
+}
+
+.empty-state-message {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-6) 0;
+  line-height: var(--line-height-normal);
+}
+
+.empty-state-button {
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-all);
+  box-shadow: var(--shadow-button);
+}
+
+.empty-state-button:hover {
+  background: var(--gradient-primary-hover);
+  box-shadow: var(--shadow-button-hover);
+  transform: translateY(-2px);
+}
+
+.empty-state-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button-active);
+}
 
 /* ===========================
    Current Predictions Card Styles
@@ -1207,67 +1117,54 @@
 }
 
 /* ===========================
-   Responsive Design - Tablet (768px - 1024px)
+   Responsive Design - Tablet & Desktop
    =========================== */
 @media (min-width: 768px) and (max-width: 1024px) {
   .dashboard-container {
     padding: var(--spacing-6);
   }
-  
+
   .dashboard-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-6);
     align-items: start;
   }
-  
+
   .dashboard-columns--three {
-    display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-6);
   }
-  
-  .dashboard-columns > section {
-    padding: var(--spacing-6);
-  }
-  
-  .dashboard-content {
-    gap: var(--spacing-6);
-  }
-  
+
   .dashboard-card {
     padding: var(--spacing-6);
     min-height: 350px;
   }
-  
+
   .large-number {
     font-size: var(--font-size-3xl);
   }
-  
-  /* Enhanced card headers for tablet */
+
   .card-header h2 {
     font-size: var(--font-size-xl);
   }
-  
-  /* Better player row spacing for tablet */
+
   .player-row {
     padding: var(--spacing-4);
     margin-bottom: var(--spacing-3);
   }
-  
+
   .player-avatar,
   .initials-badge {
     width: 48px;
     height: 48px;
   }
-  
-  /* Tablet landscape optimizations */
+
   @media (orientation: landscape) {
     .dashboard-columns {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: var(--spacing-4);
     }
-    
+
     .dashboard-card {
       padding: var(--spacing-4);
       min-height: 300px;
@@ -1275,20 +1172,17 @@
   }
 }
 
-/* ===========================
-   Responsive Design - Desktop (1025px+)
-   =========================== */
 @media (min-width: 1025px) {
-  .dashboard-container {
-    padding: var(--spacing-8);
-    max-width: 1600px;
+  .tagline-text {
+    font-size: var(--font-size-5xl);
+    letter-spacing: 2px;
   }
-  
+
   .dashboard-header {
     padding: var(--spacing-8);
     margin-bottom: var(--spacing-10);
   }
-  
+
   .dashboard-header h1 {
     font-size: var(--font-size-5xl);
     background: var(--gradient-primary);
@@ -1296,64 +1190,54 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .dashboard-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-8);
     align-items: start;
   }
-  
+
   .dashboard-columns--three {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-6);
-    align-items: start;
   }
-  
-  /* Three-column layout for ultra-wide screens */
-  @media (min-width: 1400px) {
-    .dashboard-columns {
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: var(--spacing-6);
-    }
-    
-    .dashboard-columns--three {
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: var(--spacing-8);
-    }
-  }
-  
+
   .dashboard-card {
     padding: var(--spacing-8);
     min-height: 400px;
     border-radius: var(--radius-xl);
   }
-  
-  .large-number {
-    font-size: var(--font-size-4xl);
-  }
-  
-  /* Enhanced player rows for desktop */
+
   .player-row {
     padding: var(--spacing-5);
     margin-bottom: var(--spacing-3);
     border-radius: var(--radius-xl);
   }
-  
+
   .player-avatar,
   .initials-badge {
     width: 56px;
     height: 56px;
   }
-  
+
   .player-score .score-value {
     font-size: var(--font-size-2xl);
   }
-  
-  /* Enhanced card headers for desktop */
+
   .card-header h2 {
     font-size: var(--font-size-2xl);
+  }
+
+  @media (min-width: 1400px) {
+    .dashboard-columns {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-6);
+    }
+
+    .dashboard-columns--three {
+      gap: var(--spacing-8);
+    }
   }
 }
 
@@ -1361,22 +1245,21 @@
    Responsive Design - Mobile
    =========================== */
 @media (max-width: 640px) {
+
   /* Mobile background adjustments */
   .home-page {
     background-attachment: scroll;
     background-size: cover;
     background-position: center top;
   }
-  
+
   .home-page::before {
     position: absolute;
-    background: linear-gradient(
-      180deg,
-      rgba(10, 10, 11, 0.8) 0%,
-      rgba(10, 10, 11, 0.9) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(10, 10, 11, 0.8) 0%,
+        rgba(10, 10, 11, 0.9) 100%);
   }
-  
+
   .dashboard-container {
     padding: var(--spacing-4);
   }
@@ -1384,101 +1267,101 @@
   .btn-sm {
     width: 100%;
   }
-  
+
   .dashboard-columns,
   .dashboard-columns--three {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-6);
   }
-  
-  .dashboard-columns > * {
+
+  .dashboard-columns>* {
     width: 100%;
   }
-  
+
   /* Remove fixed height constraints - let cards grow naturally */
-  
+
   .dashboard-content {
     flex-direction: column;
     gap: var(--spacing-6);
   }
-  
+
   .dashboard-column {
     width: 100%;
   }
-  
+
   .dashboard-title {
     font-size: var(--font-size-3xl);
   }
-  
+
   .card-title {
     font-size: var(--font-size-xl);
   }
-  
+
   .section-title {
     font-size: var(--font-size-lg);
   }
-  
+
   .large-number {
     font-size: var(--font-size-3xl);
   }
-  
+
   .dashboard-card {
     padding: var(--spacing-4);
   }
-  
+
   .card-header {
     /* Keep horizontal layout on mobile */
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
   }
-  
+
   .team-total-score {
     /* Ensure score stays on right */
     flex-shrink: 0;
   }
-  
+
   .total-score-value {
     font-size: var(--font-size-3xl);
   }
-  
+
   .card-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-2);
   }
-  
+
   .player-row,
   .contestant-row {
     padding: var(--spacing-2);
   }
-  
+
   .rank-badge {
     width: 32px;
     height: 32px;
     font-size: var(--font-size-base);
   }
-  
+
   .initials-badge {
     width: 40px;
     height: 40px;
     font-size: var(--font-size-sm);
   }
-  
+
   .player-avatar {
     width: 40px;
     height: 40px;
   }
-  
+
   .player-avatar .avatar-initial {
     font-size: var(--font-size-sm);
   }
-  
+
   .player-score .score-value {
     font-size: var(--font-size-base);
   }
-  
+
   .contestant-score {
     font-size: var(--font-size-base);
   }
@@ -1614,7 +1497,8 @@
 
   .prediction-result.correct,
   .prediction-result.incorrect {
-    font-size: 0; /* Hide the text */
+    font-size: 0;
+    /* Hide the text */
   }
 
   .prediction-result.correct::after,
@@ -2745,27 +2629,27 @@
   .my-team-card .card-body {
     gap: var(--spacing-6);
   }
-  
+
   .team-section {
     padding: var(--spacing-4) 0;
   }
-  
+
   .section-header h3 {
     font-size: var(--font-size-lg);
   }
-  
+
   /* Keep sole survivor and draft picks horizontal on mobile - matching leaderboard */
   .sole-survivor-display,
   .draft-pick-display {
     /* Keep horizontal layout */
     padding: var(--spacing-2);
   }
-  
+
   .sole-survivor-left,
   .draft-pick-left {
     /* Keep horizontal layout */
   }
-  
+
   .sole-survivor-image,
   .sole-survivor-initials,
   .draft-pick-image,
@@ -2774,68 +2658,69 @@
     width: var(--initials-badge-size);
     height: var(--initials-badge-size);
   }
-  
+
   .sole-survivor-info,
   .draft-pick-info {
     margin-right: var(--spacing-2);
   }
-  
+
   .contestant-row {
     padding: var(--spacing-2);
   }
-  
+
   .contestant-rank-badge {
     width: 40px;
     height: 40px;
   }
-  
+
   .contestant-initials {
     font-size: var(--font-size-sm);
   }
-  
+
   .contestant-name {
     font-size: var(--font-size-sm);
   }
-  
+
   .contestant-profession {
     font-size: var(--font-size-sm);
   }
-  
+
   .contestant-points {
     font-size: var(--font-size-base);
   }
-  
+
   .total-score-section {
     padding: var(--spacing-3);
   }
-  
+
   .total-points {
     font-size: var(--font-size-3xl);
   }
-  
+
   .total-score-display {
     flex-direction: column;
     text-align: center;
     gap: var(--spacing-4);
   }
-  
+
   .trophy-icon {
     font-size: 3rem;
   }
-  
+
   .score-details {
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-2);
   }
-  
+
   .total-points {
     font-size: 1.75rem;
   }
-  
+
   .select-winner-btn {
     width: 100%;
-    min-height: 44px; /* Touch target size */
+    min-height: 44px;
+    /* Touch target size */
   }
 }
 
@@ -2879,17 +2764,18 @@
   .prediction-interface {
     padding: var(--spacing-4);
   }
-  
+
   .prediction-header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-2);
   }
-  
+
   .prediction-header h2 {
     font-size: var(--font-size-xl);
   }
 }
+
 /*
  ===========================
    Mobile Responsive - Contestant Rows
@@ -2899,37 +2785,37 @@
     padding: var(--spacing-3);
     gap: var(--spacing-3);
   }
-  
+
   .contestant-avatar {
     width: 40px;
     height: 40px;
   }
-  
+
   .contestant-initials {
     font-size: var(--font-size-sm);
   }
-  
+
   .crown-icon {
     font-size: var(--font-size-base);
   }
-  
+
   .contestant-name {
     font-size: var(--font-size-sm);
   }
-  
+
   .contestant-profession {
     font-size: var(--font-size-xs);
   }
-  
+
   .contestant-points {
     font-size: var(--font-size-base);
   }
-  
+
   .contestant-status {
     font-size: var(--font-size-xs);
     padding: var(--spacing-1);
   }
-  
+
   .change-sole-survivor-btn {
     padding: var(--spacing-4);
     font-size: var(--font-size-base);
@@ -3012,9 +2898,11 @@
 .current-predictions-card .contestant-row {
   margin-bottom: 0;
 }
+
 /*
  iOS-specific fixes for expandable rows */
 @supports (-webkit-touch-callout: none) {
+
   /* This targets iOS Safari specifically */
   .player-row[role="button"],
   .player-row.expandable {
@@ -3035,13 +2923,13 @@
     transform: translate3d(0, 0, 0);
     will-change: background-color;
   }
-  
+
   /* Specifically target non-expanded state to force initial render */
   .player-row.expandable:not(.expanded) {
     background-color: transparent !important;
     background: none !important;
   }
-  
+
   .player-row[role="button"]:hover,
   .player-row[role="button"]:focus,
   .player-row[role="button"]:active,
@@ -3052,10 +2940,49 @@
     border-color: var(--color-primary) !important;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
   }
-  
+
   .expand-icon {
     background: none !important;
     background-color: transparent !important;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
+}
+
+/* ===========================
+   Draft Link
+   =========================== */
+.draft-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  display: inline-block;
+}
+
+.draft-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+  background-color: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+.draft-link:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring-primary);
+}
+
+.draft-link:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments for draft link */
+@media (max-width: 640px) {
+  .draft-link {
+    padding: var(--spacing-3);
+    font-size: var(--font-size-base);
   }
 }
