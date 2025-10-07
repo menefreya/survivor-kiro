@@ -483,6 +483,14 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid transparent;
+  /* iOS Safari button reset for role="button" elements */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 .player-row:hover {
@@ -644,6 +652,16 @@
 .player-row.expandable {
   cursor: pointer;
   user-select: none;
+  /* iOS Safari button reset */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  /* Prevent iOS Safari blue highlight */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 /* Expandable rows get orange border on hover to indicate interactivity */
