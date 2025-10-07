@@ -1,5 +1,6 @@
 const supabase = require('../db/supabase');
 const { replaceEliminatedDraftPicks } = require('../services/draftService');
+const { calculateMultipleContestantTrends } = require('../services/contestantPerformanceService');
 
 /**
  * Get all contestants
@@ -307,10 +308,95 @@ async function getContestantEvents(req, res) {
   }
 }
 
+/**
+ * Get contestant performance data with metrics and trends
+ * @route GET /api/contestants/performance
+ * @access Protected
+ */
+async function getContestantPerformance(req, res) {
+  try {
+    // Fetch all contestants with basic info
+    const { data: contestants, error: contestantsError } = await supabase
+      .from('contestants')
+      .select('id, name, image_url, total_score, profession, is_eliminated')
+      .order('total_score', { ascending: false });
+
+    if (contestantsError) {
+      console.error('Error fetching contestants:', contestantsError);
+      return res.status(500).json({ error: 'Failed to fetch contestants' });
+    }
+
+    // Fetch all episode scores for all contestants to calculate episodes participated
+    const { data: episodeScores, error: scoresError } = await supabase
+      .from('episode_scores')
+      .select(`
+        contestant_id,
+        score,
+        episodes!inner(
+          id,
+          episode_number
+        )
+      `)
+      .order('episodes(episode_number)', { ascending: true });
+
+    if (scoresError) {
+      console.error('Error fetching episode scores:', scoresError);
+      return res.status(500).json({ error: 'Failed to fetch episode scores' });
+    }
+
+    // Group episode scores by contestant to count episodes participated
+    const scoresByContestant = {};
+    episodeScores.forEach(score => {
+      if (!scoresByContestant[score.contestant_id]) {
+        scoresByContestant[score.contestant_id] = [];
+      }
+      scoresByContestant[score.contestant_id].push({
+        episode_number: score.episodes.episode_number,
+        score: score.score
+      });
+    });
+
+    // Calculate performance trends for all contestants efficiently
+    const contestantIds = contestants.map(c => c.id);
+    const trends = await calculateMultipleContestantTrends(contestantIds);
+
+    // Calculate performance metrics for each contestant
+    const performanceData = contestants.map((contestant, index) => {
+      const contestantScores = scoresByContestant[contestant.id] || [];
+      const episodesParticipated = contestantScores.length;
+      
+      // Calculate average points per episode
+      let averagePerEpisode = null;
+      if (episodesParticipated > 0) {
+        averagePerEpisode = parseFloat((contestant.total_score / episodesParticipated).toFixed(1));
+      }
+
+      return {
+        id: contestant.id,
+        name: contestant.name,
+        image_url: contestant.image_url,
+        total_score: contestant.total_score,
+        average_per_episode: averagePerEpisode,
+        trend: trends[contestant.id] || 'n/a',
+        episodes_participated: episodesParticipated,
+        is_eliminated: contestant.is_eliminated,
+        profession: contestant.profession,
+        rank: index + 1
+      };
+    });
+
+    res.json({ data: performanceData });
+  } catch (error) {
+    console.error('Error in getContestantPerformance:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getAllContestants,
   addContestant,
   updateContestant,
   getScoreBreakdown,
-  getContestantEvents
+  getContestantEvents,
+  getContestantPerformance
 };

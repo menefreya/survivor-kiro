@@ -107,31 +107,39 @@
      DARK THEME COLOR PALETTE
      ============================================ */
 
-  /* Primary Dark Backgrounds */
-  --color-bg-primary: #0A0A0B;
-  /* Deep black for main backgrounds */
-  --color-bg-secondary: #1A1A1C;
-  /* Slightly lighter for cards/containers */
-  --color-bg-tertiary: #2A2A2E;
+  /* Primary Dark Backgrounds - Enhanced for dramatic effect */
+  --color-bg-primary: #000000;
+  /* Pure black for main backgrounds */
+  --color-bg-secondary: #0F0F0F;
+  /* Very dark gray for cards/containers */
+  --color-bg-tertiary: #1A1A1A;
   /* Elevated surfaces */
-  --color-bg-quaternary: #3A3A3F;
+  --color-bg-quaternary: #2A2A2A;
   /* Interactive elements */
-  --color-bg-overlay: rgba(10, 10, 11, 0.95);
+  --color-bg-overlay: rgba(0, 0, 0, 0.95);
   /* Dark overlay with transparency */
 
   /* Survivor Brand Colors (Enhanced for Dark Theme) */
   --color-primary: #FF6B35;
-  /* Survivor orange (unchanged) */
+  /* Survivor orange - main brand color */
   --color-primary-hover: #FF8A5C;
   /* Lighter on hover */
   --color-primary-active: #E55A2B;
   /* Darker when pressed */
-  --color-primary-light: rgba(255, 107, 53, 0.1);
+  --color-primary-light: rgba(255, 107, 53, 0.15);
   /* Light background for dark theme */
   --color-primary-dark: #B33D1A;
   /* Darker variant */
-  --color-primary-glow: rgba(255, 107, 53, 0.3);
-  /* Glow effect */
+  --color-primary-glow: rgba(255, 107, 53, 0.4);
+  /* Enhanced glow effect */
+  
+  /* Score highlighting colors */
+  --color-score-primary: #FF6B35;
+  /* Primary score color - orange */
+  --color-score-secondary: #FFA366;
+  /* Secondary score color - lighter orange */
+  --color-score-accent: #FF8A5C;
+  /* Accent score color for highlights */
 
   /* Accent Colors (Survivor Red) */
   --color-accent: #FF4444;
@@ -195,24 +203,34 @@
 
   /* Text Colors (High Contrast for Dark Theme) */
   --color-text-primary: #FFFFFF;
-  /* Pure white for headings */
-  --color-text-secondary: #E0E0E0;
+  /* Pure white for headings and primary text */
+  --color-text-secondary: #E5E5E5;
   /* Light gray for body text */
-  --color-text-tertiary: #B0B0B0;
+  --color-text-tertiary: #B8B8B8;
   /* Medium gray for secondary info */
-  --color-text-muted: #808080;
+  --color-text-muted: #888888;
   /* Darker gray for disabled/muted */
-  --color-text-inverse: #0A0A0B;
+  --color-text-inverse: #000000;
   /* Dark text for light backgrounds */
-  --color-text-disabled: #606060;
+  --color-text-disabled: #666666;
   /* Disabled text color */
+  
+  /* Specialized text colors for performance data */
+  --color-text-score: #FF6B35;
+  /* Orange for scores and important numbers */
+  --color-text-rank: #FFFFFF;
+  /* White for rank numbers */
+  --color-text-name: #FFFFFF;
+  /* White for contestant names */
+  --color-text-subtitle: #B8B8B8;
+  /* Gray for subtitles and descriptions */
 
   /* Border and Divider Colors (Dark Theme) */
-  --color-border-subtle: #2A2A2E;
+  --color-border-subtle: #1A1A1A;
   /* Subtle borders - barely visible definition */
-  --color-border-medium: #3A3A3F;
+  --color-border-medium: #2A2A2A;
   /* Standard borders - clear but not harsh */
-  --color-border-strong: #4A4A4F;
+  --color-border-strong: #3A3A3A;
   /* Emphasized borders - for focus/active states */
   --color-border-accent: var(--color-primary);
   /* Accent borders - orange highlights */

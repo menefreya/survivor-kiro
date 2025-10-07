@@ -6,11 +6,15 @@ const {
   addContestant,
   updateContestant,
   getScoreBreakdown,
-  getContestantEvents
+  getContestantEvents,
+  getContestantPerformance
 } = require('../controllers/contestantController');
 
 // Get all contestants (requires authentication)
 router.get('/', authenticateToken, getAllContestants);
+
+// Get contestant performance data (requires authentication)
+router.get('/performance', authenticateToken, getContestantPerformance);
 
 // Add new contestant (requires admin)
 router.post('/', authenticateToken, requireAdmin, addContestant);

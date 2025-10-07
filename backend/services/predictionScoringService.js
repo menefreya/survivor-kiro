@@ -43,9 +43,9 @@ class PredictionScoringService {
       // Update predictions atomically - mark correct predictions
       const { error: correctError } = await supabase
         .from('elimination_predictions')
-        .update({ 
-          is_correct: true, 
-          scored_at: now 
+        .update({
+          is_correct: true,
+          scored_at: now
         })
         .eq('episode_id', episodeId)
         .eq('tribe', tribe)
@@ -62,9 +62,9 @@ class PredictionScoringService {
       // Update predictions atomically - mark incorrect predictions
       const { error: incorrectError } = await supabase
         .from('elimination_predictions')
-        .update({ 
-          is_correct: false, 
-          scored_at: now 
+        .update({
+          is_correct: false,
+          scored_at: now
         })
         .eq('episode_id', episodeId)
         .eq('tribe', tribe)
@@ -137,9 +137,9 @@ class PredictionScoringService {
       // Reset all predictions for this episode (set is_correct and scored_at to NULL)
       const { error: resetError } = await supabase
         .from('elimination_predictions')
-        .update({ 
-          is_correct: null, 
-          scored_at: null 
+        .update({
+          is_correct: null,
+          scored_at: null
         })
         .eq('episode_id', episodeId);
 
@@ -173,7 +173,7 @@ class PredictionScoringService {
       // Re-score predictions based on current elimination data
       for (const elimination of eliminations) {
         const tribe = elimination.contestants.current_tribe;
-        
+
         // Skip if this tribe has already been scored
         if (scoredTribes.has(tribe)) {
           continue;

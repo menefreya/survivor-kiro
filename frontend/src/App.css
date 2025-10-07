@@ -37,6 +37,7 @@
 @import './styles/07-pages/ranking.css';
 @import './styles/07-pages/admin.css';
 @import './styles/07-pages/auth.css';
+@import './styles/07-pages/contestants.css';
 
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';
@@ -58,7 +59,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
 }
 
 .main-content {

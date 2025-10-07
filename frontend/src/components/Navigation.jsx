@@ -95,6 +95,17 @@ const Navigation = () => {
             )}
           </Link>
         </li>
+
+        <li className="navigation__item">
+          <Link 
+            to="/contestants" 
+            className={`navigation__link ${isActive('/contestants') ? 'navigation__link--active' : ''}`}
+            aria-current={isActive('/contestants') ? 'page' : undefined}
+            onClick={closeMobileMenu}
+          >
+            Contestants
+          </Link>
+        </li>
         {user?.is_admin && (
           <li className="navigation__item">
             <Link 
