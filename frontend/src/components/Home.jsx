@@ -137,9 +137,7 @@ const Home = () => {
   const hasCompletedRankings = myTeam && (myTeam.drafted_contestants.length > 0 || myTeam.sole_survivor);
 
   return (
-    <div className="home-page">
-      {/* Dashboard Content */}
-      <div className="dashboard-container">
+    <>
         {/* Prediction Results Notification (Fixed Position) */}
         <PredictionResultsNotification />
 
@@ -189,8 +187,7 @@ const Home = () => {
             <CurrentPredictionsCard />
           </div>
         </div>
-      </div>
-    </div>
+    </>
   );
 };
 
