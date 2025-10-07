@@ -693,17 +693,19 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin-left: var(--spacing-2);
-  /* Ensure no button styling on iOS */
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  background: none !important;
-  background-color: transparent !important;
-  border: none !important;
-  outline: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
-  pointer-events: none; /* Prevent direct interaction */
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  pointer-events: auto;
+}
+
+.expand-icon:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.expand-icon:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* Team Details Expansion */

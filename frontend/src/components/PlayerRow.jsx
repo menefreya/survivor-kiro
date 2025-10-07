@@ -137,9 +137,17 @@ const PlayerRow = ({
 
         {/* Expand Icon */}
         {hasTeam && (
-          <div className="expand-icon" aria-hidden="true">
+          <a 
+            href="#" 
+            className="expand-icon" 
+            aria-hidden="true"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             {isExpanded ? '▼' : '▶'}
-          </div>
+          </a>
         )}
       </div>
 
