@@ -176,23 +176,31 @@
   margin-bottom: var(--spacing-6);
 }
 
-/* Override form-input focus color for success theme */
+/* Simple form input styling - minimalist gray borders */
+.sole-survivor-section .form-input {
+  border-color: var(--color-border-medium) !important;
+  background-color: var(--color-bg-secondary) !important;
+  box-shadow: none !important;
+}
+
 .sole-survivor-section .form-input:hover:not(:disabled) {
-  border-color: var(--color-success);
-  background-color: var(--color-bg-quaternary);
+  border-color: var(--color-border-medium) !important;
+  background-color: var(--color-bg-secondary) !important;
+  box-shadow: none !important;
 }
 
 .sole-survivor-section .form-input:focus {
-  border-color: var(--color-success);
-  box-shadow: 
-    0 0 0 3px rgba(0, 208, 132, 0.3),
-    var(--glow-success),
-    inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  border-color: var(--color-border-medium) !important;
+  background-color: var(--color-bg-secondary) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-/* Update select dropdown arrow for success theme */
-.sole-survivor-section .form-input:focus {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300D084' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+.sole-survivor-section .form-input:focus-visible {
+  border-color: var(--color-border-medium) !important;
+  background-color: var(--color-bg-secondary) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .selected-survivor {
@@ -258,14 +266,37 @@
   text-overflow: ellipsis;
 }
 
-/* Submit button now uses btn-primary btn-block classes */
-/* Override primary color with success color for ranking theme */
+/* Submit button uses global btn-primary btn-block classes with standard styling */
 .ranking-container .btn-primary {
-  background-color: var(--color-success);
+  color: var(--color-text-inverse) !important;
+  background: var(--gradient-primary);
+  border: none;
+  box-shadow: var(--shadow-button);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  transition: all var(--transition-base);
+  padding: var(--spacing-3) var(--spacing-6);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ranking-container .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-success-hover);
+  box-shadow: var(--shadow-button-hover);
+  transform: translateY(-2px);
+  color: var(--color-text-inverse) !important;
+}
+
+.ranking-container .btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button-active);
+  color: var(--color-text-inverse) !important;
 }
 
 /* Responsive design */

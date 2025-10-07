@@ -10,7 +10,8 @@ const SignUp = () => {
     email: '',
     password: '',
     name: '',
-    profileImageUrl: ''
+    profileImageUrl: '',
+    passcode: ''
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +43,10 @@ const SignUp = () => {
 
     if (!formData.name) {
       newErrors.name = 'Name is required';
+    }
+
+    if (!formData.passcode) {
+      newErrors.passcode = 'Passcode is required';
     }
 
     setErrors(newErrors);
@@ -81,7 +86,8 @@ const SignUp = () => {
       const payload = {
         email: formData.email,
         password: formData.password,
-        name: formData.name
+        name: formData.name,
+        passcode: formData.passcode
       };
 
       // Only include profile_image_url if provided
@@ -150,6 +156,8 @@ const SignUp = () => {
                 {errors.name && <span id="name-error" className="error-message" role="alert">{errors.name}</span>}
               </div>
 
+
+
               <div className="form-group">
                 <label htmlFor="email" className="required">Email</label>
                 <input
@@ -201,6 +209,26 @@ const SignUp = () => {
                   aria-describedby="profile-image-hint"
                 />
                 <span id="profile-image-hint" className="visually-hidden">Enter a valid URL for your profile image</span>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="passcode" className="required">Access Passcode</label>
+                <input
+                  type="text"
+                  id="passcode"
+                  name="passcode"
+                  value={formData.passcode}
+                  onChange={handleChange}
+                  className={errors.passcode ? 'error' : ''}
+                  placeholder="Enter the access passcode"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.passcode ? 'true' : 'false'}
+                  aria-describedby={errors.passcode ? 'passcode-error' : 'passcode-hint'}
+                  autoComplete="off"
+                />
+                {errors.passcode && <span id="passcode-error" className="error-message" role="alert">{errors.passcode}</span>}
+                {!errors.passcode && <span id="passcode-hint" className="password-hint">Contact admin if you don't have the passcode</span>}
               </div>
 
               {apiError && <div className="api-error-message" role="alert">{apiError}</div>}
