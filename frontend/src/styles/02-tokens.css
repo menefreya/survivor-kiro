@@ -132,7 +132,7 @@
   /* Darker variant */
   --color-primary-glow: rgba(255, 107, 53, 0.4);
   /* Enhanced glow effect */
-  
+
   /* Score highlighting colors */
   --color-score-primary: #FF6B35;
   /* Primary score color - orange */
@@ -214,7 +214,7 @@
   /* Dark text for light backgrounds */
   --color-text-disabled: #666666;
   /* Disabled text color */
-  
+
   /* Specialized text colors for performance data */
   --color-text-score: #FF6B35;
   /* Orange for scores and important numbers */

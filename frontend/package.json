@@ -21,6 +21,7 @@
     "prebuild:dev": "npm run lint:all && npm run legacy:check"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.74.0",
     "axios": "^1.12.2",
     "prop-types": "^15.8.1",
     "react": "^19.1.1",

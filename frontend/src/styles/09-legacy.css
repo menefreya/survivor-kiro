@@ -202,23 +202,7 @@
   margin-top: var(--spacing-6);
 }
 
-.btn-link {
-  background-color: var(--color-primary);
-  color: white;
-  text-decoration: none;
-  padding: var(--spacing-3) var(--spacing-6);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-base);
-  display: inline-block;
-}
 
-.btn-link:hover {
-  background-color: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
 
 /* Info Message Styles */
 .info-message {
@@ -326,23 +310,21 @@
 }
 
 .prediction-reminder-actions .btn-primary {
-  background: var(--gradient-primary);
+  background: var(--color-primary);
   border: none;
   color: var(--color-text-inverse);
   font-weight: var(--font-weight-semibold);
   padding: var(--spacing-3) var(--spacing-6);
   border-radius: var(--radius-lg);
-  transition: var(--transition-all);
+  transition: background-color var(--transition-base);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: var(--font-size-sm);
-  box-shadow: var(--shadow-button);
+  box-shadow: none;
 }
 
 .prediction-reminder-actions .btn-primary:hover {
-  transform: translateY(-2px);
-  background: var(--gradient-primary-hover);
-  box-shadow: var(--shadow-button-hover);
+  background: var(--color-primary-hover);
 }
 
 /* Prediction Results Notification Styles */
@@ -536,14 +518,13 @@
 }
 
 .notification-actions .btn-primary {
-  background: var(--gradient-primary);
+  background: var(--color-primary);
   color: var(--color-text-inverse);
   border: none;
 }
 
 .notification-actions .btn-primary:hover {
-  background: var(--gradient-primary-hover);
-  transform: translateY(-1px);
+  background: var(--color-primary-hover);
 }
 
 .notification-actions .btn-secondary {

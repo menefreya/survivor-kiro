@@ -32,6 +32,9 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
+
 // Routes
 const authRoutes = require('./routes/auth');
 const contestantRoutes = require('./routes/contestants');
@@ -45,6 +48,8 @@ const eventTypeRoutes = require('./routes/eventTypes');
 const eventRoutes = require('./routes/events');
 const predictionRoutes = require('./routes/predictions');
 const episodeRoutes = require('./routes/episodes');
+const storageRoutes = require('./routes/storage');
+const uploadRoutes = require('./routes/upload');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/contestants', contestantRoutes);
@@ -58,6 +63,8 @@ app.use('/api/event-types', eventTypeRoutes);
 app.use('/api', eventRoutes);
 app.use('/api/predictions', predictionRoutes);
 app.use('/api/episodes', episodeRoutes);
+app.use('/api/storage', storageRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
