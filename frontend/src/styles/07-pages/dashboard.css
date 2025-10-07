@@ -483,14 +483,18 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid transparent;
-  /* iOS Safari button reset for role="button" elements */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: none;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+  /* Aggressive iOS Safari button reset for role="button" elements */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: none !important;
+  background-color: transparent !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  /* Additional iOS-specific resets */
+  -webkit-user-select: none !important;
+  -webkit-text-size-adjust: none !important;
 }
 
 .player-row:hover {
@@ -662,6 +666,14 @@
   /* Prevent iOS Safari blue highlight */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  /* Force style recalculation on iOS */
+  animation: ios-fix 0.001s ease-in-out;
+}
+
+/* Micro animation to force iOS style recalculation */
+@keyframes ios-fix {
+  0% { opacity: 0.999; }
+  100% { opacity: 1; }
 }
 
 /* Expandable rows get orange border on hover to indicate interactivity */
@@ -681,6 +693,17 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin-left: var(--spacing-2);
+  /* Ensure no button styling on iOS */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  pointer-events: none; /* Prevent direct interaction */
 }
 
 /* Team Details Expansion */
@@ -2988,4 +3011,51 @@
 /* Remove margin from contestant rows inside prediction wrappers */
 .current-predictions-card .contestant-row {
   margin-bottom: 0;
+}
+/*
+ iOS-specific fixes for expandable rows */
+@supports (-webkit-touch-callout: none) {
+  /* This targets iOS Safari specifically */
+  .player-row[role="button"],
+  .player-row.expandable {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background: none !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    /* Force transparent background on all states */
+    background-image: none !important;
+    box-shadow: none !important;
+    /* Force GPU acceleration to bypass iOS caching */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    will-change: background-color;
+  }
+  
+  /* Specifically target non-expanded state to force initial render */
+  .player-row.expandable:not(.expanded) {
+    background-color: transparent !important;
+    background: none !important;
+  }
+  
+  .player-row[role="button"]:hover,
+  .player-row[role="button"]:focus,
+  .player-row[role="button"]:active,
+  .player-row.expandable:hover,
+  .player-row.expandable:focus,
+  .player-row.expandable:active {
+    background-color: var(--color-bg-tertiary) !important;
+    border-color: var(--color-primary) !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
+  
+  .expand-icon {
+    background: none !important;
+    background-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
 }
