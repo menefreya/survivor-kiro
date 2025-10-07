@@ -58,7 +58,44 @@
    =========================== */
 .home-page {
   background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-primary);
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Fallback for browsers that don't support background-attachment: fixed */
+@supports not (background-attachment: fixed) {
+  .home-page {
+    background-attachment: scroll;
+  }
+}
+
+/* Additional overlay for better text readability */
+.home-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 11, 0.7) 0%,
+    rgba(10, 10, 11, 0.85) 50%,
+    rgba(10, 10, 11, 0.9) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content is above the overlay */
+.home-page > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ===========================
@@ -119,12 +156,10 @@
   max-width: 1600px;
   margin: 0 auto;
   padding: var(--spacing-8);
-  background-color: var(--color-bg-primary);
-  /* Enhanced dark theme background with subtle gradient */
-  background-image: var(--gradient-bg-primary);
+  background-color: transparent;
   /* Smooth transition from hero section */
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .btn-sm {
@@ -210,14 +245,22 @@
    Card Styles
    =========================== */
 .dashboard-card {
-  background-color: var(--color-bg-secondary);
+  background-color: rgba(26, 26, 28, 0.95);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card-elevated);
   padding: var(--spacing-6);
   transition: var(--transition-shadow), var(--transition-colors);
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(10px)) {
+  .dashboard-card {
+    background-color: rgba(26, 26, 28, 0.98);
+  }
 }
 
 /* Removed dashboard card hover effects - containers should not have hover states */
@@ -1277,6 +1320,22 @@
    Responsive Design - Mobile
    =========================== */
 @media (max-width: 640px) {
+  /* Mobile background adjustments */
+  .home-page {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center top;
+  }
+  
+  .home-page::before {
+    position: absolute;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 11, 0.8) 0%,
+      rgba(10, 10, 11, 0.9) 100%
+    );
+  }
+  
   .dashboard-container {
     padding: var(--spacing-4);
   }
