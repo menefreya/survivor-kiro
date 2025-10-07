@@ -8,6 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
 import PredictionReminder from './PredictionReminder';
 import PredictionResultsNotification from './PredictionResultsNotification';
 import CurrentPredictionsCard from './CurrentPredictionsCard';
+
 import '../App.css';
 import '../styles/07-pages/dashboard.css';
 
@@ -136,49 +137,52 @@ const Home = () => {
   const hasCompletedRankings = myTeam && (myTeam.drafted_contestants.length > 0 || myTeam.sole_survivor);
 
   return (
-    <div className="dashboard-container">
-      {/* Prediction Results Notification (Fixed Position) */}
-      <PredictionResultsNotification />
+    <div className="home-page">
+      {/* Dashboard Content */}
+      <div className="dashboard-container">
+        {/* Prediction Results Notification (Fixed Position) */}
+        <PredictionResultsNotification />
 
-      {/* Dashboard Header */}
-      <header className="dashboard-header">
-        <h1 className="page-title">Season 49 Dashboard</h1>
-        <p className="body-text welcome-message" role="status" aria-live="polite">
-          {hasCompletedRankings 
-            ? `Welcome back, ${user?.username || user?.email}! Track your team's performance below.`
-            : "Welcome to Survivor Season 49! Complete your draft and sole survivor pick to get started."
-          }
-        </p>
-      </header>
+        {/* Dashboard Header */}
+        <header className="dashboard-header">
+          <h1 className="dashboard-title">Season 49 Dashboard</h1>
+          <p className="body-text welcome-message" role="status" aria-live="polite">
+            {hasCompletedRankings 
+              ? `Welcome back, ${user?.username || user?.email}! Track your team's performance below.`
+              : "Welcome to Survivor Season 49! Complete your draft and sole survivor pick to get started."
+            }
+          </p>
+        </header>
 
-      {/* Prediction Reminder Banner */}
-      <PredictionReminder />
+        {/* Prediction Reminder Banner */}
+        <PredictionReminder />
 
-      {/* Current Episode Predictions */}
-      <CurrentPredictionsCard />
-      
-      {/* Dashboard Layout */}
-      <div className="dashboard-columns">
-        {/* Left Column: Leaderboard */}
-        <LeaderboardCard 
-          players={leaderboard}
-          userPosition={userPosition}
-          pointsBehindLeader={pointsBehindLeader}
-          currentUserId={user?.id}
-          error={leaderboardError}
-          onRetry={handleRefresh}
-        />
+        {/* Current Episode Predictions */}
+        <CurrentPredictionsCard />
+        
+        {/* Dashboard Layout */}
+        <div className="dashboard-columns">
+          {/* Left Column: Leaderboard */}
+          <LeaderboardCard 
+            players={leaderboard}
+            userPosition={userPosition}
+            pointsBehindLeader={pointsBehindLeader}
+            currentUserId={user?.id}
+            error={leaderboardError}
+            onRetry={handleRefresh}
+          />
 
-        {/* Right Column: My Team */}
-        <MyTeamCard
-          soleSurvivor={myTeam?.sole_survivor || null}
-          draftPicks={myTeam?.drafted_contestants || []}
-          totalScore={myTeam?.total_score || 0}
-          weeklyChange={weeklyChange}
-          error={teamError}
-          onRetry={handleRefresh}
-          playerId={user?.id}
-        />
+          {/* Right Column: My Team */}
+          <MyTeamCard
+            soleSurvivor={myTeam?.sole_survivor || null}
+            draftPicks={myTeam?.drafted_contestants || []}
+            totalScore={myTeam?.total_score || 0}
+            weeklyChange={weeklyChange}
+            error={teamError}
+            onRetry={handleRefresh}
+            playerId={user?.id}
+          />
+        </div>
       </div>
     </div>
   );

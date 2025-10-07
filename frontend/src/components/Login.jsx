@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import '../styles/07-pages/auth.css';
+import '../styles/06-features/hero-section.css';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -58,51 +59,76 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="auth-form" aria-label="Login form">
-        <div className="form-group">
-          <label htmlFor="email" className="required">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="your.email@example.com"
-            required
-            aria-required="true"
-            autoComplete="email"
-          />
+    <div className="login-page">
+      {/* Hero Background */}
+      <div className="hero-section hero-section--login">
+        <div className="hero-section__background">
+          <div className="hero-section__overlay"></div>
         </div>
-        <div className="form-group">
-          <label htmlFor="password" className="required">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-            aria-required="true"
-            autoComplete="current-password"
-          />
+        
+        <div className="hero-section__content hero-section__content--login">
+          {/* Hero Text */}
+          <div className="hero-section__text hero-section__text--login">
+            <h1 className="hero-section__title">
+              <span className="hero-section__title-line">OUTWIT.</span>
+              <span className="hero-section__title-line">OUTPLAY.</span>
+              <span className="hero-section__title-line">OUTLAST.</span>
+            </h1>
+            
+            <p className="hero-section__subtitle">
+              Join the Ultimate Survivor Fantasy League
+            </p>
+          </div>
+          
+          {/* Login Form */}
+          <div className="auth-container auth-container--hero">
+            <h2>Welcome Back</h2>
+            <form onSubmit={handleSubmit} className="auth-form" aria-label="Login form">
+              <div className="form-group">
+                <label htmlFor="email" className="required">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your.email@example.com"
+                  required
+                  aria-required="true"
+                  autoComplete="email"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password" className="required">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                  aria-required="true"
+                  autoComplete="current-password"
+                />
+              </div>
+
+              {error && <div className="api-error-message" role="alert">{error}</div>}
+
+              <button 
+                type="submit" 
+                className={`auth-button ${isLoading ? 'loading' : ''}`} 
+                disabled={isLoading}
+                aria-busy={isLoading}
+              >
+                {isLoading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+            <div className="auth-footer">
+              Don't have an account? <Link to="/signup">Sign Up</Link>
+            </div>
+          </div>
         </div>
-
-        {error && <div className="api-error-message" role="alert">{error}</div>}
-
-        <button 
-          type="submit" 
-          className={`auth-button ${isLoading ? 'loading' : ''}`} 
-          disabled={isLoading}
-          aria-busy={isLoading}
-        >
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-      <div className="auth-footer">
-        Don't have an account? <Link to="/signup">Sign Up</Link>
       </div>
     </div>
   );

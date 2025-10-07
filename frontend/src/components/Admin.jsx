@@ -167,7 +167,7 @@ const Admin = () => {
 
   return (
     <div className="admin-container">
-      <h2>Admin Dashboard</h2>
+      <h2 className="admin-container__title">Admin Dashboard</h2>
 
       {/* Tab Navigation */}
       <div className="admin-tabs" role="tablist">
@@ -224,7 +224,7 @@ const Admin = () => {
         {activeTab === 'contestants' && (
           <div role="tabpanel" id="contestants-panel" aria-labelledby="contestants-tab">
             <section className="admin-section">
-              <h3>Manage Contestants</h3>
+              <h3 className="admin-section__title">Manage Contestants</h3>
 
               {contestantError && <div className="error-message" role="alert">{contestantError}</div>}
 
@@ -380,7 +380,7 @@ const Admin = () => {
         {activeTab === 'draft' && (
           <div role="tabpanel" id="draft-panel" aria-labelledby="draft-tab">
             <section className="admin-section">
-              <h3>Trigger Draft</h3>
+              <h3 className="admin-section__title">Trigger Draft</h3>
               
               {draftStatus && (
                 <div className="draft-status" role="status" aria-live="polite">

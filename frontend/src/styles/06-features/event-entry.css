@@ -36,7 +36,7 @@
   height: 64px;
   border-radius: var(--radius-full);
   overflow: hidden;
-  background: var(--color-gray-200);
+  background: var(--color-bg-tertiary);
 }
 
 .contestant-avatar-image {
@@ -54,8 +54,8 @@
   justify-content: center;
   font-size: var(--font-size-xl);
   font-weight: 700;
-  color: var(--color-gray-600);
-  background: var(--color-gray-200);
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-tertiary);
 }
 
 .contestant-details {
@@ -332,7 +332,8 @@
 }
 
 .save-button:disabled {
-  background: var(--color-gray-400);
+  background: var(--color-bg-quaternary);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
@@ -391,7 +392,7 @@
 }
 
 .close-button:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
 }
 
@@ -445,8 +446,8 @@
 }
 
 .event-history-item-points.neutral {
-  background: var(--color-gray-100);
-  color: var(--color-gray-600);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
 }
 
 .delete-event-button {

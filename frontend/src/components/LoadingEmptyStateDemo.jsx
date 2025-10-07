@@ -50,10 +50,12 @@ const LoadingEmptyStateDemo = () => {
       <section className="demo-section">
         <h2>Button Loading States</h2>
         <div className="button-demo-grid">
-          <button className="btn-primary">Normal Button</button>
+          <button className="btn-primary">Primary Button</button>
           <button className="btn-primary btn-loading">Loading Button</button>
           <button className="btn-secondary">Secondary</button>
+          <button className="btn-tertiary">Tertiary</button>
           <button className="btn-danger">Danger</button>
+          <button className="btn-link">Link Button</button>
         </div>
       </section>
 

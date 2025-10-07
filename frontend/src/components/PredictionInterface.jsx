@@ -290,7 +290,6 @@ const PredictionInterface = () => {
                       <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                       <div className="contestant-card-details">
                         {pred.contestant?.profession && <span className="detail-item">{pred.contestant.profession}</span>}
-                        {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
                       </div>
                     </div>
                     
@@ -333,7 +332,6 @@ const PredictionInterface = () => {
                     <div className={`contestant-tribe-name ${getTribeClass(pred.tribe)}`}>{pred.tribe} Tribe</div>
                     <div className="contestant-card-details">
                       {pred.contestant?.profession && <span className="detail-item">{pred.contestant.profession}</span>}
-                      {pred.contestant?.age && <span className="detail-item">{pred.contestant.age} years old</span>}
                     </div>
                   </div>
                   
@@ -404,7 +402,6 @@ const PredictionInterface = () => {
                         <h4 className="contestant-card-name">{contestant.name}</h4>
                         <div className="contestant-card-details">
                           {contestant.profession && <span className="detail-item">{contestant.profession}</span>}
-                          {contestant.age && <span className="detail-item">{contestant.age} years old</span>}
                         </div>
                       </div>
                     </div>

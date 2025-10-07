@@ -1,70 +1,102 @@
 import '../styles/07-pages/dashboard.css';
 
-const ContestantRow = ({ rank, name, profession, totalScore, isEliminated, imageUrl }) => {
+const ContestantRow = ({ 
+  contestant, 
+  showCrown = false, 
+  isSoleSurvivor = false,
+  // Legacy props for backward compatibility
+  rank, 
+  name, 
+  profession, 
+  totalScore, 
+  isEliminated, 
+  imageUrl 
+}) => {
+  // Use contestant object if provided, otherwise fall back to individual props
+  const contestantData = contestant || {
+    id: rank,
+    name,
+    profession,
+    total_score: totalScore,
+    is_eliminated: isEliminated,
+    image_url: imageUrl
+  };
+
   // Extract initials from name
   const getInitials = (name) => {
     return name.split(' ').map(n => n[0]).join('');
   };
 
-  // Get badge color based on rank
-  const getBadgeColor = (rank) => {
-    const colors = [
-      '#FF6B35', // Orange
-      '#4A90E2', // Blue
-      '#27AE60', // Green
-      '#9B59B6', // Purple
-      '#E74C3C', // Red
+  // Get badge color class based on rank or type
+  const getBadgeColorClass = (rank) => {
+    if (isSoleSurvivor) {
+      return 'contestant-badge--sole-survivor';
+    }
+    const colorClasses = [
+      'contestant-badge--primary',    // Orange
+      'contestant-badge--secondary',  // Blue
+      'contestant-badge--success',    // Green
+      'contestant-badge--info',       // Purple
+      'contestant-badge--danger',     // Red
     ];
-    return colors[(rank - 1) % colors.length];
+    return colorClasses[(rank - 1) % colorClasses.length];
   };
 
   return (
     <div
-      className={`contestant-row ${isEliminated ? 'eliminated' : ''}`}
+      className={`contestant-row ${contestantData.is_eliminated ? 'eliminated' : ''} ${isSoleSurvivor ? 'sole-survivor' : ''}`}
       role="listitem"
-      aria-label={`Draft pick ${rank}: ${name}, ${profession}, ${totalScore} points, ${isEliminated ? 'eliminated' : 'active'}`}
+      aria-label={`${isSoleSurvivor ? 'Sole survivor' : 'Draft pick'}: ${contestantData.name}, ${contestantData.profession}, ${contestantData.total_score || 0} points${contestantData.is_eliminated ? ', eliminated' : ''}`}
     >
-      <div
-        className="contestant-rank-badge"
-        style={{ backgroundColor: getBadgeColor(rank) }}
-        aria-label={`Draft pick ${rank}`}
-      >
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={`${name}'s profile picture`}
-            className="contestant-badge-image"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextElementSibling.style.display = 'flex';
-            }}
-          />
-        ) : null}
+      <div className="contestant-left">
         <div
-          className="contestant-initials"
-          style={{ display: imageUrl ? 'none' : 'flex' }}
-          aria-label={`${name} initials`}
+          className={`contestant-avatar ${getBadgeColorClass(rank)}`}
+          aria-label={isSoleSurvivor ? 'Sole survivor' : `Draft pick ${rank || ''}`}
         >
-          {getInitials(name)}
+          {contestantData.image_url ? (
+            <img
+              src={contestantData.image_url}
+              alt={`${contestantData.name}'s profile picture`}
+              className="contestant-avatar-image"
+              onError={(e) => {
+                e.target.classList.add('u-hidden');
+                e.target.nextElementSibling.classList.remove('u-hidden');
+                e.target.nextElementSibling.classList.add('u-flex');
+              }}
+            />
+          ) : null}
+          <div
+            className={`contestant-initials ${contestantData.image_url ? 'u-hidden' : 'u-flex'}`}
+            aria-label={`${contestantData.name} initials`}
+          >
+            {getInitials(contestantData.name)}
+          </div>
+        </div>
+
+        <div className="contestant-details">
+          <div className="contestant-name-wrapper">
+            {showCrown && (
+              <span className="crown-icon" role="img" aria-label="Sole survivor crown">👑</span>
+            )}
+            <h4 className="contestant-name">{contestantData.name}</h4>
+          </div>
+          <p className="contestant-profession">{contestantData.profession}</p>
         </div>
       </div>
 
-      <div className="contestant-details">
-        <h4 className="contestant-name">{name}</h4>
-        <p className="contestant-profession">{profession}</p>
-      </div>
-
       <div className="contestant-stats">
-        <span className="contestant-points" aria-label={`${totalScore} points`}>
-          {totalScore} <span className="pts-label" aria-hidden="true">pts</span>
+        <span className="contestant-points" aria-label={`${contestantData.total_score || 0} points`}>
+          {contestantData.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
         </span>
-        <span
-          className={`contestant-status ${isEliminated ? 'status-eliminated' : 'status-active'}`}
-          role="status"
-          aria-label={`Status: ${isEliminated ? 'eliminated' : 'active'}`}
-        >
-          {isEliminated ? 'Eliminated' : 'Active'}
-        </span>
+        {contestantData.is_eliminated && (
+          <span
+            className="contestant-status status-eliminated"
+            role="status"
+            aria-label="Status: eliminated"
+          >
+            Eliminated
+          </span>
+        )}
       </div>
     </div>
   );

@@ -54,9 +54,18 @@ a:hover {
   text-decoration: underline;
 }
 
+a:focus {
+  outline: none; /* Remove default outline */
+}
+
 a:focus-visible {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  border-radius: var(--radius-sm);
 }
 
 /* Lists */
@@ -103,4 +112,67 @@ th {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-secondary);
   background-color: var(--color-bg-secondary);
+}
+/* 
+============================================
+   ENHANCED FOCUS INDICATORS FOR DARK THEME
+   ============================================ */
+
+/* Remove default focus outline for all elements */
+*:focus {
+  outline: none;
+}
+
+/* Enhanced focus-visible styles for keyboard navigation */
+*:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring-primary);
+  transition: var(--transition-fast);
+}
+
+/* Button focus indicators - Subtle gray focus */
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring-primary);
+}
+
+/* Form element focus indicators - Subtle gray focus */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--focus-ring-primary);
+}
+
+/* Interactive container focus - Subtle gray focus */
+[tabindex]:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring-primary);
+}
+
+
+
+/* Keyboard-only focus styles (not mouse) */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Enhanced table focus - Subtle gray focus */
+table:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+th:focus-visible,
+td:focus-visible {
+  outline: 2px solid var(--focus-outline-color);
+  outline-offset: 1px;
+  background-color: var(--color-bg-tertiary);
 }

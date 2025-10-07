@@ -47,7 +47,7 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h2>My Profile</h2>
+      <h2 className="profile-container__title">My Profile</h2>
       
       <div className="profile-info">
         <div className="profile-image-section" aria-label="Profile picture">
@@ -87,7 +87,7 @@ const Profile = () => {
       </div>
 
       <div className="profile-update-section">
-        <h3>Update Profile Image</h3>
+        <h3 className="profile-container__subtitle">Update Profile Image</h3>
         <form onSubmit={handleUpdateProfileImage}>
           <div className="form-group">
             <label htmlFor="profileImageUrl" className="form-label">Profile Image URL:</label>

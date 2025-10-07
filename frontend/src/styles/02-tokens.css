@@ -17,94 +17,123 @@
   --font-size-2xl: 1.5rem;    /* 24px */
   --font-size-3xl: 1.875rem;  /* 30px */
   --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px - for hero text */
+  --font-size-6xl: 3.75rem;   /* 60px - for dramatic headings */
   
   /* Font Weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
   
   /* Line Heights */
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
   
+  /* Text Shadows for Dramatic Effects */
+  --text-shadow-glow: 0 0 10px rgba(255, 107, 53, 0.3);
+  --text-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --text-shadow-dramatic: 0 2px 8px rgba(0, 0, 0, 0.8);
+  --text-shadow-hero: 0 4px 12px rgba(0, 0, 0, 0.9);
+  --text-shadow-none: none;
+  
   /* ============================================
-     COLOR PALETTE
+     DARK THEME COLOR PALETTE
      ============================================ */
   
-  /* Primary Colors (Orange - Brand) */
-  --color-primary: #FF6B35;
-  --color-primary-hover: #E55A2B;
-  --color-primary-active: #CC4E24;
-  --color-primary-light: #FFF5F2;
-  --color-primary-dark: #B33D1A;
+  /* Primary Dark Backgrounds */
+  --color-bg-primary: #0A0A0B;        /* Deep black for main backgrounds */
+  --color-bg-secondary: #1A1A1C;      /* Slightly lighter for cards/containers */
+  --color-bg-tertiary: #2A2A2E;       /* Elevated surfaces */
+  --color-bg-quaternary: #3A3A3F;     /* Interactive elements */
+  --color-bg-overlay: rgba(10, 10, 11, 0.95); /* Dark overlay with transparency */
   
-  /* Secondary Colors (Blue) */
+  /* Survivor Brand Colors (Enhanced for Dark Theme) */
+  --color-primary: #FF6B35;           /* Survivor orange (unchanged) */
+  --color-primary-hover: #FF8A5C;     /* Lighter on hover */
+  --color-primary-active: #E55A2B;    /* Darker when pressed */
+  --color-primary-light: rgba(255, 107, 53, 0.1); /* Light background for dark theme */
+  --color-primary-dark: #B33D1A;      /* Darker variant */
+  --color-primary-glow: rgba(255, 107, 53, 0.3); /* Glow effect */
+  
+  /* Accent Colors (Survivor Red) */
+  --color-accent: #FF4444;            /* Survivor red for danger/elimination */
+  --color-accent-hover: #FF6666;      /* Lighter red on hover */
+  --color-accent-active: #E53E3E;     /* Darker red when pressed */
+  --color-accent-light: rgba(255, 68, 68, 0.1); /* Light background */
+  --color-accent-glow: rgba(255, 68, 68, 0.3); /* Red glow effect */
+  
+  /* Secondary Colors (Blue - adapted for dark) */
   --color-secondary: #4A90E2;
-  --color-secondary-hover: #3A7BC8;
-  --color-secondary-active: #2A6BB8;
-  --color-secondary-light: #F0F7FF;
-  --color-secondary-dark: #1A5BA8;
+  --color-secondary-hover: #5BA0F2;
+  --color-secondary-active: #3A7BC8;
+  --color-secondary-light: rgba(74, 144, 226, 0.1);
+  --color-secondary-dark: #2A6BB8;
   
-  /* Success Colors (Green) */
-  --color-success: #27AE60;
-  --color-success-hover: #1E8449;
-  --color-success-active: #186A3B;
-  --color-success-light: #E8F8F0;
-  --color-success-dark: #145A32;
+  /* Success Colors (Bright Green for Dark Theme) */
+  --color-success: #00D084;           /* Bright green for success states */
+  --color-success-hover: #00E094;     /* Lighter on hover */
+  --color-success-active: #00B574;    /* Darker when pressed */
+  --color-success-light: rgba(0, 208, 132, 0.1); /* Success background */
+  --color-success-dark: #009A64;
   
-  /* Danger Colors (Red) */
-  --color-danger: #E74C3C;
-  --color-danger-hover: #C0392B;
-  --color-danger-active: #A93226;
-  --color-danger-light: #FDEDEC;
-  --color-danger-dark: #922B21;
+  /* Danger Colors (Bright Red for Dark Theme) */
+  --color-danger: #FF4444;            /* Bright red for errors */
+  --color-danger-hover: #FF6666;      /* Lighter on hover */
+  --color-danger-active: #E53E3E;     /* Darker when pressed */
+  --color-danger-light: rgba(255, 68, 68, 0.1); /* Error background */
+  --color-danger-dark: #CC3333;
   
-  /* Warning Colors (Yellow-Orange) */
-  --color-warning: #F39C12;
-  --color-warning-hover: #D68910;
-  --color-warning-active: #B9770E;
-  --color-warning-light: #FEF5E7;
-  --color-warning-lightest: #FFFBF5;
-  --color-warning-dark: #9C640C;
+  /* Warning Colors (Bright Yellow for Dark Theme) */
+  --color-warning: #FFB800;           /* Bright yellow for warnings */
+  --color-warning-hover: #FFC533;     /* Lighter on hover */
+  --color-warning-active: #E6A600;    /* Darker when pressed */
+  --color-warning-light: rgba(255, 184, 0, 0.1); /* Warning background */
+  --color-warning-lightest: rgba(255, 184, 0, 0.05);
+  --color-warning-dark: #CC9200;
   
-  /* Info Colors (Light Blue) */
+  /* Info Colors (Bright Blue for Dark Theme) */
   --color-info: #3498DB;
-  --color-info-hover: #2980B9;
-  --color-info-active: #21618C;
-  --color-info-light: #EBF5FB;
-  --color-info-dark: #1B4F72;
+  --color-info-hover: #5DADE2;
+  --color-info-active: #2980B9;
+  --color-info-light: rgba(52, 152, 219, 0.1);
+  --color-info-dark: #21618C;
   
-  /* Neutral Colors (Gray Scale) */
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E5E7EB;
-  --color-gray-300: #D1D5DB;
-  --color-gray-400: #9CA3AF;
-  --color-gray-500: #6B7280;
-  --color-gray-600: #4B5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1F2937;
-  --color-gray-900: #111827;
+  /* Text Colors (High Contrast for Dark Theme) */
+  --color-text-primary: #FFFFFF;      /* Pure white for headings */
+  --color-text-secondary: #E0E0E0;    /* Light gray for body text */
+  --color-text-tertiary: #B0B0B0;     /* Medium gray for secondary info */
+  --color-text-muted: #808080;        /* Darker gray for disabled/muted */
+  --color-text-inverse: #0A0A0B;      /* Dark text for light backgrounds */
+  --color-text-disabled: #606060;     /* Disabled text color */
   
-  /* Text Colors */
-  --color-text-primary: var(--color-gray-900);
-  --color-text-secondary: var(--color-gray-600);
-  --color-text-tertiary: var(--color-gray-500);
-  --color-text-inverse: #FFFFFF;
-  --color-text-disabled: var(--color-gray-400);
+  /* Border and Divider Colors (Dark Theme) */
+  --color-border-subtle: #2A2A2E;     /* Subtle borders - barely visible definition */
+  --color-border-medium: #3A3A3F;     /* Standard borders - clear but not harsh */
+  --color-border-strong: #4A4A4F;     /* Emphasized borders - for focus/active states */
+  --color-border-accent: var(--color-primary); /* Accent borders - orange highlights */
   
-  /* Background Colors */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: var(--color-gray-50);
-  --color-bg-tertiary: var(--color-gray-100);
-  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  /* Semantic border colors for consistent usage */
+  --color-border-light: var(--color-border-subtle);   /* Light = subtle in dark theme */
+  --color-border-dark: var(--color-border-strong);    /* Dark = strong in dark theme */
+  --color-border-default: var(--color-border-medium); /* Default border for most components */
   
-  /* Border Colors */
-  --color-border-light: var(--color-gray-200);
-  --color-border-medium: var(--color-gray-300);
-  --color-border-dark: var(--color-gray-400);
+  /* Neutral Colors (Adapted for Dark Theme) */
+  --color-gray-50: #F9FAFB;   /* Keep for light elements */
+  --color-gray-100: #F3F4F6;  /* Keep for light elements */
+  --color-gray-200: #E5E7EB;  /* Keep for light elements */
+  --color-gray-300: #D1D5DB;  /* Keep for light elements */
+  --color-gray-400: #9CA3AF;  /* Keep for medium elements */
+  --color-gray-500: #6B7280;  /* Keep for medium elements */
+  --color-gray-600: #4B5563;  /* Repurposed for dark theme borders */
+  --color-gray-700: #374151;  /* Repurposed for dark theme surfaces */
+  --color-gray-800: #1F2937;  /* Repurposed for dark theme backgrounds */
+  --color-gray-900: #111827;  /* Repurposed for dark theme deep backgrounds */
+  
+
   
   /* ============================================
      TRIBE COLORS - Survivor Season 49
@@ -162,21 +191,56 @@
   --radius-full: 9999px; /* Fully rounded */
   
   /* ============================================
-     SHADOWS
+     DARK THEME SHADOWS & GLOWS
      ============================================ */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* Standard Shadows (Enhanced for Dark Theme) */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   --shadow-none: none;
   
-  /* Focus Shadow */
-  --shadow-focus: 0 0 0 3px rgba(255, 107, 53, 0.2);
-  --shadow-focus-danger: 0 0 0 3px rgba(231, 76, 60, 0.2);
-  --shadow-focus-success: 0 0 0 3px rgba(39, 174, 96, 0.2);
+  /* Dramatic Card Shadows */
+  --shadow-card: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 107, 53, 0.2);
+  --shadow-card-elevated: 
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  
+  /* Glow Effects */
+  --glow-primary: 0 0 20px rgba(255, 107, 53, 0.3);
+  --glow-primary-intense: 0 0 30px rgba(255, 107, 53, 0.5);
+  --glow-accent: 0 0 20px rgba(255, 68, 68, 0.3);
+  --glow-success: 0 0 20px rgba(0, 208, 132, 0.3);
+  --glow-warning: 0 0 20px rgba(255, 184, 0, 0.3);
+  --glow-text: 0 0 10px rgba(255, 107, 53, 0.3);
+  
+  /* Focus Shadows (Subtle Gray) */
+  --shadow-focus: 0 0 0 2px rgba(74, 74, 79, 0.3);
+  --shadow-focus-danger: 0 0 0 2px var(--color-accent-glow);
+  --shadow-focus-success: 0 0 0 2px rgba(0, 208, 132, 0.3);
+  --shadow-focus-warning: 0 0 0 2px rgba(255, 184, 0, 0.3);
+  
+  /* Button Shadows */
+  --shadow-button: 
+    0 4px 12px rgba(255, 107, 53, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --shadow-button-hover: 
+    0 6px 16px rgba(255, 107, 53, 0.4),
+    0 0 20px rgba(255, 107, 53, 0.3);
+  --shadow-button-active: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  /* Navigation Shadow */
+  --shadow-navigation: 0 4px 12px rgba(0, 0, 0, 0.4);
   
   /* ============================================
      TRANSITIONS
@@ -245,19 +309,45 @@
   --card-border-width: 1px;
   
   /* ============================================
-     GRADIENTS
+     DARK THEME GRADIENTS
      ============================================ */
   
-  /* Primary gradients */
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Primary Button Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary), #FF8A5C);
+  --gradient-primary-hover: linear-gradient(135deg, #FF8A5C, var(--color-primary));
   --gradient-secondary: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-  --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --gradient-success: linear-gradient(135deg, var(--color-success), #00E094);
+  --gradient-warning: linear-gradient(135deg, var(--color-warning), #FFC533);
+  --gradient-danger: linear-gradient(135deg, var(--color-danger), #FF6666);
   
-  /* Medal gradients */
+  /* Hero Section Gradients */
+  --gradient-hero: 
+    linear-gradient(135deg, 
+      rgba(10, 10, 11, 0.9) 0%,
+      rgba(26, 26, 28, 0.8) 50%,
+      rgba(42, 42, 46, 0.9) 100%
+    );
+  --gradient-hero-overlay: 
+    linear-gradient(180deg, 
+      rgba(10, 10, 11, 0.2) 0%,
+      rgba(10, 10, 11, 0.8) 100%
+    );
+  
+  /* Background Gradients */
+  --gradient-bg-primary: 
+    radial-gradient(ellipse at top, 
+      rgba(26, 26, 28, 0.8) 0%, 
+      rgba(10, 10, 11, 1) 100%
+    );
+  --gradient-bg-card: 
+    linear-gradient(145deg, 
+      rgba(26, 26, 28, 0.9) 0%, 
+      rgba(42, 42, 46, 0.6) 100%
+    );
+  
+  /* Medal gradients (Enhanced for Dark Theme) */
   --gradient-gold: linear-gradient(135deg, #FFD700, #FFA500);
-  --gradient-silver: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+  --gradient-silver: linear-gradient(135deg, #E8E8E8, #C0C0C0);
   --gradient-bronze: linear-gradient(135deg, #CD7F32, #B8860B);
   
   /* Avatar/initials gradients */
@@ -266,6 +356,14 @@
   
   /* Progress bar gradients */
   --gradient-progress: linear-gradient(90deg, var(--color-success), var(--color-primary));
+  
+  /* Accent Gradients */
+  --gradient-accent: linear-gradient(135deg, var(--color-accent), #FF6666);
+  --gradient-glow: 
+    radial-gradient(circle, 
+      rgba(255, 107, 53, 0.3) 0%, 
+      transparent 70%
+    );
   
   /* ============================================
      MEDAL COLORS
@@ -302,66 +400,210 @@
   --height-full: 100%;
   --width-auto: auto;
   --height-auto: auto;
+  --height-screen: 100vh;
+  --width-screen: 100vw;
   
   /* Common overflow patterns */
   --overflow-hidden: hidden;
   --overflow-auto: auto;
   --overflow-visible: visible;
   
+  /* Dark Theme Specific Utilities */
+  --backdrop-blur: blur(10px);
+  --backdrop-blur-sm: blur(4px);
+  --backdrop-blur-lg: blur(16px);
+  
+  /* Animation Utilities */
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 300ms;
+  --animation-duration-slow: 500ms;
+  --animation-easing-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animation-easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Hero Section Utilities */
+  --hero-min-height: 100vh;
+  --hero-padding-top: 80px; /* Account for navigation */
+  
+  /* Card Utilities */
+  --card-backdrop: rgba(26, 26, 28, 0.8);
+  --card-border: 1px solid var(--color-border-subtle);
+  --card-border-hover: 1px solid var(--color-border-medium);
+  --card-border-focus: 1px solid var(--color-border-accent);
+  
+  /* Border Utilities */
+  --border-subtle: 1px solid var(--color-border-subtle);
+  --border-medium: 1px solid var(--color-border-medium);
+  --border-strong: 1px solid var(--color-border-strong);
+  --border-accent: 1px solid var(--color-border-accent);
+  --border-none: none;
+  
+  /* Button Utilities */
+  --button-transition: all var(--transition-base);
+  --button-transform-hover: translateY(-2px);
+  --button-transform-active: translateY(0);
+  
   /* ============================================
-     ACCESSIBILITY
+     ACCESSIBILITY TOKENS
      ============================================ */
   
-  /* Focus visible outline */
-  --focus-outline-width: 3px;
+  /* Focus Management - Subtle Gray Focus States */
+  --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
-  --focus-outline-color: var(--color-primary);
+  --focus-outline-color: var(--color-border-strong);
+  --focus-ring-primary: 0 0 0 2px rgba(74, 74, 79, 0.3);
+  --focus-ring-danger: 0 0 0 2px var(--color-accent-glow);
+  --focus-ring-success: 0 0 0 2px rgba(0, 208, 132, 0.3);
   
-  /* Minimum touch target size */
+  /* Touch Targets */
   --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+  
+  /* High Contrast Mode Tokens */
+  --hc-border-width: 2px;
+  --hc-outline-width: 4px;
+  --hc-text-primary: #FFFFFF;
+  --hc-text-secondary: #E0E0E0;
+  --hc-bg-primary: #000000;
+  --hc-bg-secondary: #1A1A1A;
+  --hc-border-primary: #FFFFFF;
+  --hc-border-secondary: #CCCCCC;
+  
+  /* Reduced Motion Tokens */
+  --motion-duration-none: 0ms;
+  --motion-duration-instant: 1ms;
+  --motion-easing-none: linear;
+  
+  /* Screen Reader Only */
+  --sr-only-position: absolute;
+  --sr-only-width: 1px;
+  --sr-only-height: 1px;
+  --sr-only-padding: 0;
+  --sr-only-margin: -1px;
+  --sr-only-overflow: hidden;
+  --sr-only-clip: rect(0, 0, 0, 0);
+  --sr-only-white-space: nowrap;
+  --sr-only-border: 0;
 }
 
 /* ============================================
-   DARK MODE SUPPORT (Optional - for future)
+   BROWSER COMPATIBILITY FALLBACKS
    ============================================ */
-/* Uncomment when implementing dark mode
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-primary: var(--color-gray-900);
-    --color-bg-secondary: var(--color-gray-800);
-    --color-bg-tertiary: var(--color-gray-700);
-    --color-text-primary: var(--color-gray-50);
-    --color-text-secondary: var(--color-gray-300);
-    --color-text-tertiary: var(--color-gray-400);
+
+/* Fallback values for browsers that don't support CSS custom properties */
+.fallback-support {
+  /* Primary colors */
+  background-color: #FF6B35; /* Fallback for var(--color-primary) */
+  color: #FFFFFF; /* Fallback for var(--color-text-primary) */
+  
+  /* Background colors */
+  background-color: #0A0A0B; /* Fallback for var(--color-bg-primary) */
+}
+
+/* Feature detection for backdrop-filter */
+@supports (backdrop-filter: blur(10px)) {
+  .supports-backdrop-blur {
+    backdrop-filter: blur(10px);
   }
 }
-*/
+
+@supports not (backdrop-filter: blur(10px)) {
+  .supports-backdrop-blur {
+    background-color: rgba(10, 10, 11, 0.95);
+  }
+}
 
 /* ============================================
-   REDUCED MOTION SUPPORT
+   ENHANCED REDUCED MOTION SUPPORT
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --transition-fast: 0ms;
-    --transition-base: 0ms;
-    --transition-slow: 0ms;
-    --transition-slower: 0ms;
+    /* Override all transition durations */
+    --transition-fast: var(--motion-duration-none);
+    --transition-base: var(--motion-duration-none);
+    --transition-slow: var(--motion-duration-none);
+    --transition-slower: var(--motion-duration-none);
+    
+    /* Override all transition properties */
+    --transition-all: none;
+    --transition-colors: none;
+    --transition-opacity: none;
+    --transition-transform: none;
+    --transition-shadow: none;
+    
+    /* Remove glow effects */
+    --glow-primary: none;
+    --glow-primary-intense: none;
+    --glow-accent: none;
+    --glow-success: none;
+    --glow-warning: none;
+    --glow-text: none;
+    
+    /* Simplify text shadows */
+    --text-shadow-glow: var(--text-shadow-none);
+    --text-shadow-dramatic: var(--text-shadow-subtle);
+    --text-shadow-hero: var(--text-shadow-subtle);
   }
   
-  * {
-    animation-duration: 0.01ms !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--motion-duration-instant) !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: var(--motion-duration-instant) !important;
+    scroll-behavior: auto !important;
   }
 }
 
 /* ============================================
-   HIGH CONTRAST MODE SUPPORT
+   ENHANCED HIGH CONTRAST MODE SUPPORT
    ============================================ */
 @media (prefers-contrast: high) {
   :root {
-    --color-border-light: var(--color-gray-400);
-    --color-border-medium: var(--color-gray-500);
-    --color-border-dark: var(--color-gray-600);
+    /* Enhanced border visibility for high contrast mode */
+    --color-border-subtle: var(--hc-border-secondary);
+    --color-border-medium: var(--hc-border-primary);
+    --color-border-strong: var(--hc-border-primary);
+    --color-border-default: var(--hc-border-primary);
+    
+    /* Enhanced text contrast */
+    --color-text-primary: var(--hc-text-primary);
+    --color-text-secondary: var(--hc-text-secondary);
+    --color-text-tertiary: var(--hc-text-secondary);
+    
+    /* Enhanced background contrast */
+    --color-bg-primary: var(--hc-bg-primary);
+    --color-bg-secondary: var(--hc-bg-secondary);
+    --color-bg-tertiary: var(--hc-bg-secondary);
+    
+    /* Enhanced focus indicators for high contrast */
+    --focus-outline-width: var(--hc-outline-width);
+    --focus-ring-primary: 0 0 0 var(--hc-outline-width) var(--hc-border-primary);
+    
+    /* Remove subtle effects that may reduce contrast */
+    --shadow-card: 0 0 0 var(--hc-border-width) var(--hc-border-primary);
+    --shadow-card-hover: 0 0 0 var(--hc-border-width) var(--color-primary);
+    --text-shadow-glow: var(--text-shadow-none);
+    --text-shadow-subtle: var(--text-shadow-none);
+  }
+}
+
+/* ============================================
+   FORCED COLORS MODE SUPPORT (Windows High Contrast)
+   ============================================ */
+@media (forced-colors: active) {
+  :root {
+    /* Use system colors in forced colors mode */
+    --color-text-primary: CanvasText;
+    --color-text-secondary: CanvasText;
+    --color-bg-primary: Canvas;
+    --color-bg-secondary: Canvas;
+    --color-primary: Highlight;
+    --color-border-medium: CanvasText;
+    
+    /* Remove custom shadows and effects */
+    --shadow-card: none;
+    --shadow-card-hover: none;
+    --glow-primary: none;
+    --text-shadow-glow: none;
   }
 }

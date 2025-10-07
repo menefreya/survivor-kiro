@@ -14,48 +14,50 @@
 /**
  * Standard Card Component
  * 
- * Base card with consistent border-radius, shadow, and padding.
+ * Base card with dark theme styling, consistent border-radius, shadow, and padding.
  * Requirement 6.1: Consistent border-radius (12px)
- * Requirement 6.2: Subtle shadows for depth
+ * Requirement 6.2: Subtle shadows for depth and separation
  * Requirement 6.5: Consistent padding across all card types
+ * Requirements: 1.1, 2.2 - Dark theme with subtle borders and shadows
  */
 .card {
-  background-color: var(--color-bg-primary);
-  border: var(--card-border-width) solid var(--color-border-light);
+  background-color: var(--color-bg-secondary);
+  border: var(--card-border-width) solid var(--color-border-subtle);
   border-radius: var(--card-border-radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
   padding: var(--card-padding);
-  transition: var(--transition-shadow);
+  transition: var(--transition-shadow), var(--transition-colors);
   position: relative;
 }
 
 /**
  * Card Hover State
  * 
- * Requirement 6.3: Hover state with increased shadow to indicate interactivity
+ * Requirement 6.3: Hover state with orange accent borders and enhanced shadow
+ * Requirements: 1.1, 2.2 - Orange accent colors for hover states
  */
-.card:hover {
-  box-shadow: var(--shadow-md);
-}
+/* Removed global card hover effects - cards should not have hover states unless specifically interactive */
 
 /**
  * Interactive Card
  * 
  * For cards that are clickable or contain interactive elements
+ * Enhanced with dark theme styling and orange accent borders
  */
 .card-interactive {
   cursor: pointer;
-  transition: box-shadow var(--transition-base), transform var(--transition-fast);
+  transition: box-shadow var(--transition-base), transform var(--transition-fast), border-color var(--transition-colors);
 }
 
 .card-interactive:hover {
-  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-elevated);
   transform: translateY(-2px);
 }
 
 .card-interactive:active {
   transform: translateY(0);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /**
@@ -63,11 +65,13 @@
  * 
  * Requirement 6.6: Focus-within state for accessibility
  * Highlights card when any child element receives focus
+ * Enhanced with orange glow for dark theme
  */
 .card:focus-within {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
-  box-shadow: var(--shadow-md), var(--shadow-focus);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card-hover), var(--shadow-focus);
 }
 
 /* ============================================
@@ -78,6 +82,7 @@
  * Card Header
  * 
  * Requirement 6.4: Consistent styling and spacing for card headers
+ * Updated with dark theme border colors
  */
 .card-header {
   display: flex;
@@ -85,7 +90,7 @@
   align-items: center;
   margin-bottom: var(--spacing-4);
   padding-bottom: var(--spacing-4);
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .card-header:last-child {
@@ -96,6 +101,7 @@
 
 /**
  * Card Title (within header)
+ * Enhanced with white text for dark theme visibility
  */
 .card-header-title {
   font-size: var(--font-size-xl);
@@ -134,6 +140,7 @@
  * Card Footer
  * 
  * Requirement 6.6: Consistently positioned action buttons
+ * Updated with dark theme border colors
  */
 .card-footer {
   display: flex;
@@ -141,7 +148,7 @@
   align-items: center;
   margin-top: var(--spacing-4);
   padding-top: var(--spacing-4);
-  border-top: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .card-footer:first-child {
@@ -214,28 +221,30 @@
 /**
  * Flat Card
  * 
- * No shadow, minimal border for subtle separation
+ * No shadow, minimal border for subtle separation in dark theme
  */
 .card-flat {
   box-shadow: none;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .card-flat:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
+  border-color: var(--color-border-medium);
 }
 
 /**
  * Elevated Card
  * 
- * Stronger shadow for prominent content
+ * Stronger shadow for prominent content in dark theme
  */
 .card-elevated {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-card-elevated);
 }
 
 .card-elevated:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card-elevated), var(--glow-primary);
+  border-color: var(--color-primary);
 }
 
 /**
@@ -253,10 +262,11 @@
 
 /**
  * Selected Card
+ * Enhanced with orange glow effect for dark theme
  */
 .card-selected {
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-md), 0 0 0 1px var(--color-primary);
+  box-shadow: var(--shadow-card-hover), 0 0 0 1px var(--color-primary), var(--glow-primary);
 }
 
 /**
@@ -296,34 +306,42 @@
 
 /**
  * Success Card
+ * Enhanced for dark theme with subtle background tinting
  */
 .card-success {
   border-color: var(--color-success);
   background-color: var(--color-success-light);
+  box-shadow: var(--shadow-card), 0 0 0 1px var(--color-success);
 }
 
 /**
  * Warning Card
+ * Enhanced for dark theme with subtle background tinting
  */
 .card-warning {
   border-color: var(--color-warning);
   background-color: var(--color-warning-light);
+  box-shadow: var(--shadow-card), 0 0 0 1px var(--color-warning);
 }
 
 /**
  * Danger Card
+ * Enhanced for dark theme with subtle background tinting
  */
 .card-danger {
   border-color: var(--color-danger);
   background-color: var(--color-danger-light);
+  box-shadow: var(--shadow-card), 0 0 0 1px var(--color-danger);
 }
 
 /**
  * Info Card
+ * Enhanced for dark theme with subtle background tinting
  */
 .card-info {
   border-color: var(--color-info);
   background-color: var(--color-info-light);
+  box-shadow: var(--shadow-card), 0 0 0 1px var(--color-info);
 }
 
 /* ============================================
@@ -539,15 +557,22 @@
 
 /**
  * High contrast mode support
+ * Enhanced for dark theme accessibility
  */
 @media (prefers-contrast: high) {
   .card {
     border-width: 2px;
-    border-color: var(--color-border-dark);
+    border-color: var(--color-border-strong);
   }
   
   .card-header,
   .card-footer {
-    border-color: var(--color-border-dark);
+    border-color: var(--color-border-strong);
+  }
+  
+  /* Removed card hover effects - only interactive cards should have hover states */
+  .card-interactive:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary);
   }
 }

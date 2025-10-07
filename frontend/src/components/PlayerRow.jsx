@@ -93,7 +93,7 @@ const PlayerRow = ({
               {getInitial(playerName)}
             </div>
           )}
-          <div className="avatar-initial" style={{ display: 'none' }} aria-label={`${playerName} avatar`}>
+          <div className="avatar-initial u-hidden" aria-label={`${playerName} avatar`}>
             {getInitial(playerName)}
           </div>
         </div>
@@ -167,8 +167,7 @@ const PlayerRow = ({
                     />
                   ) : null}
                   <div 
-                    className="team-member-initials"
-                    style={{ display: soleSurvivor.image_url ? 'none' : 'flex' }}
+                    className={`team-member-initials ${soleSurvivor.image_url ? 'u-hidden' : 'u-flex'}`}
                   >
                     {getInitials(soleSurvivor.name)}
                   </div>
@@ -179,9 +178,11 @@ const PlayerRow = ({
                 </div>
                 <div className="team-member-stats">
                   <span className="team-member-score">{soleSurvivor.total_score || 0} pts</span>
-                  <span className={`team-member-status ${soleSurvivor.is_eliminated ? 'status-eliminated' : 'status-active'}`}>
-                    {soleSurvivor.is_eliminated ? 'Eliminated' : 'Active'}
-                  </span>
+                  {soleSurvivor.is_eliminated && (
+                    <span className="team-member-status status-eliminated">
+                      Eliminated
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -208,8 +209,7 @@ const PlayerRow = ({
                       />
                     ) : null}
                     <div 
-                      className="team-member-initials"
-                      style={{ display: contestant.image_url ? 'none' : 'flex' }}
+                      className={`team-member-initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
                     >
                       {getInitials(contestant.name)}
                     </div>
@@ -220,9 +220,11 @@ const PlayerRow = ({
                   </div>
                   <div className="team-member-stats">
                     <span className="team-member-score">{contestant.total_score || 0} pts</span>
-                    <span className={`team-member-status ${contestant.is_eliminated ? 'status-eliminated' : 'status-active'}`}>
-                      {contestant.is_eliminated ? 'Eliminated' : 'Active'}
-                    </span>
+                    {contestant.is_eliminated && (
+                      <span className="team-member-status status-eliminated">
+                        Eliminated
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}

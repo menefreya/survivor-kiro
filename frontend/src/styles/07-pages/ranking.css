@@ -76,21 +76,25 @@
   width: 50px;
   text-align: center;
   margin-right: var(--spacing-4);
-  border: 2px solid var(--color-border-light);
+  border: 2px solid var(--color-border-medium);
   border-radius: var(--radius-sm);
   padding: var(--spacing-1);
-  background: var(--color-bg-primary);
-  transition: border-color var(--transition-base);
+  background: var(--color-bg-tertiary);
+  transition: all var(--transition-fast);
 }
 
 .rank-input:hover {
   border-color: var(--color-success);
+  background-color: var(--color-bg-quaternary);
 }
 
 .rank-input:focus {
   outline: none;
   border-color: var(--color-success);
-  box-shadow: 0 0 0 3px var(--color-success-light);
+  box-shadow: 
+    0 0 0 3px rgba(0, 208, 132, 0.3),
+    var(--glow-success),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Hide number input arrows */
@@ -141,7 +145,7 @@
 }
 
 .contestant-separator {
-  color: var(--color-gray-300);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
 }
 
@@ -159,7 +163,7 @@
 
 .drag-handle {
   font-size: var(--font-size-2xl);
-  color: var(--color-gray-400);
+  color: var(--color-text-muted);
   cursor: grab;
   padding: 0 var(--spacing-2);
 }
@@ -175,11 +179,20 @@
 /* Override form-input focus color for success theme */
 .sole-survivor-section .form-input:hover:not(:disabled) {
   border-color: var(--color-success);
+  background-color: var(--color-bg-quaternary);
 }
 
 .sole-survivor-section .form-input:focus {
   border-color: var(--color-success);
-  box-shadow: 0 0 0 3px var(--color-success-light);
+  box-shadow: 
+    0 0 0 3px rgba(0, 208, 132, 0.3),
+    var(--glow-success),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Update select dropdown arrow for success theme */
+.sole-survivor-section .form-input:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300D084' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 }
 
 .selected-survivor {

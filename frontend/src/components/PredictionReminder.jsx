@@ -82,21 +82,26 @@ const PredictionReminder = () => {
         )}
         <div className="prediction-reminder-text">
           <strong>
-            {isUrgent ? 'Urgent: ' : ''}
-            Episode {episodeNumber} Predictions Available
+            Weekly Prediction Open
           </strong>
           <p>
-            {isUrgent 
-              ? 'Predictions close soon! Make your elimination predictions now.'
-              : 'Make your elimination predictions to earn bonus points.'}
+            Submit your prediction for who will be eliminated in Episode {episodeNumber}
           </p>
+          <div className="prediction-deadline">
+            <span className="prediction-deadline-icon">🕐</span>
+            <span>
+              {isUrgent 
+                ? 'Deadline: Soon! Submit now'
+                : 'Deadline: Wednesday 8:00 PM EST'}
+            </span>
+          </div>
         </div>
         <div className="prediction-reminder-actions">
           <button 
             className="btn-primary"
             onClick={handleMakePredictions}
           >
-            Make Predictions
+            Submit Prediction
           </button>
         </div>
       </div>

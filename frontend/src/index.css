@@ -46,14 +46,14 @@ img {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: var(--color-bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gray-400);
+  background: var(--color-border-medium);
   border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
+  background: var(--color-border-strong);
 }

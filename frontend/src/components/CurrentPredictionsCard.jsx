@@ -97,7 +97,6 @@ const CurrentPredictionsCard = () => {
               <h4 className="contestant-card-name">{prediction.contestant?.name || 'Unknown'}</h4>
               <div className={`contestant-tribe-name ${getTribeClass(prediction.tribe)}`}>{prediction.tribe} Tribe</div>
               <div className="contestant-card-details">
-                {prediction.contestant?.age && <span className="detail-item">{prediction.contestant.age} years old</span>}
                 {prediction.contestant?.occupation && <span className="detail-item">{prediction.contestant.occupation}</span>}
               </div>
             </div>

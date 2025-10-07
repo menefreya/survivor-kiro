@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
-import '../styles/Modal.css';
+// Modal styles are now in the main CSS architecture
 
 const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerId, onSuccess }) => {
   const [contestants, setContestants] = useState([]);
@@ -95,10 +95,10 @@ const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerI
               <p className="body-text">
                 <strong>Current Sole Survivor:</strong> {currentSoleSurvivor.name}
                 {currentSoleSurvivor.is_eliminated && (
-                  <span className="eliminated-badge" style={{ marginLeft: '8px' }}>Eliminated</span>
+                  <span className="eliminated-badge u-ml-2">Eliminated</span>
                 )}
               </p>
-              <p className="body-text-sm" style={{ marginTop: '8px', color: 'var(--color-gray-600)' }}>
+              <p className="body-text-sm u-mt-2 u-text-tertiary">
                 Select a new sole survivor from the available contestants below.
               </p>
             </div>
@@ -141,14 +141,13 @@ const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerI
                           alt={`${contestant.name}'s profile`}
                           className="contestant-image"
                           onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextElementSibling.style.display = 'flex';
+                            e.target.classList.add('u-hidden');
+                            e.target.nextElementSibling.classList.remove('u-hidden');
                           }}
                         />
                       ) : null}
                       <div 
-                        className="contestant-initials"
-                        style={{ display: contestant.image_url ? 'none' : 'flex' }}
+                        className={`contestant-initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
                       >
                         {contestant.name.split(' ').map(n => n[0]).join('')}
                       </div>

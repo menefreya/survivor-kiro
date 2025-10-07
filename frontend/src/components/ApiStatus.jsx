@@ -21,17 +21,7 @@ const ApiStatus = () => {
   }, [apiUrl]);
 
   return (
-    <div style={{ 
-      position: 'fixed', 
-      bottom: '10px', 
-      right: '10px', 
-      padding: '10px', 
-      background: '#f0f0f0',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      fontSize: '12px',
-      zIndex: 9999
-    }}>
+    <div className="api-status-indicator">
       <div><strong>API URL:</strong> {apiUrl}</div>
       <div><strong>Status:</strong> {status}</div>
     </div>

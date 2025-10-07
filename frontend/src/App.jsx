@@ -17,9 +17,6 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="app">
-          <a href="#main-content" className="skip-to-main">
-            Skip to main content
-          </a>
           <Navigation />
           <main id="main-content" className="main-content">
             <Routes>

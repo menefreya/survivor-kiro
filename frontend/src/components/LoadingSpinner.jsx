@@ -29,7 +29,7 @@ const LoadingSpinner = ({
   }
 
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }} role={role} aria-live={ariaLive}>
+    <div className="loading-spinner-container" role={role} aria-live={ariaLive}>
       <div className={spinnerClass} aria-hidden="true"></div>
       {text && <span className="loading-text">{text}</span>}
       <span className="visually-hidden">{text || 'Loading content, please wait'}</span>

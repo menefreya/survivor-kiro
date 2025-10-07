@@ -1,0 +1,563 @@
+/**
+ * Mobile Responsive Optimizations for Dark Theme
+ * 
+ * Enhanced mobile layouts with improved touch targets, readability,
+ * and spacing optimized for dark theme visibility.
+ * 
+ * Requirements: 5.1, 5.2 - Mobile responsive design with dark theme optimization
+ */
+
+/* ============================================
+   MOBILE LAYOUT FOUNDATIONS
+   ============================================ */
+
+/* Enhanced container padding for mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 var(--spacing-3);
+  }
+  
+  /* Ensure minimum touch targets on mobile */
+  button,
+  .btn,
+  a[role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    min-height: var(--touch-target-comfortable);
+    min-width: var(--touch-target-comfortable);
+  }
+  
+  /* Enhanced text readability on mobile dark theme */
+  body {
+    font-size: var(--font-size-base); /* Ensure 16px minimum for iOS zoom prevention */
+    line-height: var(--line-height-relaxed); /* Better readability on small screens */
+  }
+  
+  /* Improved contrast for small text on mobile */
+  .u-text-sm,
+  .small-text,
+  .card-meta,
+  .form-hint {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+  }
+}
+
+/* ============================================
+   MOBILE NAVIGATION ENHANCEMENTS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced mobile navigation with better dark theme visibility */
+  .navigation {
+    padding: var(--spacing-3) var(--spacing-4);
+    background: rgba(10, 10, 11, 0.98);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--color-border-medium);
+  }
+  
+  .navigation__list--mobile-open {
+    background: rgba(10, 10, 11, 0.98);
+    backdrop-filter: blur(12px);
+    border: 2px solid var(--color-border-medium);
+    border-top: none;
+    box-shadow: 
+      var(--shadow-lg),
+      0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+  
+  .navigation__link,
+  .navigation__logout-button {
+    padding: var(--spacing-4) var(--spacing-5);
+    font-size: var(--font-size-base);
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border-subtle);
+    transition: all var(--transition-base);
+  }
+  
+  .navigation__link:hover,
+  .navigation__logout-button:hover {
+    background: linear-gradient(90deg, 
+      rgba(255, 107, 53, 0.15) 0%, 
+      rgba(255, 107, 53, 0.05) 100%);
+    box-shadow: inset 4px 0 0 var(--color-primary);
+    color: var(--color-primary);
+    text-shadow: var(--text-shadow-glow);
+  }
+  
+  .navigation__link--active {
+    background: linear-gradient(90deg, 
+      rgba(255, 107, 53, 0.2) 0%, 
+      rgba(255, 107, 53, 0.1) 100%);
+    box-shadow: inset 4px 0 0 var(--color-primary);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+  
+  /* Enhanced mobile menu toggle */
+  .mobile-menu-toggle {
+    padding: var(--spacing-3);
+    border-radius: var(--radius-md);
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid var(--color-border-subtle);
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: rgba(255, 107, 53, 0.2);
+    border-color: var(--color-primary);
+    box-shadow: var(--glow-primary);
+  }
+}
+
+/* ============================================
+   MOBILE CARD OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced card spacing and readability */
+  .card,
+  .dashboard-card {
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    border: 1px solid var(--color-border-medium);
+    box-shadow: 
+      var(--shadow-card),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+  
+  /* Removed card hover effects for mobile - containers should not have hover states */
+  
+  /* Mobile card headers */
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 2px solid var(--color-border-subtle);
+  }
+  
+  .card-header h2,
+  .card-title {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-primary);
+    text-shadow: var(--text-shadow-subtle);
+  }
+  
+  /* Mobile card footers */
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+    padding-top: var(--spacing-3);
+    border-top: 2px solid var(--color-border-subtle);
+  }
+  
+  .card-footer-actions {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .card-footer-actions > * {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   MOBILE DASHBOARD OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: var(--spacing-3);
+    background: var(--gradient-bg-primary);
+  }
+  
+  .dashboard-header {
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+    border: 2px solid var(--color-border-medium);
+    background: var(--gradient-bg-card);
+    box-shadow: var(--shadow-card-elevated);
+  }
+  
+  .dashboard-header h1 {
+    font-size: var(--font-size-3xl);
+    text-shadow: var(--text-shadow-dramatic);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .dashboard-columns {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+  
+  /* Enhanced mobile player rows */
+  .player-row {
+    padding: var(--spacing-3);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-2);
+    background: var(--color-bg-secondary);
+    transition: all var(--transition-base);
+  }
+  
+  .player-row:hover {
+    border-color: var(--color-primary);
+    background: var(--color-bg-tertiary);
+    box-shadow: 
+      var(--shadow-md),
+      0 0 0 1px var(--color-primary);
+    transform: translateY(-1px);
+  }
+  
+  .player-row.current-user {
+    background: var(--color-warning-light);
+    border-color: var(--color-warning);
+    box-shadow: 
+      var(--shadow-md),
+      0 0 0 1px var(--color-warning);
+  }
+  
+  /* Mobile avatar sizing */
+  .player-avatar,
+  .initials-badge {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+  
+  .player-avatar .avatar-initial,
+  .initials-badge {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+  }
+  
+  /* Mobile score display */
+  .player-score .score-value {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-shadow: var(--text-shadow-subtle);
+  }
+  
+  .player-score .score-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+  }
+}
+
+/* ============================================
+   MOBILE FORM OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced form inputs for mobile dark theme */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: var(--spacing-4);
+    font-size: var(--font-size-base); /* Prevent iOS zoom */
+    border: 2px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    transition: all var(--transition-base);
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 
+      var(--shadow-focus),
+      0 0 0 1px var(--color-primary),
+      var(--glow-primary);
+    background: var(--color-bg-quaternary);
+  }
+  
+  .form-group label {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  /* Enhanced error states for mobile */
+  .form-group input.error,
+  .form-group select.error,
+  .form-group textarea.error {
+    border-color: var(--color-danger);
+    background: var(--color-danger-light);
+    box-shadow: 
+      0 0 0 1px var(--color-danger),
+      var(--glow-accent);
+  }
+  
+  .error-message {
+    font-size: var(--font-size-sm);
+    color: var(--color-danger);
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    background: var(--color-danger-light);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-danger);
+  }
+}
+
+/* ============================================
+   MOBILE BUTTON OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced mobile button styling */
+  .btn {
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-md);
+    min-height: var(--touch-target-comfortable);
+    transition: all var(--transition-base);
+  }
+  
+  .btn-primary {
+    background: var(--gradient-primary);
+    box-shadow: 
+      var(--shadow-button),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 
+      var(--shadow-button-hover),
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      var(--glow-primary-intense);
+    transform: translateY(-2px);
+  }
+  
+  .btn-secondary {
+    border: 2px solid var(--color-border-strong);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    box-shadow: 
+      var(--shadow-md),
+      var(--glow-primary);
+  }
+  
+  /* Full-width buttons on mobile */
+  .btn-block,
+  .auth-button,
+  .card-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Button groups stack on mobile */
+  .btn-group {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .btn-group .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   MOBILE TYPOGRAPHY ENHANCEMENTS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced heading hierarchy for mobile */
+  h1, .u-text-4xl {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+    text-shadow: var(--text-shadow-dramatic);
+    margin-bottom: var(--spacing-4);
+  }
+  
+  h2, .u-text-3xl {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+    text-shadow: var(--text-shadow-subtle);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  h3, .u-text-2xl {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  /* Enhanced body text readability */
+  p, .card-text {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-4);
+  }
+  
+  /* Better small text visibility */
+  small, .u-text-sm {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-secondary);
+  }
+}
+
+/* ============================================
+   MOBILE SPACING OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced spacing for mobile layouts */
+  .u-p-6 { padding: var(--spacing-4) !important; }
+  .u-p-8 { padding: var(--spacing-5) !important; }
+  .u-p-10 { padding: var(--spacing-6) !important; }
+  .u-p-12 { padding: var(--spacing-8) !important; }
+  
+  .u-m-6 { margin: var(--spacing-4) !important; }
+  .u-m-8 { margin: var(--spacing-5) !important; }
+  .u-m-10 { margin: var(--spacing-6) !important; }
+  .u-m-12 { margin: var(--spacing-8) !important; }
+  
+  /* Responsive gap utilities */
+  .gap-6 { gap: var(--spacing-4); }
+  .gap-8 { gap: var(--spacing-5); }
+  
+  /* Mobile-specific spacing classes */
+  .u-mobile-p-3 { padding: var(--spacing-3) !important; }
+  .u-mobile-p-4 { padding: var(--spacing-4) !important; }
+  .u-mobile-m-3 { margin: var(--spacing-3) !important; }
+  .u-mobile-m-4 { margin: var(--spacing-4) !important; }
+}
+
+/* ============================================
+   MOBILE ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced focus indicators for mobile */
+  *:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: var(--focus-ring-primary);
+  }
+  
+  /* Better tap target spacing */
+  .navigation__link,
+  .btn,
+  .card-link,
+  .link-button {
+    margin: var(--spacing-1) 0;
+  }
+  
+  /* Enhanced contrast for interactive elements */
+  .card-interactive,
+  .player-row.expandable {
+    border: 2px solid var(--color-border-medium);
+  }
+  
+  .card-interactive:hover,
+  .player-row.expandable:hover {
+    border-color: var(--color-primary);
+    box-shadow: 
+      var(--shadow-md),
+      0 0 0 1px var(--color-primary),
+      var(--glow-primary);
+  }
+}
+
+/* ============================================
+   MOBILE DARK THEME LIGHTING CONDITIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Enhanced contrast for outdoor/bright light usage */
+  .mobile-high-contrast {
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #F0F0F0;
+    --color-bg-primary: #000000;
+    --color-bg-secondary: #0A0A0A;
+    --color-border-medium: #404040;
+    --color-border-strong: #606060;
+  }
+  
+  /* Better visibility for low light conditions */
+  .mobile-low-light {
+    --color-bg-primary: #050505;
+    --color-bg-secondary: #0F0F0F;
+    --text-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.8);
+    --glow-primary: 0 0 15px rgba(255, 107, 53, 0.4);
+  }
+}
+
+/* ============================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Reduce animations for better mobile performance */
+  .card,
+  .btn,
+  .player-row {
+    transition: 
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+  
+  /* Optimize shadows for mobile - removed card hover, kept button hover */
+  .btn:hover {
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* Reduce backdrop blur on older mobile devices */
+  @supports not (backdrop-filter: blur(10px)) {
+    .navigation,
+    .navigation__list--mobile-open {
+      background: rgba(10, 10, 11, 0.98);
+      backdrop-filter: none;
+    }
+  }
+}
+
+/* ============================================
+   MOBILE LANDSCAPE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 640px) and (orientation: landscape) {
+  /* Optimize for mobile landscape */
+  .dashboard-container {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+  
+  .navigation {
+    padding: var(--spacing-2) var(--spacing-4);
+  }
+  
+  .navigation__list--mobile-open {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  
+  .card,
+  .dashboard-card {
+    padding: var(--spacing-3);
+  }
+  
+  /* Compact button sizing for landscape */
+  .btn {
+    padding: var(--spacing-3) var(--spacing-5);
+    min-height: 40px;
+  }
+}

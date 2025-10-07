@@ -15,8 +15,8 @@ export const LeaderboardSkeleton = () => {
         </div>
       </div>
       <div className="card-footer">
-        <div className="skeleton skeleton-text" style={{ width: '40%' }}></div>
-        <div className="skeleton skeleton-text" style={{ width: '40%' }}></div>
+        <div className="skeleton skeleton-text skeleton-text--40"></div>
+        <div className="skeleton skeleton-text skeleton-text--40"></div>
       </div>
     </div>
   );
@@ -33,7 +33,7 @@ export const MyTeamSkeleton = () => {
         {/* Sole Survivor Section Skeleton */}
         <div className="team-section sole-survivor-section">
           <div className="section-header">
-            <div className="skeleton skeleton-text" style={{ width: '60%' }}></div>
+            <div className="skeleton skeleton-text skeleton-text--60"></div>
           </div>
           <div className="skeleton skeleton-row"></div>
         </div>
@@ -41,7 +41,7 @@ export const MyTeamSkeleton = () => {
         {/* Draft Picks Section Skeleton */}
         <div className="team-section draft-picks-section">
           <div className="section-header">
-            <div className="skeleton skeleton-text" style={{ width: '40%' }}></div>
+            <div className="skeleton skeleton-text skeleton-text--40"></div>
           </div>
           <div className="draft-picks-list">
             {[1, 2].map((i) => (

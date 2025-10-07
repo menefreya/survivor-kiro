@@ -5,7 +5,7 @@
   margin-bottom: var(--spacing-6);
 }
 
-/* Form Labels */
+/* Form Labels (Enhanced for Dark Theme) */
 .form-label {
   display: block;
   margin-bottom: var(--spacing-2);
@@ -13,14 +13,16 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   line-height: var(--line-height-normal);
+  text-shadow: var(--text-shadow-subtle);
 }
 
 .form-label.required::after {
   content: ' *';
   color: var(--color-danger);
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.5);
 }
 
-/* Form Inputs - Base Styles */
+/* Form Inputs - Base Styles (Dark Theme) */
 .form-input,
 .form-select,
 .form-textarea {
@@ -31,66 +33,89 @@
   font-family: inherit;
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-tertiary); /* Dark tertiary background */
   border: 2px solid var(--color-border-medium);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
   box-sizing: border-box;
 }
 
-/* Hover State */
+/* Hover State (Dark Theme) */
 .form-input:hover:not(:disabled):not(.error):not(.success),
 .form-select:hover:not(:disabled):not(.error):not(.success),
 .form-textarea:hover:not(:disabled):not(.error):not(.success) {
-  border-color: var(--color-border-dark);
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg-quaternary);
 }
 
-/* Focus State */
+/* Placeholder Text (Dark Theme) */
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1; /* Ensure consistent opacity across browsers */
+}
+
+/* Focus State (Dark Theme with Orange Glow) */
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  box-shadow: 
+    0 0 0 3px var(--color-primary-glow),
+    var(--glow-primary),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Error State */
+/* Error State (Dark Theme) */
 .form-input.error,
 .form-select.error,
 .form-textarea.error {
   border-color: var(--color-danger);
   background-color: var(--color-danger-light);
+  box-shadow: 
+    0 0 8px rgba(255, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .form-input.error:focus,
 .form-select.error:focus,
 .form-textarea.error:focus {
   border-color: var(--color-danger);
-  box-shadow: 0 0 0 3px var(--color-danger-light);
+  box-shadow: 
+    0 0 0 3px var(--color-accent-glow),
+    var(--glow-accent),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Success State */
+/* Success State (Dark Theme) */
 .form-input.success,
 .form-select.success,
 .form-textarea.success {
   border-color: var(--color-success);
   background-color: var(--color-success-light);
+  box-shadow: 
+    0 0 8px rgba(0, 208, 132, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .form-input.success:focus,
 .form-select.success:focus,
 .form-textarea.success:focus {
   border-color: var(--color-success);
-  box-shadow: 0 0 0 3px var(--color-success-light);
+  box-shadow: 
+    0 0 0 3px var(--glow-success),
+    var(--glow-success),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Disabled State */
+/* Disabled State (Dark Theme) */
 .form-input:disabled,
 .form-select:disabled,
 .form-textarea:disabled {
-  background-color: var(--color-bg-tertiary);
-  border-color: var(--color-border-light);
-  color: var(--color-text-tertiary);
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -102,10 +127,10 @@
   padding: var(--spacing-3) var(--spacing-4);
 }
 
-/* Select Specific */
+/* Select Specific (Dark Theme) */
 .form-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234B5563' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23E0E0E0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--spacing-4) center;
   background-size: 12px;
@@ -113,7 +138,11 @@
 }
 
 .form-select:disabled {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23808080' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FF6B35' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 }
 
 /* Checkbox and Radio Inputs */
@@ -154,7 +183,7 @@
   cursor: not-allowed;
 }
 
-/* Form Messages */
+/* Form Messages (Enhanced for Dark Theme) */
 .form-message {
   display: flex;
   align-items: flex-start;
@@ -165,26 +194,39 @@
   line-height: var(--line-height-normal);
   border-radius: var(--radius-md);
   border: 1px solid;
+  font-weight: var(--font-weight-medium);
 }
 
-/* Error Message */
+/* Error Message - Enhanced Dark Theme */
 .form-error {
-  color: var(--color-danger);
+  color: var(--color-text-primary);
   background-color: var(--color-danger-light);
   border-color: var(--color-danger);
+  /* Enhanced visibility for dark theme */
+  box-shadow: 
+    0 4px 12px rgba(255, 68, 68, 0.3),
+    0 0 8px rgba(255, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .form-error::before {
   content: '⚠';
   font-size: var(--font-size-base);
   flex-shrink: 0;
+  color: var(--color-danger);
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.5);
 }
 
-/* Success Message */
+/* Success Message - Enhanced Dark Theme */
 .form-success {
-  color: var(--color-success);
+  color: var(--color-text-primary);
   background-color: var(--color-success-light);
   border-color: var(--color-success);
+  box-shadow: 
+    0 4px 12px rgba(0, 208, 132, 0.2),
+    0 0 8px rgba(0, 208, 132, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .form-success::before {
@@ -192,41 +234,56 @@
   font-size: var(--font-size-base);
   flex-shrink: 0;
   font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+  text-shadow: 0 0 4px rgba(0, 208, 132, 0.5);
 }
 
-/* Info Message */
+/* Info Message - Enhanced Dark Theme */
 .form-info {
-  color: var(--color-info);
+  color: var(--color-text-primary);
   background-color: var(--color-info-light);
   border-color: var(--color-info);
+  box-shadow: 
+    0 4px 12px rgba(52, 152, 219, 0.2),
+    0 0 8px rgba(52, 152, 219, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .form-info::before {
   content: 'ℹ';
   font-size: var(--font-size-base);
   flex-shrink: 0;
+  color: var(--color-info);
+  text-shadow: 0 0 4px rgba(52, 152, 219, 0.5);
 }
 
-/* Warning Message */
+/* Warning Message - Enhanced Dark Theme */
 .form-warning {
-  color: var(--color-warning);
+  color: var(--color-text-primary);
   background-color: var(--color-warning-light);
   border-color: var(--color-warning);
+  box-shadow: 
+    0 4px 12px rgba(255, 184, 0, 0.2),
+    0 0 8px rgba(255, 184, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .form-warning::before {
   content: '⚠';
   font-size: var(--font-size-base);
   flex-shrink: 0;
+  color: var(--color-warning);
+  text-shadow: 0 0 4px rgba(255, 184, 0, 0.5);
 }
 
-/* Helper Text */
+/* Helper Text (Enhanced for Dark Theme) */
 .form-helper {
   display: block;
   margin-top: var(--spacing-2);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
 }
 
 /* Input Group - for inputs with icons or buttons */
@@ -248,7 +305,7 @@
   padding: var(--spacing-3) var(--spacing-4);
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-quaternary);
   border: 2px solid var(--color-border-medium);
   white-space: nowrap;
 }
@@ -313,7 +370,7 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-tertiary);
   border: 2px dashed var(--color-border-medium);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -324,6 +381,7 @@
   border-color: var(--color-primary);
   color: var(--color-primary);
   background-color: var(--color-primary-light);
+  box-shadow: var(--glow-primary);
 }
 
 .form-file-label--focused {
@@ -351,7 +409,7 @@
   border-width: 0;
 }
 
-/* Focus Visible - Enhanced keyboard navigation */
+/* Focus Visible - Enhanced keyboard navigation for Dark Theme */
 .form-input:focus-visible,
 .form-select:focus-visible,
 .form-textarea:focus-visible,
@@ -359,6 +417,9 @@
 .form-radio:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
+  box-shadow: 
+    0 0 0 3px var(--color-primary-glow),
+    var(--glow-primary);
 }
 
 /* Responsive Adjustments */
@@ -408,6 +469,51 @@
   }
 }
 
+/* Enhanced Form Validation States for Dark Theme */
+.form-input:invalid:not(:focus):not(:placeholder-shown),
+.form-select:invalid:not(:focus),
+.form-textarea:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: var(--color-danger);
+  background-color: var(--color-danger-light);
+  box-shadow: 
+    0 0 8px rgba(255, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.form-input:valid:not(:focus):not(:placeholder-shown),
+.form-select:valid:not(:focus),
+.form-textarea:valid:not(:focus):not(:placeholder-shown) {
+  border-color: var(--color-success);
+  background-color: var(--color-success-light);
+  box-shadow: 
+    0 0 8px rgba(0, 208, 132, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Form Field Required Indicator Enhancement */
+.form-label.required {
+  position: relative;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: var(--color-danger);
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.5);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Dark Theme Form Loading State */
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-image: none; /* Remove select arrow when disabled */
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   .form-input,
@@ -415,5 +521,19 @@
   .form-textarea,
   .form-file-label {
     transition: none;
+  }
+  
+  .form-error,
+  .form-success,
+  .form-info,
+  .form-warning {
+    box-shadow: none;
+  }
+  
+  .form-error::before,
+  .form-success::before,
+  .form-info::before,
+  .form-warning::before {
+    text-shadow: none;
   }
 }

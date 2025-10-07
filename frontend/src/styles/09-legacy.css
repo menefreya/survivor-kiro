@@ -145,15 +145,16 @@
 }
 
 .submit-button:disabled {
-  background-color: var(--color-gray-400);
+  background-color: var(--color-bg-quaternary);
+  color: var(--color-text-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .submit-button:focus {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* Locked State Styles */
@@ -230,27 +231,33 @@
   text-align: center;
 }
 
-/* Prediction Reminder Banner Styles */
+/* Prediction Reminder Banner Styles - Survivor Theme */
 .prediction-reminder-banner {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
-  box-shadow: var(--shadow-md);
-  color: white;
+  margin: var(--spacing-6) 0;
+  padding: var(--spacing-5) var(--spacing-6);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-xl);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.2);
+  transition: var(--transition-all);
 }
 
 .prediction-reminder-banner.urgent {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-  animation: pulse 2s infinite;
+  animation: pulse-glow 2s infinite;
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+  box-shadow: 0 0 0 1px rgba(255, 68, 68, 0.2);
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: var(--shadow-card), 0 0 20px rgba(255, 107, 53, 0.3);
+  }
+  50% { 
+    box-shadow: var(--shadow-card-hover), 0 0 30px rgba(255, 107, 53, 0.5);
+  }
 }
 
 .prediction-reminder-content {
@@ -259,11 +266,21 @@
   gap: var(--spacing-4);
   position: relative;
   z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .prediction-reminder-icon {
-  font-size: var(--font-size-2xl);
+  width: 48px;
+  height: 48px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
   flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
 }
 
 .prediction-reminder-text {
@@ -273,16 +290,33 @@
 
 .prediction-reminder-text strong {
   display: block;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-1);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: var(--line-height-tight);
 }
 
 .prediction-reminder-text p {
   margin: 0;
   font-size: var(--font-size-base);
-  opacity: 0.9;
+  color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
+}
+
+.prediction-deadline {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.prediction-deadline-icon {
+  font-size: var(--font-size-base);
 }
 
 .prediction-reminder-actions {
@@ -292,19 +326,236 @@
 }
 
 .prediction-reminder-actions .btn-primary {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  background: var(--gradient-primary);
+  border: none;
+  color: var(--color-text-inverse);
   font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-base);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-all);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-button);
 }
 
 .prediction-reminder-actions .btn-primary:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  background: var(--gradient-primary-hover);
+  box-shadow: var(--shadow-button-hover);
+}
+
+/* Prediction Results Notification Styles */
+.prediction-results-notification {
+  position: fixed;
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  width: 400px;
+  max-width: calc(100vw - var(--spacing-8));
+  z-index: var(--z-notification);
+  padding: var(--spacing-5);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.2);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-content {
+  /* Content styling handled by parent container */
+}
+
+.notification-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--color-success);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.2);
+}
+
+.notification-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title h3 {
+  margin: 0 0 var(--spacing-1) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.notification-title p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  padding: var(--spacing-1);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-colors);
+  flex-shrink: 0;
+}
+
+.notification-close:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.notification-body {
+  margin-top: var(--spacing-4);
+}
+
+.results-summary {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.result-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 1;
+  padding: var(--spacing-3);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.stat-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.result-stat.correct .stat-icon {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.result-stat.incorrect .stat-icon {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.result-stat.points .stat-icon {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.stat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.results-message {
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+.results-message.success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+}
+
+.results-message.neutral {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.notification-actions {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.notification-actions .btn-primary,
+.notification-actions .btn-secondary {
+  flex: 1;
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  text-align: center;
+  text-decoration: none;
+  transition: var(--transition-all);
+}
+
+.notification-actions .btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-text-inverse);
+  border: none;
+}
+
+.notification-actions .btn-primary:hover {
+  background: var(--gradient-primary-hover);
   transform: translateY(-1px);
+}
+
+.notification-actions .btn-secondary {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-medium);
+}
+
+.notification-actions .btn-secondary:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-strong);
 }
 
 /* Mobile Responsive */
@@ -339,7 +590,7 @@
   }
   
   .contestant-card-name {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     margin-bottom: var(--spacing-1);
   }
   
@@ -349,7 +600,7 @@
   }
   
   .detail-item {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
   }
   
   .selected-indicator {
@@ -381,7 +632,26 @@
   .prediction-reminder-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-3);
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+  
+  .prediction-reminder-icon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-lg);
+  }
+  
+  .prediction-reminder-text strong {
+    font-size: var(--font-size-lg);
+  }
+  
+  .prediction-reminder-text p {
+    font-size: var(--font-size-sm);
+  }
+  
+  .prediction-deadline {
+    font-size: var(--font-size-xs);
   }
   
   .prediction-reminder-actions {
@@ -391,6 +661,56 @@
   .prediction-reminder-actions .btn-primary {
     width: 100%;
     text-align: center;
+    padding: var(--spacing-4) var(--spacing-6);
+  }
+  
+  /* Prediction Results Notification Mobile */
+  .prediction-results-notification {
+    position: fixed;
+    top: var(--spacing-4);
+    left: var(--spacing-4);
+    right: var(--spacing-4);
+    width: auto;
+    max-width: none;
+  }
+  
+  .notification-content {
+    padding: var(--spacing-4);
+  }
+  
+  .notification-header {
+    gap: var(--spacing-2);
+  }
+  
+  .notification-icon {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-base);
+  }
+  
+  .notification-title h3 {
+    font-size: var(--font-size-base);
+  }
+  
+  .notification-title p {
+    font-size: var(--font-size-xs);
+  }
+  
+  .results-summary {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .result-stat {
+    padding: var(--spacing-2);
+  }
+  
+  .stat-value {
+    font-size: var(--font-size-base);
+  }
+  
+  .notification-actions {
+    flex-direction: column;
   }
 }
 

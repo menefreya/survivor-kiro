@@ -62,17 +62,19 @@
   flex-wrap: wrap;
 }
 
-/* Empty State Demo Container */
+/* Empty State Demo Container - Dark Theme */
 .empty-state-demo-container {
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-8);
+  background: var(--color-bg-secondary);
 }
 
-/* Skeleton Demo Container */
+/* Skeleton Demo Container - Dark Theme */
 .skeleton-demo-container {
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
   padding: var(--spacing-6);
 }
 

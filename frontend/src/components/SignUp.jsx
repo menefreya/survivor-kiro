@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import '../styles/07-pages/auth.css';
+import '../styles/06-features/hero-section.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -105,94 +106,119 @@ const SignUp = () => {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit} className="auth-form" aria-label="Sign up form">
-        <div className="form-group">
-          <label htmlFor="name" className="required">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={errors.name ? 'error' : ''}
-            placeholder="Enter your full name"
-            required
-            aria-required="true"
-            aria-invalid={errors.name ? 'true' : 'false'}
-            aria-describedby={errors.name ? 'name-error' : undefined}
-            autoComplete="name"
-          />
-          {errors.name && <span id="name-error" className="error-message" role="alert">{errors.name}</span>}
+    <div className="signup-page">
+      {/* Hero Background */}
+      <div className="hero-section hero-section--login">
+        <div className="hero-section__background">
+          <div className="hero-section__overlay"></div>
         </div>
+        
+        <div className="hero-section__content hero-section__content--login">
+          {/* Hero Text */}
+          <div className="hero-section__text hero-section__text--login">
+            <h1 className="hero-section__title">
+              <span className="hero-section__title-line">OUTWIT.</span>
+              <span className="hero-section__title-line">OUTPLAY.</span>
+              <span className="hero-section__title-line">OUTLAST.</span>
+            </h1>
+            
+            <p className="hero-section__subtitle">
+              Join the Ultimate Survivor Fantasy League
+            </p>
+          </div>
+          
+          {/* Sign Up Form */}
+          <div className="auth-container auth-container--hero">
+            <h2>Join the League</h2>
+            <form onSubmit={handleSubmit} className="auth-form" aria-label="Sign up form">
+              <div className="form-group">
+                <label htmlFor="name" className="required">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={errors.name ? 'error' : ''}
+                  placeholder="Enter your full name"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.name ? 'true' : 'false'}
+                  aria-describedby={errors.name ? 'name-error' : undefined}
+                  autoComplete="name"
+                />
+                {errors.name && <span id="name-error" className="error-message" role="alert">{errors.name}</span>}
+              </div>
 
-        <div className="form-group">
-          <label htmlFor="email" className="required">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? 'error' : ''}
-            placeholder="your.email@example.com"
-            required
-            aria-required="true"
-            aria-invalid={errors.email ? 'true' : 'false'}
-            aria-describedby={errors.email ? 'email-error' : undefined}
-            autoComplete="email"
-          />
-          {errors.email && <span id="email-error" className="error-message" role="alert">{errors.email}</span>}
+              <div className="form-group">
+                <label htmlFor="email" className="required">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={errors.email ? 'error' : ''}
+                  placeholder="your.email@example.com"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.email ? 'true' : 'false'}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  autoComplete="email"
+                />
+                {errors.email && <span id="email-error" className="error-message" role="alert">{errors.email}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password" className="required">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={errors.password ? 'error' : ''}
+                  placeholder="Minimum 8 characters"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.password ? 'true' : 'false'}
+                  aria-describedby={errors.password ? 'password-error' : 'password-hint'}
+                  autoComplete="new-password"
+                />
+                {errors.password && <span id="password-error" className="error-message" role="alert">{errors.password}</span>}
+                {!errors.password && <span id="password-hint" className="password-hint">Must be at least 8 characters</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="profileImageUrl">Profile Image URL (optional)</label>
+                <input
+                  type="url"
+                  id="profileImageUrl"
+                  name="profileImageUrl"
+                  value={formData.profileImageUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com/image.jpg"
+                  aria-describedby="profile-image-hint"
+                />
+                <span id="profile-image-hint" className="visually-hidden">Enter a valid URL for your profile image</span>
+              </div>
+
+              {apiError && <div className="api-error-message" role="alert">{apiError}</div>}
+
+              <button 
+                type="submit" 
+                className={`auth-button ${isLoading ? 'loading' : ''}`} 
+                disabled={isLoading}
+                aria-busy={isLoading}
+              >
+                {isLoading ? 'Creating account...' : 'Sign Up'}
+              </button>
+            </form>
+            <div className="auth-footer">
+              Already have an account? <Link to="/login">Login</Link>
+            </div>
+          </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="password" className="required">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={errors.password ? 'error' : ''}
-            placeholder="Minimum 8 characters"
-            required
-            aria-required="true"
-            aria-invalid={errors.password ? 'true' : 'false'}
-            aria-describedby={errors.password ? 'password-error' : 'password-hint'}
-            autoComplete="new-password"
-          />
-          {errors.password && <span id="password-error" className="error-message" role="alert">{errors.password}</span>}
-          {!errors.password && <span id="password-hint" className="password-hint">Must be at least 8 characters</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="profileImageUrl">Profile Image URL (optional)</label>
-          <input
-            type="url"
-            id="profileImageUrl"
-            name="profileImageUrl"
-            value={formData.profileImageUrl}
-            onChange={handleChange}
-            placeholder="https://example.com/image.jpg"
-            aria-describedby="profile-image-hint"
-          />
-          <span id="profile-image-hint" className="visually-hidden">Enter a valid URL for your profile image</span>
-        </div>
-
-        {apiError && <div className="api-error-message" role="alert">{apiError}</div>}
-
-        <button 
-          type="submit" 
-          className={`auth-button ${isLoading ? 'loading' : ''}`} 
-          disabled={isLoading}
-          aria-busy={isLoading}
-        >
-          {isLoading ? 'Creating account...' : 'Sign Up'}
-        </button>
-      </form>
-      <div className="auth-footer">
-        Already have an account? <Link to="/login">Login</Link>
       </div>
     </div>
   );
