@@ -58,6 +58,9 @@ const CurrentPredictionsCard = () => {
     <div className="dashboard-card current-predictions-card" role="region" aria-label="Current Episode Predictions">
       <div className="card-header">
         <h2 id="predictions-title">Episode {episodeNumber} Predictions</h2>
+        <Link to="/predictions#compare" className="compare-link">
+          Compare Predictions →
+        </Link>
       </div>
 
       <div className="card-body">

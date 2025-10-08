@@ -808,27 +808,31 @@
 .tribe-badge {
   display: inline-block;
   padding: var(--spacing-1) var(--spacing-3);
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 /* Tribe-specific colors */
 .tribe-badge.tribe-kele {
-  background-color: var(--tribe-kele-light);
   color: var(--tribe-kele-dark);
+  background-color: var(--tribe-kele-light);
+  border: 1px solid var(--tribe-kele);
 }
 
 .tribe-badge.tribe-hina {
-  background-color: var(--tribe-hina-light);
   color: var(--tribe-hina-dark);
+  background-color: var(--tribe-hina-light);
+  border: 1px solid var(--tribe-hina);
 }
 
 .tribe-badge.tribe-uli {
-  background-color: var(--tribe-uli-light);
   color: var(--tribe-uli-dark);
+  background-color: var(--tribe-uli-light);
+  border: 1px solid var(--tribe-uli);
 }
 
 /* Tribe header colors */

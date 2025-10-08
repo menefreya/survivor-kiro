@@ -686,6 +686,131 @@ async function getPredictionStatistics(req, res) {
   }
 }
 
+/**
+ * Get all players' predictions for current episode (accessible to all users)
+ * @route GET /api/predictions/all
+ * @access Protected
+ */
+async function getAllCurrentPredictions(req, res) {
+  try {
+    // Get current episode (most recent)
+    const { data: currentEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('id, episode_number, predictions_locked')
+      .order('episode_number', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (episodeError) {
+      console.error('Error fetching current episode:', episodeError);
+      return res.status(500).json({ error: 'Failed to fetch current episode' });
+    }
+
+    if (!currentEpisode) {
+      return res.json({
+        episode: null,
+        predictions: [],
+        message: 'No current episode available'
+      });
+    }
+
+    // Get all predictions for current episode
+    const { data: predictions, error: predictionsError } = await supabase
+      .from('elimination_predictions')
+      .select(`
+        id,
+        player_id,
+        tribe,
+        contestant_id,
+        is_correct,
+        scored_at,
+        created_at,
+        players (
+          id,
+          name,
+          profile_image_url
+        ),
+        contestants (
+          id,
+          name,
+          image_url,
+          current_tribe,
+          profession
+        )
+      `)
+      .eq('episode_id', currentEpisode.id)
+      .order('created_at', { ascending: true });
+
+    if (predictionsError) {
+      console.error('Error fetching predictions:', predictionsError);
+      return res.status(500).json({ error: 'Failed to fetch predictions' });
+    }
+
+    // Group predictions by player
+    const groupedByPlayer = {};
+
+    for (const prediction of predictions || []) {
+      const playerId = prediction.player_id;
+
+      if (!groupedByPlayer[playerId]) {
+        groupedByPlayer[playerId] = {
+          player: {
+            id: prediction.players.id,
+            name: prediction.players.name,
+            profile_image_url: prediction.players.profile_image_url
+          },
+          predictions: []
+        };
+      }
+
+      groupedByPlayer[playerId].predictions.push({
+        id: prediction.id,
+        tribe: prediction.tribe,
+        contestant: prediction.contestants,
+        is_correct: prediction.is_correct,
+        scored_at: prediction.scored_at,
+        created_at: prediction.created_at
+      });
+    }
+
+    // Convert to array and sort by player name
+    const playerPredictions = Object.values(groupedByPlayer).sort((a, b) =>
+      a.player.name.localeCompare(b.player.name)
+    );
+
+    // Get all players to find who hasn't submitted
+    const { data: allPlayers, error: playersError } = await supabase
+      .from('players')
+      .select('id, name, profile_image_url')
+      .order('name', { ascending: true });
+
+    if (playersError) {
+      console.error('Error fetching all players:', playersError);
+    }
+
+    // Find players who haven't submitted predictions
+    const playerIdsWithPredictions = new Set(Object.keys(groupedByPlayer).map(id => parseInt(id)));
+    const playersWithoutPredictions = (allPlayers || []).filter(
+      player => !playerIdsWithPredictions.has(player.id)
+    );
+
+    res.json({
+      episode: {
+        id: currentEpisode.id,
+        episode_number: currentEpisode.episode_number,
+        predictions_locked: currentEpisode.predictions_locked
+      },
+      player_predictions: playerPredictions,
+      players_without_predictions: playersWithoutPredictions,
+      total_players: playerPredictions.length,
+      total_players_without_predictions: playersWithoutPredictions.length
+    });
+  } catch (error) {
+    console.error('Error in getAllCurrentPredictions:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getPredictionStatus,
   submitPredictions,
@@ -693,5 +818,6 @@ module.exports = {
   getPredictionHistory,
   getEpisodePredictions,
   togglePredictionLock,
-  getPredictionStatistics
+  getPredictionStatistics,
+  getAllCurrentPredictions
 };

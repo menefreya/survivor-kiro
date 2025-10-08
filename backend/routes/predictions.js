@@ -8,7 +8,8 @@ const {
   getPredictionHistory,
   getEpisodePredictions,
   togglePredictionLock,
-  getPredictionStatistics
+  getPredictionStatistics,
+  getAllCurrentPredictions
 } = require('../controllers/predictionController');
 
 /**
@@ -25,6 +26,9 @@ router.post('/', authenticateToken, submitPredictions);
 
 // Get current user's predictions for current episode
 router.get('/current', authenticateToken, getCurrentPredictions);
+
+// Get all players' predictions for current episode
+router.get('/all', authenticateToken, getAllCurrentPredictions);
 
 // Get prediction history for current user
 router.get('/history', authenticateToken, getPredictionHistory);
