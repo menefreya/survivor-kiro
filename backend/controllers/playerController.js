@@ -49,33 +49,42 @@ async function getPlayerById(req, res) {
 }
 
 /**
- * Update player profile image
+ * Update player profile (name and/or profile_image_url)
  * PUT /api/players/:id
  */
 async function updatePlayerProfile(req, res) {
   try {
     const { id } = req.params;
-    const { profile_image_url } = req.body;
+    const { profile_image_url, name } = req.body;
     const userId = req.user.id;
 
     // Ensure user can only update their own profile (unless admin)
     if (parseInt(id) !== userId && !req.user.isAdmin) {
-      return res.status(403).json({ 
-        error: 'You can only update your own profile' 
+      return res.status(403).json({
+        error: 'You can only update your own profile'
       });
     }
 
-    // Validate profile_image_url is provided
-    if (profile_image_url === undefined) {
-      return res.status(400).json({ 
-        error: 'profile_image_url is required' 
+    // Validate at least one field is provided
+    if (profile_image_url === undefined && name === undefined) {
+      return res.status(400).json({
+        error: 'At least one field (name or profile_image_url) is required'
       });
     }
 
-    // Update player profile image
+    // Build update object with only provided fields
+    const updateData = {};
+    if (profile_image_url !== undefined) {
+      updateData.profile_image_url = profile_image_url;
+    }
+    if (name !== undefined) {
+      updateData.name = name;
+    }
+
+    // Update player profile
     const { data: updatedPlayer, error } = await supabase
       .from('players')
-      .update({ profile_image_url })
+      .update(updateData)
       .eq('id', id)
       .select('id, email, name, profile_image_url, is_admin, has_submitted_rankings, sole_survivor_id')
       .single();

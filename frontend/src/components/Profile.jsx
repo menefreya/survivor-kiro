@@ -8,9 +8,14 @@ const Profile = () => {
   const { user, logout, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [name, setName] = useState('');
+  const [isEditingName, setIsEditingName] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdatingName, setIsUpdatingName] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [nameSuccess, setNameSuccess] = useState('');
 
   const handleLogout = () => {
     logout();
@@ -39,6 +44,40 @@ const Profile = () => {
     } finally {
       setIsUpdating(false);
     }
+  };
+
+  const handleUpdateName = async (e) => {
+    e.preventDefault();
+    setNameError('');
+    setIsUpdatingName(true);
+
+    try {
+      await api.put(`/players/${user.id}`, {
+        name: name
+      });
+
+      // Update user in context with new name
+      const updatedUser = { ...user, name: name };
+      updateUser(updatedUser);
+
+      setIsEditingName(false);
+    } catch (err) {
+      setNameError(err.response?.data?.error || 'Failed to update name');
+    } finally {
+      setIsUpdatingName(false);
+    }
+  };
+
+  const handleEditName = () => {
+    setName(user.name);
+    setIsEditingName(true);
+    setNameError('');
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingName(false);
+    setName('');
+    setNameError('');
   };
 
   if (!user) {
@@ -71,8 +110,43 @@ const Profile = () => {
         <div className="profile-details">
           <div className="profile-field">
             <label>Name:</label>
-            <span>{user.name}</span>
+            {!isEditingName ? (
+              <>
+                <span>{user.name}</span>
+                <button onClick={handleEditName} className="btn-edit" aria-label="Edit name">
+                  Edit
+                </button>
+              </>
+            ) : (
+              <form onSubmit={handleUpdateName} className="inline-edit-form">
+                <input
+                  type="text"
+                  className="form-input-inline"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="btn-save"
+                  disabled={isUpdatingName}
+                  aria-label="Save name"
+                >
+                  {isUpdatingName ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="btn-cancel"
+                  aria-label="Cancel editing"
+                >
+                  Cancel
+                </button>
+              </form>
+            )}
           </div>
+          {nameError && <div className="form-error" role="alert">{nameError}</div>}
           <div className="profile-field">
             <label>Email:</label>
             <span>{user.email}</span>
@@ -105,8 +179,8 @@ const Profile = () => {
           {error && <div className="form-error" role="alert">{error}</div>}
           {success && <div className="form-success" role="status">{success}</div>}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn-primary"
             disabled={isUpdating}
             aria-busy={isUpdating}
