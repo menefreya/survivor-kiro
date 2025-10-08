@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
@@ -9,12 +9,36 @@ const Navigation = () => {
   const location = useLocation();
   const [predictionStatus, setPredictionStatus] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigationRef = useRef(null);
 
   useEffect(() => {
     if (isAuthenticated) {
       checkPredictionStatus();
     }
   }, [isAuthenticated]);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMobileMenuOpen && 
+          navigationRef.current && 
+          !navigationRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    // Only add listener when menu is open
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    // Cleanup listeners
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   const checkPredictionStatus = async () => {
     try {
@@ -52,7 +76,7 @@ const Navigation = () => {
                                !predictionStatus.has_submitted;
 
   return (
-    <nav className="navigation" aria-label="Main navigation">
+    <nav className="navigation" aria-label="Main navigation" ref={navigationRef}>
       {/* App Logo */}
       <div className="navigation__logo">
         <Link to="/home" className="navigation__logo-link" onClick={closeMobileMenu}>
