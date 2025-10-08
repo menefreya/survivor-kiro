@@ -18,6 +18,7 @@
 @import './styles/05-components/forms.css';
 @import './styles/05-components/cards.css';
 @import './styles/05-components/navigation.css';
+@import './styles/05-components/scoring-rules.css';
 
 /* Layer 6: Feature Styles */
 @import './styles/06-features/loading.css';
@@ -38,6 +39,7 @@
 @import './styles/07-pages/admin.css';
 @import './styles/07-pages/auth.css';
 @import './styles/07-pages/contestants.css';
+@import './styles/07-pages/scoring-rules.css';
 
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';

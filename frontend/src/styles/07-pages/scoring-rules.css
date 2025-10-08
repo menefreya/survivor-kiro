@@ -1,0 +1,66 @@
+/* Scoring Rules Page Styles */
+
+.scoring-rules-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-8);
+  background-color: transparent;
+}
+
+
+
+/* Main Content */
+.scoring-rules-content {
+  margin-bottom: var(--spacing-12);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .scoring-rules-container {
+    padding: var(--spacing-4);
+  }
+  
+  .scoring-rules-header {
+    margin-bottom: var(--spacing-8);
+    padding: var(--spacing-4) 0;
+  }
+  
+  .scoring-rules-title {
+    font-size: var(--font-size-3xl);
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .scoring-rules-icon {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .scoring-rules-subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+
+}
+
+@media (max-width: 480px) {
+  .scoring-rules-container {
+    padding: var(--spacing-2);
+  }
+  
+  .scoring-rules-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .scoring-rules-subtitle {
+    font-size: var(--font-size-sm);
+  }
+  
+
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  /* No animations to disable for this simplified page */
+}

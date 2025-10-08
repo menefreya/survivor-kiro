@@ -14,13 +14,30 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:5174',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://localhost:4173',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:4173'
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
+
+    // In development mode, be more permissive
+    if (process.env.NODE_ENV !== 'production') {
+      // Allow any localhost origin in development
+      if (origin && origin.includes('localhost')) {
+        return callback(null, true);
+      }
+      // Allow any 127.0.0.1 origin in development
+      if (origin && origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+    }
 
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.FRONTEND_URL === '*') {
       callback(null, true);

@@ -11,6 +11,7 @@ import Admin from './components/Admin';
 import PredictionInterface from './components/PredictionInterface';
 import PredictionHistory from './components/PredictionHistory';
 import ContestantPerformance from './components/ContestantPerformance';
+import ScoringRules from './components/ScoringRules';
 import './App.css';
 
 function App() {
@@ -76,6 +77,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ContestantPerformance />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/scoring-rules" 
+                element={
+                  <ProtectedRoute>
+                    <ScoringRules />
                   </ProtectedRoute>
                 } 
               />

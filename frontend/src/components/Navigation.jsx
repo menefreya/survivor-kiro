@@ -117,6 +117,17 @@ const Navigation = () => {
             Contestants
           </Link>
         </li>
+
+        <li className="navigation__item">
+          <Link 
+            to="/scoring-rules" 
+            className={`navigation__link ${isActive('/scoring-rules') ? 'navigation__link--active' : ''}`}
+            aria-current={isActive('/scoring-rules') ? 'page' : undefined}
+            onClick={closeMobileMenu}
+          >
+            Scoring Rules
+          </Link>
+        </li>
         {user?.is_admin && (
           <li className="navigation__item">
             <Link 
