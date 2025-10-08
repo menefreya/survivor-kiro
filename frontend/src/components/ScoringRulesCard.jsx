@@ -22,8 +22,12 @@ const ScoringRulesCard = () => {
               <span className="scoring-breakdown__description">Your chosen contestant's total score</span>
             </div>
             <div className="scoring-breakdown__item">
-              <span className="scoring-breakdown__label">Sole Survivor Bonus</span>
-              <span className="scoring-breakdown__description">+15 points if your pick wins the season</span>
+              <span className="scoring-breakdown__label">Sole Survivor Episode Bonus</span>
+              <span className="scoring-breakdown__description">+1 point per episode for current pick</span>
+            </div>
+            <div className="scoring-breakdown__item">
+              <span className="scoring-breakdown__label">Sole Survivor Winner Bonus</span>
+              <span className="scoring-breakdown__description">+25 points if pick wins AND selected by episode 2</span>
             </div>
             <div className="scoring-breakdown__item">
               <span className="scoring-breakdown__label">Weekly Prediction Bonus</span>
@@ -90,6 +94,30 @@ const ScoringRulesCard = () => {
             <div className="scoring-event">
               <span className="scoring-event__name">Voted Out with Idol</span>
               <span className="scoring-event__points scoring-event__points--negative">-3</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="scoring-rules-section">
+          <h3 className="scoring-rules-section__title">Sole Survivor Bonus Details</h3>
+          <div className="prediction-rules">
+            <div className="prediction-rule">
+              <span className="prediction-rule__icon">📅</span>
+              <div className="prediction-rule__content">
+                <strong>Episode Bonus:</strong> Earn +1 point for each episode your current sole survivor pick remains active
+              </div>
+            </div>
+            <div className="prediction-rule">
+              <span className="prediction-rule__icon">🏆</span>
+              <div className="prediction-rule__content">
+                <strong>Winner Bonus:</strong> Earn +25 points if your sole survivor wins the season AND you selected them by episode 2
+              </div>
+            </div>
+            <div className="prediction-rule">
+              <span className="prediction-rule__icon">🔄</span>
+              <div className="prediction-rule__content">
+                <strong>Changing Picks:</strong> You can change your sole survivor if they get eliminated, but episode bonus resets
+              </div>
             </div>
           </div>
         </div>
