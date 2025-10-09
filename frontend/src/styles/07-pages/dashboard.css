@@ -1409,14 +1409,17 @@
   .player-row,
   .contestant-row {
     padding: var(--spacing-2);
-    overflow: hidden;
     max-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
   }
 
   .player-info,
   .contestant-info {
-    max-width: 80px;
-    margin-right: var(--spacing-1);
+    flex: 1;
+    min-width: 0;
+    max-width: 100px;
     overflow: hidden;
   }
 
@@ -1430,8 +1433,16 @@
 
   .player-score,
   .contestant-score {
+    flex-shrink: 0;
     min-width: 60px;
     max-width: 60px;
+  }
+
+  .expand-icon {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    margin-left: var(--spacing-1);
   }
 
   .rank-badge {
