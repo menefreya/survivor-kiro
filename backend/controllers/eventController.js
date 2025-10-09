@@ -452,6 +452,7 @@ async function bulkUpdateEvents(req, res) {
 
     // Process additions
     const eventsToInsert = [];
+    let insertedEvents = [];
     
     if (add.length > 0) {
       for (const event of add) {
@@ -509,7 +510,6 @@ async function bulkUpdateEvents(req, res) {
       }
 
       // Insert all new events
-      let insertedEvents = [];
       if (eventsToInsert.length > 0) {
         const { data, error: insertError } = await supabase
           .from('contestant_events')
@@ -527,6 +527,7 @@ async function bulkUpdateEvents(req, res) {
 
     // Check for elimination events and trigger prediction scoring
     const predictionScoringResults = [];
+    
     for (const event of insertedEvents) {
       // Get event type to check if it's an elimination
       const { data: eventType, error: eventTypeError } = await supabase
@@ -642,7 +643,11 @@ async function bulkUpdateEvents(req, res) {
     });
   } catch (error) {
     console.error('Error in bulkUpdateEvents:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
 

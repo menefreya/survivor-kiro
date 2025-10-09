@@ -1,17 +1,17 @@
 import '../styles/07-pages/dashboard.css';
 
-const ContestantRow = ({ 
-  contestant, 
-  showCrown = false, 
+const ContestantRow = ({
+  contestant,
+  showCrown = false,
   isSoleSurvivor = false,
   customStats = null, // Custom content to replace the default stats area
   // Legacy props for backward compatibility
-  rank, 
-  name, 
-  profession, 
-  totalScore, 
-  isEliminated, 
-  imageUrl 
+  rank,
+  name,
+  profession,
+  totalScore,
+  isEliminated,
+  imageUrl
 }) => {
   // Use contestant object if provided, otherwise fall back to individual props
   const contestantData = contestant || {

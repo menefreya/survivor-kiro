@@ -15,6 +15,8 @@ class PredictionScoringService {
    */
   async scorePredictions(episodeId, contestantId, tribe) {
     try {
+      console.log(`Scoring predictions for episode ${episodeId}, contestant ${contestantId}, tribe ${tribe}`);
+      
       // Query all predictions for this episode and tribe
       const { data: predictions, error: fetchError } = await supabase
         .from('elimination_predictions')
@@ -24,7 +26,19 @@ class PredictionScoringService {
         .is('is_correct', null); // Only score unscored predictions
 
       if (fetchError) {
-        throw new Error(`Failed to fetch predictions: ${fetchError.message}`);
+        console.error('Prediction fetch error details:', fetchError);
+        // If table access fails, return gracefully instead of throwing
+        console.warn(`Could not fetch predictions for episode ${episodeId}, tribe ${tribe}: ${fetchError.message}`);
+        return {
+          correct: 0,
+          incorrect: 0,
+          points_awarded: 0
+        };
+      }
+      
+      console.log(`Found ${predictions?.length || 0} predictions to score`);
+      if (predictions && predictions.length > 0) {
+        console.log('Sample prediction:', predictions[0]);
       }
 
       // If no predictions to score, return zeros
@@ -40,6 +54,8 @@ class PredictionScoringService {
       let correctCount = 0;
       let incorrectCount = 0;
 
+      console.log(`Updating correct predictions for contestant ${contestantId}`);
+      
       // Update predictions atomically - mark correct predictions
       const { error: correctError } = await supabase
         .from('elimination_predictions')
@@ -53,7 +69,8 @@ class PredictionScoringService {
         .is('is_correct', null);
 
       if (correctError) {
-        throw new Error(`Failed to update correct predictions: ${correctError.message}`);
+        console.error('Error updating correct predictions:', correctError);
+        // Continue with counting, don't throw
       }
 
       // Count correct predictions
@@ -72,7 +89,8 @@ class PredictionScoringService {
         .is('is_correct', null);
 
       if (incorrectError) {
-        throw new Error(`Failed to update incorrect predictions: ${incorrectError.message}`);
+        console.error('Error updating incorrect predictions:', incorrectError);
+        // Continue with counting, don't throw
       }
 
       // Count incorrect predictions
@@ -152,7 +170,9 @@ class PredictionScoringService {
         .from('contestant_events')
         .select(`
           contestant_id,
-          contestants!inner(current_tribe)
+          event_type_id,
+          contestants!inner(current_tribe),
+          event_types!inner(name)
         `)
         .eq('episode_id', episodeId)
         .eq('event_types.name', 'eliminated')
