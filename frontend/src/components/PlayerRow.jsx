@@ -107,15 +107,18 @@ const PlayerRow = ({
         <div className="player-score" aria-label={`${totalScore} points`}>
           <div className="score-value">{totalScore}</div>
           <div className="score-label" aria-hidden="true">pts</div>
+          {/* Weekly Change under score */}
+          {weeklyChange !== undefined && weeklyChange !== null && weeklyChange !== 0 && (
+            <div className={`weekly-change ${weeklyChange < 0 ? 'negative' : ''}`} aria-label={`${weeklyChange > 0 ? 'Increased' : 'Decreased'} by ${Math.abs(weeklyChange)} points this week`}>
+              <span className="change-arrow" aria-hidden="true" role="img">
+                {weeklyChange > 0 ? '↑' : '↓'}
+              </span>
+              <span className="change-value">
+                {weeklyChange > 0 ? '+' : ''}{weeklyChange}
+              </span>
+            </div>
+          )}
         </div>
-
-        {/* Weekly Change */}
-        {weeklyChange !== undefined && weeklyChange !== null && weeklyChange > 0 && (
-          <div className="weekly-change" aria-label={`Increased by ${weeklyChange} points this week`}>
-            <span className="change-arrow" aria-hidden="true" role="img">↑</span>
-            <span className="change-value">+{weeklyChange}</span>
-          </div>
-        )}
 
         {/* Prediction Bonus Indicator */}
         {predictionBonus > 0 && (

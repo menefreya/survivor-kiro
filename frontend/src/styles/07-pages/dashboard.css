@@ -8,7 +8,7 @@
   --dashboard-silver: var(--color-silver);
   --dashboard-bronze: var(--color-bronze);
 
-  max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   padding: var(--spacing-8);
   background-color: transparent;
@@ -184,7 +184,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-6);
-  max-width: 1600px;
+  width: 100%;
 }
 
 .dashboard-column {
@@ -224,6 +224,7 @@
   transition: var(--transition-shadow), var(--transition-colors);
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 @supports not (backdrop-filter: blur(10px)) {
@@ -456,6 +457,8 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid transparent;
+  overflow: hidden;
+  max-width: 100%;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
@@ -515,12 +518,18 @@
 .contestant-info {
   flex: 1;
   min-width: 0;
-  margin-right: var(--spacing-4);
+  max-width: 100px;
+  margin-right: var(--spacing-1);
+  overflow: hidden;
 }
 
 .player-name,
 .contestant-name {
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .player-username,
@@ -528,6 +537,10 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .player-score,
@@ -536,6 +549,8 @@
   flex-direction: column;
   align-items: flex-end;
   flex-shrink: 0;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .player-score .score-value,
@@ -555,10 +570,12 @@
 .weekly-change {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--spacing-1);
   color: var(--color-success);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
+  margin-top: var(--spacing-1);
 }
 
 .weekly-change.negative {
@@ -761,15 +778,24 @@
 .team-member-info {
   flex: 1;
   min-width: 0;
+  max-width: 150px;
 }
 
 .team-member-name {
   margin: 0 0 var(--spacing-1) 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .team-member-profession {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .team-member-stats {
@@ -1383,6 +1409,29 @@
   .player-row,
   .contestant-row {
     padding: var(--spacing-2);
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .player-info,
+  .contestant-info {
+    max-width: 80px;
+    margin-right: var(--spacing-1);
+    overflow: hidden;
+  }
+
+  .player-name,
+  .contestant-name {
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .player-score,
+  .contestant-score {
+    min-width: 60px;
+    max-width: 60px;
   }
 
   .rank-badge {

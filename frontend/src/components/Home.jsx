@@ -6,7 +6,7 @@ import LeaderboardCard from './LeaderboardCard';
 import MyTeamCard from './MyTeamCard';
 import LoadingSpinner from './LoadingSpinner';
 import PredictionReminder from './PredictionReminder';
-import PredictionResultsNotification from './PredictionResultsNotification';
+
 import CurrentPredictionsCard from './CurrentPredictionsCard';
 
 import '../App.css';
@@ -138,8 +138,7 @@ const Home = () => {
 
   return (
     <>
-        {/* Prediction Results Notification (Fixed Position) */}
-        <PredictionResultsNotification />
+
 
         {/* Survivor Tagline */}
         <div className="survivor-tagline">

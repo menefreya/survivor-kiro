@@ -157,6 +157,22 @@ async function getLeaderboard(req, res) {
   }
 }
 
+/**
+ * Recalculate all contestant scores
+ * @route POST /api/leaderboard/recalculate
+ * @access Admin only
+ */
+async function recalculateScores(req, res) {
+  try {
+    await ScoreCalculationService.recalculateAllContestantScores();
+    res.json({ message: 'All contestant scores recalculated successfully' });
+  } catch (error) {
+    console.error('Error recalculating scores:', error);
+    res.status(500).json({ error: 'Failed to recalculate scores' });
+  }
+}
+
 module.exports = {
-  getLeaderboard
+  getLeaderboard,
+  recalculateScores
 };

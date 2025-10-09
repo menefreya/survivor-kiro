@@ -69,6 +69,30 @@ class ScoreCalculationService {
   }
 
   /**
+   * Recalculate and update total scores for all contestants
+   * @returns {Promise<void>}
+   */
+  async recalculateAllContestantScores() {
+    // Get all contestant IDs
+    const { data: contestants, error } = await supabase
+      .from('contestants')
+      .select('id');
+
+    if (error) {
+      throw new Error(`Failed to fetch contestants: ${error.message}`);
+    }
+
+    // Update each contestant's total score
+    for (const contestant of contestants) {
+      try {
+        await this.updateContestantTotalScore(contestant.id);
+      } catch (error) {
+        console.error(`Error updating score for contestant ${contestant.id}:`, error);
+      }
+    }
+  }
+
+  /**
    * Calculate sole survivor bonus for a player
    * Awards +1 point per episode in current contiguous period
    * Awards +25 bonus if contestant wins and was selected by episode 2

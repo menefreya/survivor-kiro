@@ -91,9 +91,9 @@ const CurrentPredictionsCard = () => {
                 <div className={`tribe-pill ${getTribeClass(prediction.tribe)}`}>
                   {prediction.tribe}
                 </div>
-                {prediction.is_correct !== null && (
-                  <div className={`prediction-result-badge ${prediction.is_correct ? 'correct' : 'incorrect'}`}>
-                    {prediction.is_correct ? '✓ Correct (+3)' : '✗ Incorrect'}
+                {prediction.is_correct === true && (
+                  <div className="prediction-result-badge correct">
+                    ✓ Correct (+3)
                   </div>
                 )}
               </div>
