@@ -370,7 +370,20 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
       }
 
       if (!replacementContestant) {
-        console.error(`No available replacement contestant for player ${playerId}`);
+        console.log(`No available replacement contestant for player ${playerId}. Keeping eliminated contestant for compensation scoring.`);
+        
+        // Log that no replacement was found - the eliminated contestant stays for compensation
+        const replacementInfo = {
+          playerId,
+          playerName: player.name,
+          eliminatedContestantId,
+          replacementContestantId: null, // No replacement found
+          pickId: pick.id,
+          compensationEligible: true
+        };
+
+        console.log('No replacement available - eligible for compensation:', replacementInfo);
+        replacements.push(replacementInfo);
         continue;
       }
 
@@ -393,7 +406,8 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         playerName: player.name,
         eliminatedContestantId,
         replacementContestantId: replacementContestant,
-        pickId: pick.id
+        pickId: pick.id,
+        compensationEligible: false
       };
 
       console.log('Draft pick replacement:', replacementInfo);
