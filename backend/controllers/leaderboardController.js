@@ -30,11 +30,14 @@ async function getLeaderboard(req, res) {
     const leaderboardData = [];
 
     for (const player of players) {
-      // Fetch player's 2 draft picks
+      // Fetch player's draft picks with episode information
       const { data: draftPicks, error: draftError } = await supabase
         .from('draft_picks')
         .select(`
           contestant_id,
+          start_episode,
+          end_episode,
+          is_replacement,
           contestants:contestant_id (
             id,
             name,
@@ -44,7 +47,8 @@ async function getLeaderboard(req, res) {
             is_eliminated
           )
         `)
-        .eq('player_id', player.id);
+        .eq('player_id', player.id)
+        .order('start_episode', { ascending: true });
 
       if (draftError) {
         console.error('Error fetching draft picks:', draftError);

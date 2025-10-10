@@ -35,6 +35,65 @@ class ScoreCalculationService {
   }
 
   /**
+   * Calculate contestant score for a specific episode range (for draft picks)
+   * @param {number} contestantId - Contestant ID
+   * @param {number} startEpisodeId - Starting episode ID (foreign key to episodes table)
+   * @param {number|null} endEpisodeId - Ending episode ID (foreign key to episodes table, null means current)
+   * @returns {Promise<number>} Total score for the episode range
+   */
+  async calculateContestantScoreForEpisodeRange(contestantId, startEpisodeId, endEpisodeId) {
+    // First, get the episode numbers for the start and end episode IDs
+    const { data: startEpisode, error: startError } = await supabase
+      .from('episodes')
+      .select('episode_number')
+      .eq('id', startEpisodeId)
+      .single();
+
+    if (startError) {
+      throw new Error(`Failed to fetch start episode: ${startError.message}`);
+    }
+
+    let endEpisodeNumber = null;
+    if (endEpisodeId !== null) {
+      const { data: endEpisode, error: endError } = await supabase
+        .from('episodes')
+        .select('episode_number')
+        .eq('id', endEpisodeId)
+        .single();
+
+      if (endError) {
+        throw new Error(`Failed to fetch end episode: ${endError.message}`);
+      }
+      endEpisodeNumber = endEpisode.episode_number;
+    }
+
+    // Build episode filter based on episode numbers
+    let episodeQuery = supabase
+      .from('episode_scores')
+      .select('score, episodes!inner(episode_number)')
+      .eq('contestant_id', contestantId)
+      .gte('episodes.episode_number', startEpisode.episode_number);
+
+    // Add end episode filter if specified
+    if (endEpisodeNumber !== null) {
+      episodeQuery = episodeQuery.lte('episodes.episode_number', endEpisodeNumber);
+    }
+
+    const { data: episodeScores, error } = await episodeQuery;
+
+    if (error) {
+      throw new Error(`Failed to fetch episode scores for range: ${error.message}`);
+    }
+
+    // Sum scores for the episode range
+    const totalScore = episodeScores && episodeScores.length > 0
+      ? episodeScores.reduce((sum, ep) => sum + (ep.score || 0), 0)
+      : 0;
+
+    return totalScore;
+  }
+
+  /**
    * Update contestant's total score by summing all episode scores
    * @param {number} contestantId - Contestant ID
    * @returns {Promise<number>} Updated total score
@@ -192,7 +251,10 @@ class ScoreCalculationService {
       // Get player's draft picks that are eliminated
       const { data: eliminatedPicks, error: picksError } = await supabase
         .from('draft_picks')
-        .select('contestant_id, contestants!inner(is_eliminated)')
+        .select(`
+          contestant_id,
+          contestants!inner(is_eliminated)
+        `)
         .eq('player_id', playerId)
         .eq('contestants.is_eliminated', true);
 
@@ -265,19 +327,28 @@ class ScoreCalculationService {
    * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, elimination_compensation: number, total: number}>}
    */
   async calculatePlayerScore(playerId) {
-    // Get draft picks and sum contestant scores
+    // Get draft picks with episode ranges
     const { data: draftPicks, error: draftError } = await supabase
       .from('draft_picks')
-      .select('contestant_id, contestants(total_score)')
+      .select('contestant_id, start_episode, end_episode')
       .eq('player_id', playerId);
 
     if (draftError) {
       throw new Error(`Failed to fetch draft picks: ${draftError.message}`);
     }
 
-    const draftScore = draftPicks && draftPicks.length > 0
-      ? draftPicks.reduce((sum, pick) => sum + (pick.contestants?.total_score || 0), 0)
-      : 0;
+    // Calculate draft score based on episode ranges
+    let draftScore = 0;
+    if (draftPicks && draftPicks.length > 0) {
+      for (const pick of draftPicks) {
+        const contestantScore = await this.calculateContestantScoreForEpisodeRange(
+          pick.contestant_id, 
+          pick.start_episode, 
+          pick.end_episode
+        );
+        draftScore += contestantScore;
+      }
+    }
 
     // Get sole survivor and add contestant score
     const { data: player, error: playerError } = await supabase

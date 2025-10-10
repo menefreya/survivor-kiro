@@ -46,17 +46,9 @@ function ScoreBreakdown({ playerId, onClose }) {
         setPredictionBonus(0);
       }
 
-      // Fetch score breakdown for each draft pick
-      const draftPicksPromises = player.draft_picks.map(async (pick) => {
-        const breakdownResponse = await api.get(`/api/contestants/${pick.contestant_id}/score-breakdown`);
-        return {
-          ...breakdownResponse.data,
-          isDraftPick: true
-        };
-      });
-
-      const draftPicksBreakdowns = await Promise.all(draftPicksPromises);
-      setDraftPicksData(draftPicksBreakdowns);
+      // Fetch draft picks breakdown with episode ranges
+      const draftPicksResponse = await api.get(`/api/players/${playerId}/draft-picks-breakdown`);
+      setDraftPicksData(draftPicksResponse.data.draft_picks || []);
 
       // Fetch score breakdown for sole survivor if exists
       if (player.sole_survivor_id) {
@@ -127,8 +119,8 @@ function ScoreBreakdown({ playerId, onClose }) {
     );
   }
 
-  // Calculate totals
-  const draftScore = draftPicksData.reduce((sum, pick) => sum + (pick.contestant?.total_score || 0), 0);
+  // Calculate totals using episode-aware scoring
+  const draftScore = draftPicksData.reduce((sum, pick) => sum + (pick.draft_pick?.range_score || 0), 0);
   const soleSurvivorScore = soleSurvivorData?.contestant?.total_score || 0;
   const soleSurvivorBonus = soleSurvivorData?.bonus?.total_bonus || 0;
   const totalScore = draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus;

@@ -188,7 +188,10 @@ async function executeDraft() {
       draftPicks.push({
         player_id: player.id,
         contestant_id: selectedContestant,
-        pick_number: draftPicks.length + 1
+        pick_number: draftPicks.length + 1,
+        start_episode: 1, // Episode ID 1 (which should be episode number 1)
+        end_episode: null,
+        is_replacement: false
       });
     }
   }
@@ -387,13 +390,126 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         continue;
       }
 
-      // Update the draft pick with the replacement contestant
-      const { data: updatedPick, error: updateError } = await supabase
+      // Find the episode where this contestant was eliminated
+      const { data: eliminationEvent, error: eliminationError } = await supabase
+        .from('contestant_events')
+        .select(`
+          episode_id,
+          episodes!inner(episode_number),
+          event_types!inner(name)
+        `)
+        .eq('contestant_id', eliminatedContestantId)
+        .eq('event_types.name', 'eliminated')
+        .order('episodes.episode_number', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      let eliminationEpisodeId;
+      let nextEpisodeId = null;
+
+      if (!eliminationError && eliminationEvent) {
+        eliminationEpisodeId = eliminationEvent.episode_id;
+        
+        // Find the next episode after elimination
+        const { data: nextEpisode } = await supabase
+          .from('episodes')
+          .select('id')
+          .gt('episode_number', eliminationEvent.episodes.episode_number)
+          .order('episode_number', { ascending: true })
+          .limit(1)
+          .maybeSingle();
+        
+        nextEpisodeId = nextEpisode?.id;
+      } else {
+        // Fallback: use current episode if no elimination event found
+        const { data: currentEpisode } = await supabase
+          .from('episodes')
+          .select('id, episode_number')
+          .eq('is_current', true)
+          .maybeSingle();
+        
+        if (currentEpisode) {
+          eliminationEpisodeId = currentEpisode.id;
+          
+          // Find next episode after current
+          const { data: nextEpisode } = await supabase
+            .from('episodes')
+            .select('id')
+            .gt('episode_number', currentEpisode.episode_number)
+            .order('episode_number', { ascending: true })
+            .limit(1)
+            .maybeSingle();
+          
+          nextEpisodeId = nextEpisode?.id;
+        } else {
+          // Final fallback: use latest episode
+          const { data: latestEpisode } = await supabase
+            .from('episodes')
+            .select('id, episode_number')
+            .order('episode_number', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          
+          if (latestEpisode) {
+            eliminationEpisodeId = latestEpisode.id;
+            
+            // Find next episode after latest
+            const { data: nextEpisode } = await supabase
+              .from('episodes')
+              .select('id')
+              .gt('episode_number', latestEpisode.episode_number)
+              .order('episode_number', { ascending: true })
+              .limit(1)
+              .maybeSingle();
+            
+            nextEpisodeId = nextEpisode?.id;
+          } else {
+            // Ultimate fallback - use episode ID 1
+            eliminationEpisodeId = 1;
+          }
+        }
+      }
+
+      // First, end the current draft pick at the elimination episode
+      const { error: endError } = await supabase
         .from('draft_picks')
-        .update({ contestant_id: replacementContestant })
-        .eq('id', pick.id)
-        .select()
-        .single();
+        .update({ end_episode: eliminationEpisodeId })
+        .eq('id', pick.id);
+
+      if (endError) {
+        console.error(`Failed to end draft pick for player ${playerId}:`, endError);
+        continue;
+      }
+
+      // Only create replacement if we have a next episode to start from
+      if (nextEpisodeId) {
+        // Create new draft pick for replacement contestant starting next episode
+        const { data: newPick, error: insertError } = await supabase
+          .from('draft_picks')
+          .insert({
+            player_id: playerId,
+            contestant_id: replacementContestant,
+            pick_number: pick.pick_number || 0,
+            start_episode: nextEpisodeId,
+            end_episode: null,
+            is_replacement: true,
+            replaced_contestant_id: eliminatedContestantId
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error(`Failed to create replacement draft pick for player ${playerId}:`, insertError);
+          continue;
+        }
+      } else {
+        console.log(`No future episodes available for replacement contestant`);
+      }
+
+      if (insertError) {
+        console.error(`Failed to create replacement draft pick for player ${playerId}:`, insertError);
+        continue;
+      }
 
       if (updateError) {
         console.error(`Failed to update draft pick for player ${playerId}:`, updateError);
@@ -406,7 +522,10 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         playerName: player.name,
         eliminatedContestantId,
         replacementContestantId: replacementContestant,
-        pickId: pick.id,
+        oldPickId: pick.id,
+        newPickId: newPick?.id,
+        endEpisodeId: eliminationEpisodeId,
+        startEpisodeId: nextEpisodeId,
         compensationEligible: false
       };
 
