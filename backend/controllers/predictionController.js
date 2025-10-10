@@ -364,23 +364,21 @@ async function getPredictionHistory(req, res) {
     const enrichedPredictions = [];
     
     for (const prediction of predictions || []) {
-      // Find the actual eliminated contestant for this episode and tribe
+      // Find the actual eliminated contestant for this episode and tribe (event_type_id 10 or 29)
       const { data: eliminatedEvents, error: eventsError } = await supabase
         .from('contestant_events')
         .select(`
           contestant_id,
+          event_type_id,
           contestants (
             id,
             name,
             image_url,
             current_tribe
-          ),
-          event_types (
-            name
           )
         `)
         .eq('episode_id', prediction.episode_id)
-        .eq('event_types.name', 'eliminated');
+        .in('event_type_id', [10, 29]);  // 10 = eliminated, 29 = eliminated_medical
 
       if (eventsError) {
         console.error('Error fetching elimination events:', eventsError);

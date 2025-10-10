@@ -253,7 +253,7 @@ class ScoreCalculationService {
         .from('draft_picks')
         .select(`
           contestant_id,
-          contestants!inner(is_eliminated)
+          contestants!contestant_id(is_eliminated)
         `)
         .eq('player_id', playerId)
         .eq('contestants.is_eliminated', true);
@@ -273,16 +273,16 @@ class ScoreCalculationService {
       for (const pick of eliminatedPicks) {
         const contestantId = pick.contestant_id;
 
-        // Find the episode where this contestant was eliminated
+        // Find the episode where this contestant was eliminated (event_type_id 10 or 29)
         const { data: eliminationEvent, error: eventError } = await supabase
           .from('contestant_events')
           .select(`
-            episode_id, 
-            episodes!inner(episode_number),
-            event_types!inner(name)
+            episode_id,
+            episodes!episode_id(episode_number),
+            event_type_id
           `)
           .eq('contestant_id', contestantId)
-          .eq('event_types.name', 'eliminated')
+          .in('event_type_id', [10, 29])  // 10 = eliminated, 29 = eliminated_medical
           .order('episodes.episode_number', { ascending: false })
           .limit(1)
           .maybeSingle();

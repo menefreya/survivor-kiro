@@ -390,16 +390,16 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         continue;
       }
 
-      // Find the episode where this contestant was eliminated
+      // Find the episode where this contestant was eliminated (event_type_id 10 or 29)
       const { data: eliminationEvent, error: eliminationError } = await supabase
         .from('contestant_events')
         .select(`
           episode_id,
-          episodes!inner(episode_number),
-          event_types!inner(name)
+          episodes!episode_id(episode_number),
+          event_type_id
         `)
         .eq('contestant_id', eliminatedContestantId)
-        .eq('event_types.name', 'eliminated')
+        .in('event_type_id', [10, 29])  // 10 = eliminated, 29 = eliminated_medical
         .order('episodes.episode_number', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -409,7 +409,7 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
 
       if (!eliminationError && eliminationEvent) {
         eliminationEpisodeId = eliminationEvent.episode_id;
-        
+
         // Find the next episode after elimination
         const { data: nextEpisode } = await supabase
           .from('episodes')
@@ -418,7 +418,7 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
           .order('episode_number', { ascending: true })
           .limit(1)
           .maybeSingle();
-        
+
         nextEpisodeId = nextEpisode?.id;
       } else {
         // Fallback: use current episode if no elimination event found
@@ -427,10 +427,10 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
           .select('id, episode_number')
           .eq('is_current', true)
           .maybeSingle();
-        
+
         if (currentEpisode) {
           eliminationEpisodeId = currentEpisode.id;
-          
+
           // Find next episode after current
           const { data: nextEpisode } = await supabase
             .from('episodes')
@@ -439,7 +439,7 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
             .order('episode_number', { ascending: true })
             .limit(1)
             .maybeSingle();
-          
+
           nextEpisodeId = nextEpisode?.id;
         } else {
           // Final fallback: use latest episode
@@ -449,10 +449,10 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
             .order('episode_number', { ascending: false })
             .limit(1)
             .maybeSingle();
-          
+
           if (latestEpisode) {
             eliminationEpisodeId = latestEpisode.id;
-            
+
             // Find next episode after latest
             const { data: nextEpisode } = await supabase
               .from('episodes')
@@ -461,7 +461,7 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
               .order('episode_number', { ascending: true })
               .limit(1)
               .maybeSingle();
-            
+
             nextEpisodeId = nextEpisode?.id;
           } else {
             // Ultimate fallback - use episode ID 1

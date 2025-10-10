@@ -108,13 +108,13 @@
      ============================================ */
 
   /* Primary Dark Backgrounds - Enhanced for dramatic effect */
-  --color-bg-primary: #000000;
-  /* Pure black for main backgrounds */
-  --color-bg-secondary: #0F0F0F;
-  /* Very dark gray for cards/containers */
-  --color-bg-tertiary: #1A1A1A;
+  --color-bg-primary: #0A0A0B;
+  /* Very dark for main backgrounds */
+  --color-bg-secondary: #1A1A1C;
+  /* Dark gray for cards/containers */
+  --color-bg-tertiary: #2A2A2E;
   /* Elevated surfaces */
-  --color-bg-quaternary: #2A2A2A;
+  --color-bg-quaternary: #3A3A3F;
   /* Interactive elements */
   --color-bg-overlay: rgba(0, 0, 0, 0.95);
   /* Dark overlay with transparency */

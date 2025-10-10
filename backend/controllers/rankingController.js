@@ -94,6 +94,31 @@ async function saveRankings(req, res) {
       return res.status(500).json({ error: 'Failed to save rankings' });
     }
 
+    // Get current episode number (find the episode marked as is_current)
+    const { data: currentEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('episode_number')
+      .eq('is_current', true)
+      .single();
+
+    // Default to episode 1 if no current episode is set
+    const currentEpisodeNumber = currentEpisode?.episode_number || 1;
+
+    // Create initial sole survivor history record
+    const { error: historyError } = await supabase
+      .from('sole_survivor_history')
+      .insert({
+        player_id: playerId,
+        contestant_id: sole_survivor_id,
+        start_episode: currentEpisodeNumber,
+        end_episode: null
+      });
+
+    if (historyError) {
+      console.error('Error creating sole survivor history:', historyError);
+      return res.status(500).json({ error: 'Failed to create sole survivor history' });
+    }
+
     // Update player's has_submitted_rankings flag and sole_survivor_id
     const { error: updateError } = await supabase
       .from('players')

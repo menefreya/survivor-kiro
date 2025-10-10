@@ -38,6 +38,64 @@ async function updateSoleSurvivor(req, res) {
     // Per requirement 2.6: Allow sole survivor pick even if eliminated
     // This allows players to re-pick if their sole survivor is eliminated
 
+    // Get current episode number (find the episode marked as is_current)
+    const { data: currentEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('episode_number')
+      .eq('is_current', true)
+      .single();
+
+    // Default to episode 1 if no current episode is set
+    const currentEpisodeNumber = currentEpisode?.episode_number || 1;
+
+    // Get player's current sole survivor to check if it's changing
+    const { data: player, error: playerError } = await supabase
+      .from('players')
+      .select('sole_survivor_id')
+      .eq('id', playerId)
+      .single();
+
+    if (playerError || !player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    // If the contestant is the same as current, no change needed
+    if (player.sole_survivor_id === parseInt(contestant_id)) {
+      return res.json({
+        message: 'Sole survivor is already set to this contestant',
+        sole_survivor_id: contestant_id
+      });
+    }
+
+    // End previous selection if exists
+    if (player.sole_survivor_id) {
+      const { error: endError } = await supabase
+        .from('sole_survivor_history')
+        .update({ end_episode: currentEpisodeNumber })
+        .eq('player_id', playerId)
+        .is('end_episode', null);
+
+      if (endError) {
+        console.error('Error ending previous sole survivor selection:', endError);
+        return res.status(500).json({ error: 'Failed to update sole survivor history' });
+      }
+    }
+
+    // Create new selection record
+    const { error: historyError } = await supabase
+      .from('sole_survivor_history')
+      .insert({
+        player_id: playerId,
+        contestant_id: contestant_id,
+        start_episode: currentEpisodeNumber,
+        end_episode: null
+      });
+
+    if (historyError) {
+      console.error('Error creating sole survivor history:', historyError);
+      return res.status(500).json({ error: 'Failed to create sole survivor history' });
+    }
+
     // Update player's sole survivor pick
     const { data: updatedPlayer, error: updateError } = await supabase
       .from('players')

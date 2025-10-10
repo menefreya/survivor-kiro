@@ -165,17 +165,16 @@ class PredictionScoringService {
         throw new Error(`Failed to reset predictions: ${resetError.message}`);
       }
 
-      // Get all elimination events for this episode
+      // Get all elimination events for this episode (event_type_id 10 or 29)
       const { data: eliminations, error: eliminationError } = await supabase
         .from('contestant_events')
         .select(`
           contestant_id,
           event_type_id,
-          contestants!inner(current_tribe),
-          event_types!inner(name)
+          contestants!inner(current_tribe)
         `)
         .eq('episode_id', episodeId)
-        .eq('event_types.name', 'eliminated')
+        .in('event_type_id', [10, 29])  // 10 = eliminated, 29 = eliminated_medical
         .not('contestants.current_tribe', 'is', null);
 
       if (eliminationError) {
