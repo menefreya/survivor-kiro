@@ -7,7 +7,8 @@ const {
   updateContestant,
   getScoreBreakdown,
   getContestantEvents,
-  getContestantPerformance
+  getContestantPerformance,
+  fixEliminatedDraftPicks
 } = require('../controllers/contestantController');
 
 // Get all contestants (requires authentication)
@@ -27,5 +28,8 @@ router.get('/:id/score-breakdown', authenticateToken, getScoreBreakdown);
 
 // Get all events for a contestant (requires authentication)
 router.get('/:id/events', authenticateToken, getContestantEvents);
+
+// Fix eliminated draft picks (requires admin)
+router.post('/fix-eliminations', authenticateToken, requireAdmin, fixEliminatedDraftPicks);
 
 module.exports = router;

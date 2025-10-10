@@ -326,27 +326,33 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         continue;
       }
 
-      // Get player's current draft picks
-      const { data: currentPicks, error: currentPicksError } = await supabase
+      // Get ALL draft picks from ALL players (not just this player)
+      const { data: allDraftPicks, error: allPicksError } = await supabase
         .from('draft_picks')
-        .select('contestant_id')
-        .eq('player_id', playerId);
+        .select('contestant_id');
 
-      if (currentPicksError) {
-        console.error(`Failed to fetch current picks for player ${playerId}:`, currentPicksError);
+      if (allPicksError) {
+        console.error(`Failed to fetch all draft picks:`, allPicksError);
         continue;
       }
 
-      // Build set of already assigned contestants (excluding the eliminated one)
+      // Build set of ALL assigned contestants (excluding the eliminated one)
       const assignedContestants = new Set(
-        currentPicks
+        allDraftPicks
           .map(p => p.contestant_id)
           .filter(id => id !== eliminatedContestantId)
       );
 
-      // Add sole survivor to exclusion list
-      if (player.sole_survivor_id) {
-        assignedContestants.add(player.sole_survivor_id);
+      // Also exclude eliminated contestants
+      const { data: eliminatedContestants, error: eliminatedError } = await supabase
+        .from('contestants')
+        .select('id')
+        .eq('is_eliminated', true);
+
+      if (!eliminatedError && eliminatedContestants) {
+        eliminatedContestants.forEach(contestant => {
+          assignedContestants.add(contestant.id);
+        });
       }
 
       // Find highest-ranked unassigned contestant

@@ -392,11 +392,74 @@ async function getContestantPerformance(req, res) {
   }
 }
 
+/**
+ * Manually trigger draft pick replacement for eliminated contestants
+ * @route POST /api/contestants/fix-eliminations
+ * @access Admin only
+ */
+async function fixEliminatedDraftPicks(req, res) {
+  try {
+    // Find all eliminated contestants who still have draft picks
+    const { data: eliminatedWithPicks, error: queryError } = await supabase
+      .from('draft_picks')
+      .select(`
+        contestant_id,
+        contestants!inner(name, is_eliminated)
+      `)
+      .eq('contestants.is_eliminated', true);
+
+    if (queryError) {
+      console.error('Error finding eliminated draft picks:', queryError);
+      return res.status(500).json({ error: 'Failed to find eliminated draft picks' });
+    }
+
+    if (!eliminatedWithPicks || eliminatedWithPicks.length === 0) {
+      return res.json({ 
+        message: 'No eliminated contestants found with active draft picks',
+        replacements: []
+      });
+    }
+
+    // Get unique eliminated contestant IDs
+    const eliminatedContestantIds = [...new Set(eliminatedWithPicks.map(p => p.contestant_id))];
+    
+    console.log('Found eliminated contestants with draft picks:', eliminatedContestantIds);
+
+    // Process replacements for each eliminated contestant
+    const allReplacements = [];
+    for (const contestantId of eliminatedContestantIds) {
+      try {
+        const replacements = await replaceEliminatedDraftPicks(contestantId);
+        allReplacements.push(...replacements);
+        console.log(`Processed replacements for contestant ${contestantId}:`, replacements);
+      } catch (error) {
+        console.error(`Error replacing picks for contestant ${contestantId}:`, error);
+      }
+    }
+
+    res.json({
+      message: `Processed ${eliminatedContestantIds.length} eliminated contestants`,
+      eliminatedContestants: eliminatedContestantIds,
+      replacements: allReplacements.map(r => ({
+        playerId: r.playerId,
+        playerName: r.playerName,
+        eliminatedContestantId: r.eliminatedContestantId,
+        newContestantId: r.replacementContestantId
+      }))
+    });
+
+  } catch (error) {
+    console.error('Error in fixEliminatedDraftPicks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getAllContestants,
   addContestant,
   updateContestant,
   getScoreBreakdown,
   getContestantEvents,
-  getContestantPerformance
+  getContestantPerformance,
+  fixEliminatedDraftPicks
 };
