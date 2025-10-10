@@ -343,6 +343,11 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
           .filter(id => id !== eliminatedContestantId)
       );
 
+      // Exclude THIS player's sole survivor (can't have same contestant as both draft pick and sole survivor)
+      if (player.sole_survivor_id) {
+        assignedContestants.add(player.sole_survivor_id);
+      }
+
       // Also exclude eliminated contestants
       const { data: eliminatedContestants, error: eliminatedError } = await supabase
         .from('contestants')
