@@ -64,6 +64,7 @@ const eventRoutes = require('./routes/events');
 const predictionRoutes = require('./routes/predictions');
 const episodeRoutes = require('./routes/episodes');
 const rulesRoutes = require('./routes/rules');
+const debugRoutes = require('./routes/debug');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/contestants', contestantRoutes);
@@ -79,6 +80,38 @@ app.use('/api', eventRoutes);
 app.use('/api/predictions', predictionRoutes);
 app.use('/api/episodes', episodeRoutes);
 app.use('/api/rules', rulesRoutes);
+app.use('/api/debug', debugRoutes);
+
+// Health check with database test
+app.get('/health', async (req, res) => {
+  try {
+    const supabase = require('./db/supabase');
+    const { data, error } = await supabase
+      .from('players')
+      .select('count')
+      .limit(1);
+    
+    if (error) {
+      return res.status(503).json({
+        status: 'unhealthy',
+        error: 'Database connection failed',
+        details: error.message
+      });
+    }
+    
+    res.json({
+      status: 'healthy',
+      message: 'Database connected',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      error: 'Health check failed',
+      details: error.message
+    });
+  }
+});
 
 // Root endpoint
 app.get('/', (req, res) => {

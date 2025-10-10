@@ -241,90 +241,9 @@ class ScoreCalculationService {
   }
 
   /**
-   * Calculate compensation points for eliminated draft picks with no replacement
-   * Awards +1 point per episode that aired AFTER the contestant was eliminated
+   * Calculate total player score including draft picks, sole survivor bonuses, and prediction bonus
    * @param {number} playerId - Player ID
-   * @returns {Promise<number>} Total compensation points
-   */
-  async calculateEliminationCompensation(playerId) {
-    try {
-      // Get player's draft picks that are eliminated
-      const { data: eliminatedPicks, error: picksError } = await supabase
-        .from('draft_picks')
-        .select(`
-          contestant_id,
-          contestants!contestant_id(is_eliminated)
-        `)
-        .eq('player_id', playerId)
-        .eq('contestants.is_eliminated', true);
-
-      if (picksError) {
-        console.warn(`Could not fetch eliminated draft picks for player ${playerId}:`, picksError.message);
-        return 0;
-      }
-
-      if (!eliminatedPicks || eliminatedPicks.length === 0) {
-        return 0;
-      }
-
-      let totalCompensation = 0;
-
-      // Calculate compensation for each eliminated contestant
-      for (const pick of eliminatedPicks) {
-        const contestantId = pick.contestant_id;
-
-        // Find the episode where this contestant was eliminated (event_type_id 10 or 29)
-        const { data: eliminationEvent, error: eventError } = await supabase
-          .from('contestant_events')
-          .select(`
-            episode_id,
-            episodes!episode_id(episode_number),
-            event_type_id
-          `)
-          .eq('contestant_id', contestantId)
-          .in('event_type_id', [10, 29])  // 10 = eliminated, 29 = eliminated_medical
-          .order('episodes.episode_number', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (eventError || !eliminationEvent) {
-          console.warn(`Could not find elimination episode for contestant ${contestantId}`);
-          continue;
-        }
-
-        const eliminationEpisodeNumber = eliminationEvent.episodes.episode_number;
-
-        // Count episodes that aired AFTER the elimination
-        const { data: subsequentEpisodes, error: subsequentError } = await supabase
-          .from('episodes')
-          .select('id')
-          .gt('episode_number', eliminationEpisodeNumber)
-          .order('episode_number', { ascending: true });
-
-        if (subsequentError) {
-          console.warn(`Could not fetch subsequent episodes for contestant ${contestantId}:`, subsequentError.message);
-          continue;
-        }
-
-        const episodesAfterElimination = subsequentEpisodes ? subsequentEpisodes.length : 0;
-        totalCompensation += episodesAfterElimination;
-
-        console.log(`Contestant ${contestantId} eliminated in episode ${eliminationEpisodeNumber}, ${episodesAfterElimination} episodes since = +${episodesAfterElimination} compensation`);
-      }
-
-      console.log(`Player ${playerId} total elimination compensation: ${totalCompensation} points`);
-
-      return totalCompensation;
-    } catch (error) {
-      console.error('Error calculating elimination compensation:', error);
-      return 0;
-    }
-  }
-
-  /**
-   * Calculate total player score including draft picks, sole survivor bonuses, prediction bonus, and elimination compensation
-   * @param {number} playerId - Player ID
-   * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, elimination_compensation: number, total: number}>}
+   * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, total: number}>}
    */
   async calculatePlayerScore(playerId) {
     // Get draft picks with episode ranges
@@ -342,8 +261,8 @@ class ScoreCalculationService {
     if (draftPicks && draftPicks.length > 0) {
       for (const pick of draftPicks) {
         const contestantScore = await this.calculateContestantScoreForEpisodeRange(
-          pick.contestant_id, 
-          pick.start_episode, 
+          pick.contestant_id,
+          pick.start_episode,
           pick.end_episode
         );
         draftScore += contestantScore;
@@ -370,16 +289,12 @@ class ScoreCalculationService {
     // Calculate and add prediction bonus
     const predictionBonus = await predictionScoringService.getPredictionBonus(playerId);
 
-    // Calculate elimination compensation
-    const eliminationCompensation = await this.calculateEliminationCompensation(playerId);
-
     return {
       draft_score: draftScore,
       sole_survivor_score: soleSurvivorScore,
       sole_survivor_bonus: soleSurvivorBonus,
       prediction_bonus: predictionBonus,
-      elimination_compensation: eliminationCompensation,
-      total: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus + eliminationCompensation
+      total: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus
     };
   }
 }
