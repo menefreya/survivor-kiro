@@ -162,7 +162,7 @@
   
   .dashboard-header h1 {
     font-size: var(--font-size-3xl);
-    text-shadow: var(--text-shadow-dramatic);
+    text-shadow: none;
     margin-bottom: var(--spacing-3);
   }
   
@@ -217,7 +217,7 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
   }
   
   .player-score .score-label {
@@ -358,14 +358,14 @@
   h1, .u-text-4xl {
     font-size: var(--font-size-3xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-dramatic);
+    text-shadow: none;
     margin-bottom: var(--spacing-4);
   }
   
   h2, .u-text-3xl {
     font-size: var(--font-size-2xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     margin-bottom: var(--spacing-3);
   }
   

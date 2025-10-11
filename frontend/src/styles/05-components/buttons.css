@@ -27,64 +27,74 @@
   outline-offset: var(--focus-outline-offset);
 }
 
-/* Primary Button - Dark Theme with Gradient and Glow */
-.btn-primary {
+/* Primary Button - Orange Background */
+.btn-primary,
+.btn--primary {
   color: var(--color-text-inverse);
-  background: var(--gradient-primary);
+  background-color: var(--color-primary);
   border: none;
   box-shadow: var(--shadow-button);
   position: relative;
   overflow: hidden;
 }
 
-.btn-primary::before {
+.btn-primary::before,
+.btn--primary::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--gradient-primary-hover);
+  background-color: var(--color-primary-hover);
   opacity: 0;
   transition: opacity var(--transition-base);
   z-index: -1;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled),
+.btn--primary:hover:not(:disabled) {
   box-shadow: var(--shadow-button-hover);
   transform: translateY(-2px);
 }
 
-.btn-primary:hover:not(:disabled)::before {
+.btn-primary:hover:not(:disabled)::before,
+.btn--primary:hover:not(:disabled)::before {
   opacity: 1;
 }
 
-.btn-primary:active:not(:disabled) {
+.btn-primary:active:not(:disabled),
+.btn--primary:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: var(--shadow-button-active);
 }
 
-.btn-primary:focus-visible {
+.btn-primary:focus-visible,
+.btn--primary:focus-visible {
   outline: none;
   box-shadow: 
     var(--shadow-button),
     var(--shadow-focus);
 }
 
-.btn-primary:disabled {
-  opacity: 0.5;
+.btn-primary:disabled,
+.btn--primary:disabled {
   cursor: not-allowed;
   transform: none;
-  background: var(--color-bg-quaternary);
+  background-color: #666666;
+  color: #ffffff;
   box-shadow: none;
+  opacity: 1;
 }
 
-.btn-primary:disabled::before {
+.btn-primary:disabled::before,
+.btn--primary:disabled::before {
   display: none;
 }
 
 /* Secondary Button - Dark Theme Outline Style */
-.btn-secondary {
+.btn-secondary,
+.btn--secondary {
   color: var(--color-text-primary);
   background: transparent;
   border: 2px solid var(--color-border-medium);
@@ -145,7 +155,8 @@
 }
 
 /* Danger Button - Dark Theme with Gradient and Glow */
-.btn-danger {
+.btn-danger,
+.btn--danger {
   color: var(--color-text-inverse);
   background: var(--gradient-danger);
   border: none;
@@ -205,7 +216,9 @@
 }
 
 /* Tertiary Button - Ghost Style for Dark Theme */
-.btn-tertiary {
+.btn-tertiary,
+.btn--tertiary,
+.btn--ghost {
   color: var(--color-text-secondary);
   background: transparent;
   border: 1px solid transparent;
@@ -259,7 +272,9 @@
 }
 
 /* Link Button - Updated for Dark Theme */
-.btn-link {
+.btn-link,
+.btn--link,
+.btn--text {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-1);
@@ -321,19 +336,26 @@
 }
 
 .btn-primary.btn-loading::after,
-.btn-danger.btn-loading::after {
+.btn--primary.btn-loading::after,
+.btn-danger.btn-loading::after,
+.btn--danger.btn-loading::after {
   border-top-color: var(--color-text-inverse);
   border-right-color: var(--color-text-inverse);
   opacity: 0.8;
 }
 
 .btn-secondary.btn-loading::after,
-.btn-tertiary.btn-loading::after {
+.btn--secondary.btn-loading::after,
+.btn-tertiary.btn-loading::after,
+.btn--tertiary.btn-loading::after,
+.btn--ghost.btn-loading::after {
   border-top-color: var(--color-primary);
   border-right-color: var(--color-primary);
 }
 
-.btn-link.btn-loading::after {
+.btn-link.btn-loading::after,
+.btn--link.btn-loading::after,
+.btn--text.btn-loading::after {
   border-top-color: var(--color-primary);
   border-right-color: var(--color-primary);
 }
@@ -355,13 +377,15 @@
 }
 
 /* Button Sizes */
-.btn-sm {
+.btn-sm,
+.btn--sm {
   min-height: 36px;
   padding: var(--spacing-2) var(--spacing-4);
   font-size: var(--font-size-sm);
 }
 
-.btn-lg {
+.btn-lg,
+.btn--lg {
   min-height: 52px;
   padding: var(--spacing-4) var(--spacing-8);
   font-size: var(--font-size-lg);

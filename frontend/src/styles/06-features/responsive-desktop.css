@@ -113,12 +113,9 @@
   
   .dashboard-header h1 {
     font-size: var(--font-size-5xl);
-    text-shadow: var(--text-shadow-hero);
+    text-shadow: none;
     margin-bottom: var(--spacing-4);
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-heading-primary);
   }
   
   /* Multi-column layout for desktop */
@@ -221,7 +218,7 @@
   .card-title {
     font-size: var(--font-size-2xl);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     font-weight: var(--font-weight-semibold);
   }
   
@@ -326,7 +323,7 @@
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     transition: color var(--transition-base);
   }
   
@@ -352,7 +349,7 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     transition: color var(--transition-base);
   }
   
@@ -562,25 +559,22 @@
   h1, .u-text-4xl {
     font-size: var(--font-size-5xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-hero);
+    text-shadow: none;
     margin-bottom: var(--spacing-6);
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-heading-primary);
   }
   
   h2, .u-text-3xl {
     font-size: var(--font-size-4xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-dramatic);
+    text-shadow: none;
     margin-bottom: var(--spacing-5);
   }
   
   h3, .u-text-2xl {
     font-size: var(--font-size-3xl);
     line-height: var(--line-height-normal);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     margin-bottom: var(--spacing-4);
   }
   

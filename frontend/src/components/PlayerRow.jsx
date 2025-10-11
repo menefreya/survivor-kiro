@@ -51,11 +51,11 @@ const PlayerRow = ({
 
   return (
     <div 
-      className={`player-row-container ${isCurrentUser ? 'current-user' : ''}`}
+      className={`entity-row-container ${isCurrentUser ? 'current-user' : ''}`}
       role="listitem"
     >
       <div 
-        className={`player-row ${hasTeam ? 'expandable' : ''} ${isExpanded ? 'expanded' : ''}`}
+        className={`entity-row entity-row--interactive ${hasTeam ? 'expandable' : ''} ${isExpanded ? 'expanded' : ''}`}
         onClick={toggleExpand}
         role={hasTeam ? 'button' : undefined}
         tabIndex={hasTeam ? 0 : undefined}
@@ -78,29 +78,32 @@ const PlayerRow = ({
         </div>
 
         {/* Player Avatar */}
-        <div className="player-avatar">
-          {profileImageUrl ? (
-            <img 
-              src={profileImageUrl} 
-              alt={`${playerName}'s profile picture`}
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-          ) : (
-            <div className="avatar-initial" aria-label={`${playerName} avatar`}>
+        <div className="entity-row__avatar">
+          <div className="avatar avatar--lg">
+            {profileImageUrl ? (
+              <img 
+                className="avatar__image"
+                src={profileImageUrl} 
+                alt={`${playerName}'s profile picture`}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : (
+              <div className="avatar__initials" aria-label={`${playerName} avatar`}>
+                {getInitial(playerName)}
+              </div>
+            )}
+            <div className="avatar__initials u-hidden" aria-label={`${playerName} avatar`}>
               {getInitial(playerName)}
             </div>
-          )}
-          <div className="avatar-initial u-hidden" aria-label={`${playerName} avatar`}>
-            {getInitial(playerName)}
           </div>
         </div>
 
         {/* Player Info */}
-        <div className="player-info">
-          <h4 className="player-name">{playerName}</h4>
+        <div className="entity-row__info">
+          <h4 className="entity-row__name">{playerName}</h4>
         </div>
 
         {/* Score */}

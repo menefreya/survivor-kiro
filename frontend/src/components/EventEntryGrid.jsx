@@ -209,7 +209,7 @@ const EventEntryGrid = ({ episodeId, contestants, onSave }) => {
     return (
       <div className="event-entry-grid-error">
         <p className="error-message">{error}</p>
-        <button onClick={fetchData} className="btn-secondary">
+        <button onClick={fetchData} className="btn btn--secondary">
           Retry
         </button>
       </div>
@@ -235,7 +235,7 @@ const EventEntryGrid = ({ episodeId, contestants, onSave }) => {
         <button
           onClick={handleSaveAll}
           disabled={saving}
-          className="btn-primary save-all-button"
+          className="btn btn--primary save-all-button"
           aria-busy={saving}
         >
           {saving ? 'Saving...' : 'Save All Events'}
@@ -249,7 +249,7 @@ const EventEntryGrid = ({ episodeId, contestants, onSave }) => {
       )}
 
       {/* Contestant Rows - Grouped by Tribe */}
-      <div className="contestant-rows">
+      <div className="entity-rows">
         {(() => {
           // Group contestants by tribe
           const contestantsByTribe = contestants.reduce((acc, contestant) => {
@@ -299,7 +299,7 @@ const EventEntryGrid = ({ episodeId, contestants, onSave }) => {
         <button
           onClick={handleSaveAll}
           disabled={saving}
-          className="btn-primary save-all-button-bottom"
+          className="btn btn--primary save-all-button-bottom"
           aria-busy={saving}
         >
           {saving ? 'Saving...' : 'Save All Events'}

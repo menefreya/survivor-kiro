@@ -147,7 +147,7 @@ const AdminEventEntry = () => {
     return (
       <div className="admin-event-entry-error">
         <p className="error-message">{error}</p>
-        <button onClick={fetchInitialData} className="btn-secondary">
+        <button onClick={fetchInitialData} className="btn btn--secondary">
           Retry
         </button>
       </div>

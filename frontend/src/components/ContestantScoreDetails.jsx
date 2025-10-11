@@ -16,15 +16,15 @@ function ContestantScoreDetails({ contestant, episodes, isSoleSurvivor = false }
   return (
     <div className="contestant-score-details">
       <div className="contestant-header" onClick={toggleExpanded}>
-        <div className="contestant-info">
+        <div className="entity-row__info">
           {contestant.image_url && (
             <img 
               src={contestant.image_url} 
               alt={contestant.name}
-              className="contestant-avatar"
+              className="avatar avatar--lg"
             />
           )}
-          <div className="contestant-name-score">
+          <div className="entity-row__info">
             <h4>{contestant.name}</h4>
             {isSoleSurvivor && <span className="sole-survivor-badge">Sole Survivor</span>}
           </div>

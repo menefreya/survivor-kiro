@@ -26,18 +26,20 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
   return (
     <div className="dashboard-card my-team-card" role="region" aria-label="My Team">
       {/* Card Header */}
-      <div className="card-header">
-        <h2 id="my-team-title">My Team</h2>
+      <div className="layout-section-header">
+        <h2 className="layout-section-header__title" id="my-team-title">My Team</h2>
         {!error && (soleSurvivor || (draftPicks && draftPicks.length > 0)) && (
-          <div className="team-total-score">
-            <span className="total-score-value">{totalScore}</span>
-            <span className="total-score-label">pts</span>
+          <div className="layout-section-header__actions">
+            <div className="team-total-score">
+              <span className="total-score-value">{totalScore}</span>
+              <span className="total-score-label">pts</span>
+            </div>
           </div>
         )}
       </div>
 
       {/* Card Body */}
-      <div className="card-body">
+      <div className="layout-section-body">
         {error ? (
           <div className="error-state" role="alert" aria-live="polite">
             <div className="error-message">

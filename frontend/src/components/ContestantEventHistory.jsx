@@ -181,7 +181,7 @@ const ContestantEventHistory = ({ contestantId, onClose, onEventDeleted }) => {
         </div>
 
         <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
+          <button className="btn btn--secondary" onClick={onClose}>
             Close
           </button>
         </div>

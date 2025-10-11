@@ -104,10 +104,11 @@
  * Enhanced with white text for dark theme visibility
  */
 .card-header-title {
+  font-family: var(--font-family-heading-secondary);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-normal);
   line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
+  color: var(--color-heading-primary);
   margin: 0;
 }
 

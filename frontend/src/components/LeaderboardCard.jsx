@@ -5,12 +5,12 @@ const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUse
   return (
     <div className="card leaderboard-card" role="region" aria-label="Leaderboard">
       {/* Card Header */}
-      <div className="card-header">
-        <h2 id="leaderboard-title">Leaderboard</h2>
+      <div className="layout-section-header">
+        <h2 className="layout-section-header__title" id="leaderboard-title">Leaderboard</h2>
       </div>
 
       {/* Card Body */}
-      <div className="card-body">
+      <div className="layout-section-body">
         {error ? (
           <div className="error-state" role="alert" aria-live="polite">
             <div className="error-message">
@@ -51,7 +51,7 @@ const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUse
 
       {/* Card Footer */}
       {!error && (
-        <div className="card-footer">
+        <div className="layout-section-footer">
           {userPosition > 0 && (
             <div className="user-stats" role="status" aria-live="polite">
               <span className="user-position" aria-label={`Your position is rank ${userPosition}`}>
