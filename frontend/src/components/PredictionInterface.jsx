@@ -302,7 +302,7 @@ const PredictionInterface = () => {
                 <div className="card-body">
                   <p className="card-text">Click on a contestant to predict their elimination:</p>
 
-                  <div className="layout-grid layout-grid--auto-sm layout-grid--gap-sm">
+                  <div className="layout-grid layout-grid--contestants layout-grid--gap-sm">
                     {tribe.contestants.map(contestant => (
                       <div
                         key={contestant.id}
@@ -323,7 +323,7 @@ const PredictionInterface = () => {
                         )}
 
                         <div className="u-flex u-flex-col u-items-center u-gap-3 u-text-center">
-                          <div className="avatar avatar--lg">
+                          <div className="avatar avatar--2xl">
                             {contestant.image_url ? (
                               <img
                                 src={contestant.image_url}

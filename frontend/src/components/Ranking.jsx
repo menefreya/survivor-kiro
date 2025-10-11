@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
-import '../styles/07-pages/ranking.css';
+import { RankBadge, StatusBadge } from './badges';
 
 const Ranking = () => {
   const { user } = useContext(AuthContext);
@@ -201,7 +201,7 @@ const Ranking = () => {
 
   if (isLoading) {
     return (
-      <div className="ranking-container">
+      <div className="content-container u-flex u-justify-center u-items-center" style={{minHeight: '400px'}}>
         <LoadingSpinner 
           size="lg" 
           text="Loading contestants..." 
@@ -214,145 +214,175 @@ const Ranking = () => {
   }
 
   return (
-    <div className="ranking-container">
-      <h2>Rank Contestants</h2>
+    <div className="content-container">
+      <div className="layout-header">
+        <h1 className="layout-header__title">Rank Contestants</h1>
+      </div>
       
-      {error && <div className="form-error" role="alert">{error}</div>}
-      {success && <div className="form-success" role="status">Rankings submitted successfully!</div>}
+      {error && <div className="form-message form-error" role="alert">{error}</div>}
+      {success && <div className="form-message form-success" role="status">Rankings submitted successfully!</div>}
       
       {isLocked && (
-        <div className="locked-message" role="status" aria-live="polite">
-          Your rankings have been submitted and are now locked. The draft will begin once all players have submitted their rankings.
+        <div className="card card-warning u-mb-6" role="status" aria-live="polite">
+          <div className="card-body u-text-center">
+            <p className="card-text">
+              Your rankings have been submitted and are now locked. The draft will begin once all players have submitted their rankings.
+            </p>
+          </div>
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         {isLocked ? (
-          <div className="card sole-survivor-display">
-            <h3 className="card-title">Your Sole Survivor Pick</h3>
-            <div className="survivor-card">
+          <div className="card u-mb-8">
+            <div className="card-header">
+              <h2 className="card-header-title">Your Sole Survivor Pick</h2>
+            </div>
+            <div className="card-body">
               {soleSurvivorId && contestants.find(c => c.id === parseInt(soleSurvivorId)) ? (
-                <>
-                  <img 
-                    src={contestants.find(c => c.id === parseInt(soleSurvivorId))?.image_url || 'https://via.placeholder.com/80?text=No+Image'} 
-                    alt={contestants.find(c => c.id === parseInt(soleSurvivorId))?.name}
-                    className="survivor-image"
-                    onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/80?text=No+Image';
-                    }}
-                  />
-                  <div className="survivor-info">
-                    <h4>{contestants.find(c => c.id === parseInt(soleSurvivorId))?.name}</h4>
-                    <p>{contestants.find(c => c.id === parseInt(soleSurvivorId))?.profession}</p>
+                <div className="entity-row">
+                  <div className="avatar avatar--xl">
+                    <img 
+                      src={contestants.find(c => c.id === parseInt(soleSurvivorId))?.image_url || 'https://via.placeholder.com/80?text=No+Image'} 
+                      alt={contestants.find(c => c.id === parseInt(soleSurvivorId))?.name}
+                      className="avatar__image"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/80?text=No+Image';
+                      }}
+                    />
                   </div>
-                </>
+                  <div className="entity-row__info">
+                    <h3 className="entity-row__name">{contestants.find(c => c.id === parseInt(soleSurvivorId))?.name}</h3>
+                    <p className="entity-row__subtitle">{contestants.find(c => c.id === parseInt(soleSurvivorId))?.profession}</p>
+                  </div>
+                </div>
               ) : (
-                <p>No sole survivor selected</p>
+                <p className="card-text">No sole survivor selected</p>
               )}
             </div>
           </div>
         ) : (
-          <div className="card sole-survivor-section">
-            <label htmlFor="sole-survivor" className="form-label">
-              <strong>Sole Survivor Pick:</strong> Who do you think will win?
-            </label>
-            <select
-              id="sole-survivor"
-              className="form-input"
-              value={soleSurvivorId}
-              onChange={handleSoleSurvivorChange}
-              disabled={isLocked}
-              required
-            >
-              <option value="">-- Select Sole Survivor --</option>
-              {contestants.map((contestant) => (
-                <option key={contestant.id} value={contestant.id}>
-                  {contestant.name}
-                </option>
-              ))}
-            </select>
-            {soleSurvivorId && (
-              <div className="selected-survivor">
-                Selected: {contestants.find(c => c.id === parseInt(soleSurvivorId))?.name || 'Unknown'}
+          <div className="card u-mb-6">
+            <div className="card-body">
+              <div className="form-group">
+                <label htmlFor="sole-survivor" className="form-label">
+                  <strong>Sole Survivor Pick:</strong> Who do you think will win?
+                </label>
+                <select
+                  id="sole-survivor"
+                  className="form-select"
+                  value={soleSurvivorId}
+                  onChange={handleSoleSurvivorChange}
+                  disabled={isLocked}
+                  required
+                >
+                  <option value="">-- Select Sole Survivor --</option>
+                  {contestants.map((contestant) => (
+                    <option key={contestant.id} value={contestant.id}>
+                      {contestant.name}
+                    </option>
+                  ))}
+                </select>
+                {soleSurvivorId && (
+                  <div className="form-message form-success u-mt-2">
+                    Selected: {contestants.find(c => c.id === parseInt(soleSurvivorId))?.name || 'Unknown'}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         )}
 
-        <div className="ranking-instructions">
-          {isLocked ? (
-            <h3>Your Rankings</h3>
-          ) : (
-            <p role="status">Drag and drop contestants or type a rank number to reorder them (1st = highest preference).</p>
-          )}
-        </div>
-
-        <div className="ranked-list" role="list" aria-label="Contestant rankings">
-          {rankedContestants.map((contestant, index) => (
-            <div
-              key={contestant.id}
-              className={`contestant-card ${draggedIndex === index ? 'dragging' : ''} ${isLocked ? 'locked' : ''}`}
-              draggable={!isLocked}
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDrop={(e) => handleDrop(e, index)}
-              onDragEnd={handleDragEnd}
-              role="listitem"
-              aria-label={`${contestant.name}, rank ${index + 1} of ${rankedContestants.length}${contestant.is_eliminated ? ', eliminated' : ''}`}
-              tabIndex={isLocked ? -1 : 0}
-            >
-              {isLocked ? (
-                <div className="rank-number" aria-label={`Rank ${index + 1}`}>{index + 1}</div>
-              ) : (
-                <input
-                  type="number"
-                  className="rank-input"
-                  value={index + 1}
-                  min="1"
-                  max={rankedContestants.length}
-                  onChange={(e) => handleRankChange(index, e.target.value)}
-                  onClick={(e) => e.target.select()}
-                  aria-label={`Change rank for ${contestant.name}, currently ${index + 1}`}
-                />
-              )}
-              <div className="entity-row__info">
-                <img 
-                  src={contestant.image_url || 'https://via.placeholder.com/60?text=No+Image'} 
-                  alt={`${contestant.name} profile picture`}
-                  className="contestant-image"
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/60?text=No+Image';
-                    e.target.alt = 'Contestant profile placeholder';
-                  }}
-                />
-                <div className="entity-row__info">
-                  <div className="entity-row__name-wrapper">
-                    <h3>{contestant.name}</h3>
-                    <span className="contestant-separator" aria-hidden="true">•</span>
-                    <p>{contestant.profession || 'Contestant'}</p>
-                    {contestant.is_eliminated && (
-                      <>
-                        <span className="contestant-separator" aria-hidden="true">•</span>
-                        <span className="eliminated-badge" role="status">Eliminated</span>
-                      </>
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-header-title">
+              {isLocked ? 'Your Rankings' : 'Rank Contestants'}
+            </h2>
+            {!isLocked && (
+              <p className="card-text u-text-sm u-text-secondary u-mt-2">
+                Drag and drop contestants or type a rank number to reorder them (1st = highest preference).
+              </p>
+            )}
+          </div>
+          <div className="card-body">
+            <div className="layout-stack" role="list" aria-label="Contestant rankings">
+              {rankedContestants.map((contestant, index) => (
+                <div
+                  key={contestant.id}
+                  className={`card card-interactive u-p-4 u-transition-all ${draggedIndex === index ? 'u-opacity-50 u-scale-98' : ''} ${isLocked ? 'u-cursor-default u-bg-secondary' : 'u-cursor-move'}`}
+                  draggable={!isLocked}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDrop={(e) => handleDrop(e, index)}
+                  onDragEnd={handleDragEnd}
+                  role="listitem"
+                  aria-label={`${contestant.name}, rank ${index + 1} of ${rankedContestants.length}${contestant.is_eliminated ? ', eliminated' : ''}`}
+                  tabIndex={isLocked ? -1 : 0}
+                >
+                  <div className="u-flex u-items-center u-w-full">
+                    {isLocked ? (
+                      <div className="u-mr-4">
+                        <RankBadge rank={index + 1} size="lg" />
+                      </div>
+                    ) : (
+                      <input
+                        type="number"
+                        className="form-input u-w-16 u-text-center u-text-lg u-font-bold u-text-success u-mr-4"
+                        value={index + 1}
+                        min="1"
+                        max={rankedContestants.length}
+                        onChange={(e) => handleRankChange(index, e.target.value)}
+                        onClick={(e) => e.target.select()}
+                        aria-label={`Change rank for ${contestant.name}, currently ${index + 1}`}
+                      />
+                    )}
+                    
+                    <div className="entity-row u-flex-1">
+                      <div className="avatar avatar--lg">
+                        <img 
+                          src={contestant.image_url || 'https://via.placeholder.com/60?text=No+Image'} 
+                          alt={`${contestant.name} profile picture`}
+                          className="avatar__image"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/60?text=No+Image';
+                            e.target.alt = 'Contestant profile placeholder';
+                          }}
+                        />
+                      </div>
+                      <div className="entity-row__info">
+                        <h3 className="entity-row__name">{contestant.name}</h3>
+                        <div className="u-flex u-items-center u-gap-2 u-flex-wrap">
+                          <span className="u-text-sm u-text-secondary">{contestant.profession || 'Contestant'}</span>
+                          {contestant.is_eliminated && (
+                            <StatusBadge status="eliminated" size="sm" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {!isLocked && (
+                      <div className="u-text-2xl u-text-muted u-cursor-grab u-px-2" aria-hidden="true">
+                        ⋮⋮
+                      </div>
                     )}
                   </div>
                 </div>
-              </div>
-              {!isLocked && <div className="drag-handle" aria-hidden="true">⋮⋮</div>}
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
         {!isLocked && (
-          <button 
-            type="submit" 
-            className="btn btn--primary btn-block"
-            disabled={isSubmitting}
-            aria-busy={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Rankings'}
-          </button>
+          <div className="u-flex u-justify-center u-mt-8">
+            <button 
+              type="submit" 
+              className={`btn btn--primary btn--lg ${isSubmitting ? 'btn-loading' : ''}`}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Rankings'}
+            </button>
+          </div>
         )}
       </form>
     </div>
