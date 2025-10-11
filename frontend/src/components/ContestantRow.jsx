@@ -28,20 +28,7 @@ const ContestantRow = ({
     return name.split(' ').map(n => n[0]).join('');
   };
 
-  // Get badge color class based on rank or type
-  const getBadgeColorClass = (rank) => {
-    if (isSoleSurvivor) {
-      return 'contestant-badge--sole-survivor';
-    }
-    const colorClasses = [
-      'contestant-badge--primary',    // Orange
-      'contestant-badge--secondary',  // Blue
-      'contestant-badge--success',    // Green
-      'contestant-badge--info',       // Purple
-      'contestant-badge--danger',     // Red
-    ];
-    return colorClasses[(rank - 1) % colorClasses.length];
-  };
+
 
   return (
     <div
@@ -70,16 +57,16 @@ const ContestantRow = ({
             {getInitials(contestantData.name)}
           </div>
         </div>
+      </div>
 
-        <div className="entity-row__info">
-          <div className="entity-row__name-wrapper">
-            {showCrown && (
-              <span className="crown-icon" role="img" aria-label="Sole survivor crown">👑</span>
-            )}
-            <h4 className="entity-row__name">{contestantData.name}</h4>
-          </div>
-          <p className="entity-row__subtitle">{contestantData.profession}</p>
+      <div className="entity-row__info">
+        <div className="entity-row__name-wrapper">
+          {showCrown && (
+            <span className="crown-icon" role="img" aria-label="Sole survivor crown">👑</span>
+          )}
+          <h4 className="entity-row__name">{contestantData.name}</h4>
         </div>
+        <p className="entity-row__subtitle">{contestantData.profession}</p>
       </div>
 
       <div className="entity-row__stats">

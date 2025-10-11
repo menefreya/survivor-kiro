@@ -59,48 +59,48 @@ const ContestantEventRow = ({
 
   return (
     <div className={`contestant-event-row ${!contestant.current_tribe ? 'no-tribe' : ''}`}>
-      {/* Contestant Info */}
-      <div className="entity-row__info">
-        <div className="entity-row__avatar">
-          <div className="avatar avatar--lg">
-            {contestant.image_url ? (
-              <img 
-                src={contestant.image_url} 
-                alt={contestant.name}
-                className="avatar__image"
-                onError={(e) => {
-                  e.target.classList.add('u-hidden');
-                  e.target.nextSibling.classList.remove('u-hidden');
-                  e.target.nextSibling.classList.add('u-flex');
-                }}
-              />
-            ) : null}
-            <div 
-              className={`avatar__initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
-            >
-              {contestant.name.charAt(0)}
-            </div>
+      {/* Contestant Avatar */}
+      <div className="entity-row__avatar">
+        <div className="avatar avatar--lg">
+          {contestant.image_url ? (
+            <img 
+              src={contestant.image_url} 
+              alt={contestant.name}
+              className="avatar__image"
+              onError={(e) => {
+                e.target.classList.add('u-hidden');
+                e.target.nextSibling.classList.remove('u-hidden');
+                e.target.nextSibling.classList.add('u-flex');
+              }}
+            />
+          ) : null}
+          <div 
+            className={`avatar__initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
+          >
+            {contestant.name.charAt(0)}
           </div>
         </div>
-        <div className="entity-row__info">
-          <div className="entity-row__name-wrapper">
-            <h4 className="entity-row__name">{contestant.name}</h4>
-            {contestant.current_tribe ? (
-              <span className={`badge badge--tribe badge--tribe-${contestant.current_tribe.toLowerCase()}`}>{contestant.current_tribe}</span>
-            ) : (
-              <span className="badge badge--warning" title="No tribe assigned">⚠️ No Tribe</span>
-            )}
-          </div>
-          <div className="contestant-scores">
-            <span className="score-label">Current Total:</span>
-            <span className="score-value">{contestant.total_score || 0} pts</span>
-          </div>
-          <div className="contestant-scores episode-score">
-            <span className="score-label">Episode Score:</span>
-            <span className={`score-value ${episodeScore >= 0 ? 'positive' : 'negative'}`}>
-              {episodeScore >= 0 ? '+' : ''}{episodeScore} pts
-            </span>
-          </div>
+      </div>
+
+      {/* Contestant Info */}
+      <div className="entity-row__info">
+        <div className="entity-row__name-wrapper">
+          <h4 className="entity-row__name">{contestant.name}</h4>
+          {contestant.current_tribe ? (
+            <span className={`badge badge--tribe badge--tribe-${contestant.current_tribe.toLowerCase()}`}>{contestant.current_tribe}</span>
+          ) : (
+            <span className="badge badge--warning" title="No tribe assigned">⚠️ No Tribe</span>
+          )}
+        </div>
+        <div className="contestant-scores">
+          <span className="score-label">Current Total:</span>
+          <span className="score-value">{contestant.total_score || 0} pts</span>
+        </div>
+        <div className="contestant-scores episode-score">
+          <span className="score-label">Episode Score:</span>
+          <span className={`score-value ${episodeScore >= 0 ? 'positive' : 'negative'}`}>
+            {episodeScore >= 0 ? '+' : ''}{episodeScore} pts
+          </span>
         </div>
       </div>
 
