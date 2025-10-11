@@ -91,23 +91,13 @@ const CurrentPredictionsCard = () => {
             // Create custom stats content with tribe pill
             const customStats = (
               <div className="prediction-stats">
-<<<<<<< HEAD
-                <div className={`badge badge--tribe badge--tribe-${prediction.tribe.toLowerCase()}`}>
-                  {prediction.tribe}
-                </div>
-                {prediction.is_correct === true && (
-                  <div className="prediction-result-badge correct">
-                    ✓ Correct (+3)
-                  </div>
-=======
                 <TribeBadge tribe={prediction.tribe} size="sm" />
                 {prediction.is_correct !== null && (
-                  <PredictionBadge 
-                    result={prediction.is_correct} 
+                  <PredictionBadge
+                    result={prediction.is_correct}
                     points={prediction.is_correct ? 3 : 0}
-                    size="sm" 
+                    size="sm"
                   />
->>>>>>> 13609d2 (badge and info banner styling)
                 )}
               </div>
             );
