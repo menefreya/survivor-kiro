@@ -236,7 +236,7 @@ const PredictionInterface = () => {
 
   if (isLoading) {
     return (
-      <div className="prediction-interface">
+      <div className="content-container u-flex u-justify-center u-items-center" style={{minHeight: '400px'}}>
         <LoadingSpinner />
       </div>
     );
@@ -244,112 +244,132 @@ const PredictionInterface = () => {
 
   if (error && !currentEpisode) {
     return (
-      <div className="prediction-interface">
-        <div className="error-message">{error}</div>
+      <div className="content-container">
+        <div className="card card-danger">
+          <div className="card-body u-text-center">
+            <h2 className="card-title">Error Loading Predictions</h2>
+            <p className="card-text">{error}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (tribes.length === 0) {
     return (
-      <div className="prediction-interface">
-        <h2>Episode {currentEpisode?.episode_number} Elimination Predictions</h2>
-        <div className="info-message">
-          No tribes are currently available for predictions. Tribes need at least 2 active contestants.
+      <div className="content-container">
+        <div className="layout-header">
+          <h1 className="layout-header__title">Episode {currentEpisode?.episode_number} Elimination Predictions</h1>
+        </div>
+        <div className="card card-info">
+          <div className="card-body u-text-center">
+            <h2 className="card-title">No Tribes Available</h2>
+            <p className="card-text">
+              No tribes are currently available for predictions. Tribes need at least 2 active contestants.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="prediction-interface">
-      <div className="prediction-header">
-        <h2>Episode {currentEpisode?.episode_number} Elimination Predictions</h2>
+    <div className="content-container">
+      <div className="layout-header">
+        <h1 className="layout-header__title">Episode {currentEpisode?.episode_number} Elimination Predictions</h1>
         {hasSubmitted && (
-          <span className="status-badge status-submitted">✓ Submitted</span>
+          <span className="badge badge--success">✓ Submitted</span>
         )}
       </div>
       
       {error && (
-        <div className="error-message">{error}</div>
+        <div className="form-message form-error">{error}</div>
       )}
 
       {!hasSubmitted && !isLocked && (
-        <form onSubmit={handleSubmit} className="prediction-form">
-          <p className="instructions">
+        <form onSubmit={handleSubmit} className="layout-stack">
+          <div className="form-message form-info">
             Select which contestant you think will be eliminated from each tribe.
             You can skip tribes if you're unsure. Earn +3 points for each correct prediction!
-          </p>
+          </div>
 
-          <div className="tribes-container">
+          <div className="layout-stack layout-stack--loose">
             {tribes.map(tribe => (
-              <div key={tribe.name} className="tribe-section">
-                <h3 className="tribe-section-title">{tribe.name} Tribe</h3>
-                <p className="tribe-instruction">Click on a contestant to predict their elimination:</p>
+              <div key={tribe.name} className={`card ${getTribeClass(tribe.name)}`}>
+                <div className="card-header">
+                  <h2 className="card-header-title">{tribe.name} Tribe</h2>
+                </div>
+                <div className="card-body">
+                  <p className="card-text">Click on a contestant to predict their elimination:</p>
 
-                <div className="contestant-cards-grid">
-                  {tribe.contestants.map(contestant => (
-                    <div
-                      key={contestant.id}
-                      className={`contestant-prediction-card ${predictions[tribe.name] === contestant.id ? 'selected' : ''}`}
-                      onClick={() => handlePredictionChange(tribe.name, contestant.id.toString())}
-                      role="button"
-                      tabIndex={0}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handlePredictionChange(tribe.name, contestant.id.toString());
-                        }
-                      }}
-                      aria-pressed={predictions[tribe.name] === contestant.id}
-                    >
-                      {predictions[tribe.name] === contestant.id && (
-                        <div className="selected-indicator">✓</div>
-                      )}
-
-                      <div className="contestant-card-image-container">
-                        {contestant.image_url ? (
-                          <img
-                            src={contestant.image_url}
-                            alt={contestant.name}
-                            className="contestant-card-image"
-                          />
-                        ) : (
-                          <div className="contestant-card-placeholder">
-                            {contestant.name.charAt(0)}
-                          </div>
+                  <div className="layout-grid layout-grid--auto-sm layout-grid--gap-sm">
+                    {tribe.contestants.map(contestant => (
+                      <div
+                        key={contestant.id}
+                        className={`card card-interactive ${predictions[tribe.name] === contestant.id ? 'card-selected' : ''}`}
+                        onClick={() => handlePredictionChange(tribe.name, contestant.id.toString())}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handlePredictionChange(tribe.name, contestant.id.toString());
+                          }
+                        }}
+                        aria-pressed={predictions[tribe.name] === contestant.id}
+                      >
+                        {predictions[tribe.name] === contestant.id && (
+                          <div className="badge badge--primary u-absolute" style={{top: 'var(--spacing-2)', right: 'var(--spacing-2)'}}>✓</div>
                         )}
-                      </div>
 
-                      <div className="contestant-card-info">
-                        <h4 className="contestant-card-name">{contestant.name}</h4>
-                        <div className="contestant-card-details">
-                          {contestant.profession && <span className="detail-item">{contestant.profession}</span>}
+                        <div className="u-flex u-flex-col u-items-center u-gap-3 u-text-center">
+                          <div className="avatar avatar--lg">
+                            {contestant.image_url ? (
+                              <img
+                                src={contestant.image_url}
+                                alt={contestant.name}
+                                className="avatar__image"
+                              />
+                            ) : (
+                              <div className="avatar__initials">
+                                {contestant.name.charAt(0)}
+                              </div>
+                            )}
+                          </div>
+
+                          <div>
+                            <h4 className="card-title u-text-base u-mb-1">{contestant.name}</h4>
+                            {contestant.profession && (
+                              <p className="card-meta u-text-xs">{contestant.profession}</p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <button
-            type="submit"
-            className="submit-button"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Predictions'}
-          </button>
+          <div className="u-flex u-justify-center">
+            <button
+              type="submit"
+              className={`btn btn--primary btn--lg ${isSubmitting ? 'btn-loading' : ''}`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Predictions'}
+            </button>
+          </div>
         </form>
       )}
 
       {isLocked && (
-        <div className="locked-message">
-          <div className="locked-header">
-            <div className="locked-icon">🔒</div>
-            <h3>Predictions are Locked</h3>
-            <p>Predictions for Episode {currentEpisode?.episode_number} are now closed.</p>
+        <div className="card card-info u-text-center">
+          <div className="card-body">
+            <div className="u-text-4xl u-mb-4">🔒</div>
+            <h2 className="card-title u-mb-2">Predictions are Locked</h2>
+            <p className="card-text">Predictions for Episode {currentEpisode?.episode_number} are now closed.</p>
           </div>
         </div>
       )}
@@ -385,87 +405,98 @@ const PredictionInterface = () => {
         )].sort();
 
         return (
-          <div id="compare" className="all-predictions-section">
-            <h3 className="all-predictions-title">All Players' Predictions</h3>
-
-            <div className="predictions-comparison-grid">
-              {/* Header Row */}
-              <div className="comparison-grid-header">
-                <div className="comparison-header-cell player-header">Player</div>
-                {allTribes.map(tribe => (
-                  <div key={tribe} className={`comparison-header-cell tribe-header ${getTribeClass(tribe)}`}>
-                    {tribe}
-                  </div>
-                ))}
-              </div>
-
-              {/* Player Rows */}
-              {combinedPlayers.map((playerData) => (
-                <div key={playerData.player.id} className={`comparison-grid-row ${playerData.player.id === user?.id ? 'current-user-row' : ''}`}>
-                  {/* Player Name Cell */}
-                  <div className="comparison-cell player-cell">
-                    <div className="player-info-compact">
-                      {playerData.player.profile_image_url ? (
-                        <img
-                          src={playerData.player.profile_image_url}
-                          alt={playerData.player.name}
-                          className="avatar avatar--sm"
-                        />
-                      ) : (
-                        <div className="avatar avatar--sm avatar__initials">
-                          {playerData.player.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <span className="entity-row__name">{playerData.player.name}</span>
-                    </div>
-                  </div>
-
-                  {/* Prediction Cells for each tribe */}
-                  {allTribes.map(tribe => {
-                    const prediction = playerData.predictions.find(p => p.tribe === tribe);
-
-                    return (
-                      <div key={tribe} className="comparison-cell prediction-cell">
-                        {prediction ? (
-                          <div className="prediction-compact">
-                            <div className="prediction-compact-avatar">
-                              {prediction.contestant?.image_url ? (
+          <div id="compare" className="card">
+            <div className="card-header">
+              <h2 className="card-header-title">All Players' Predictions</h2>
+            </div>
+            <div className="card-body">
+              <div className="u-overflow-x-auto">
+                <table className="u-w-full u-border-collapse">
+                  <thead>
+                    <tr className="u-bg-tertiary">
+                      <th className="u-p-3 u-text-left u-border-b u-border-subtle">Player</th>
+                      {allTribes.map(tribe => (
+                        <th key={tribe} className={`u-p-3 u-text-center u-border-b u-border-subtle ${getTribeClass(tribe)}`}>
+                          {tribe}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {combinedPlayers.map((playerData) => (
+                      <tr key={playerData.player.id} className={`u-border-b u-border-subtle ${playerData.player.id === user?.id ? 'u-bg-warning-light' : ''}`}>
+                        {/* Player Name Cell */}
+                        <td className="u-p-3">
+                          <div className="entity-row entity-row--compact">
+                            <div className="avatar avatar--sm">
+                              {playerData.player.profile_image_url ? (
                                 <img
-                                  src={prediction.contestant.image_url}
-                                  alt={prediction.contestant.name}
-                                  className="prediction-contestant-thumb"
+                                  src={playerData.player.profile_image_url}
+                                  alt={playerData.player.name}
+                                  className="avatar__image"
                                 />
                               ) : (
-                                <div className="prediction-contestant-thumb-placeholder">
-                                  {prediction.contestant?.name?.charAt(0) || '?'}
+                                <div className="avatar__initials">
+                                  {playerData.player.name.charAt(0).toUpperCase()}
                                 </div>
                               )}
-                              {prediction.is_correct !== null && (
-                                <span className={`prediction-result-icon ${prediction.is_correct ? 'correct' : 'incorrect'}`}>
-                                  {prediction.is_correct ? '✓' : '✗'}
-                                </span>
-                              )}
                             </div>
-                            <span className="entity-row__name">
-                              {prediction.contestant?.name?.split(' ')[0] || 'Unknown'}
-                            </span>
+                            <span className="entity-row__name">{playerData.player.name}</span>
                           </div>
-                        ) : (
-                          <span className="no-prediction-text">—</span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
+                        </td>
+
+                        {/* Prediction Cells for each tribe */}
+                        {allTribes.map(tribe => {
+                          const prediction = playerData.predictions.find(p => p.tribe === tribe);
+
+                          return (
+                            <td key={tribe} className="u-p-3 u-text-center">
+                              {prediction ? (
+                                <div className="u-flex u-flex-col u-items-center u-gap-1">
+                                  <div className="u-relative">
+                                    <div className="avatar avatar--xs">
+                                      {prediction.contestant?.image_url ? (
+                                        <img
+                                          src={prediction.contestant.image_url}
+                                          alt={prediction.contestant.name}
+                                          className="avatar__image"
+                                        />
+                                      ) : (
+                                        <div className="avatar__initials">
+                                          {prediction.contestant?.name?.charAt(0) || '?'}
+                                        </div>
+                                      )}
+                                    </div>
+                                    {prediction.is_correct !== null && (
+                                      <span className={`badge badge--xs u-absolute ${prediction.is_correct ? 'badge--success' : 'badge--danger'}`} 
+                                            style={{top: '-4px', right: '-4px'}}>
+                                        {prediction.is_correct ? '✓' : '✗'}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="u-text-xs u-text-secondary">
+                                    {prediction.contestant?.name?.split(' ')[0] || 'Unknown'}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="u-text-muted">—</span>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         );
       })()}
 
       {/* Back to Dashboard Button */}
-      <div className="prediction-actions">
-        <Link to="/home" className="btn-link">
+      <div className="u-flex u-justify-center u-mt-8">
+        <Link to="/home" className="btn btn--secondary">
           Back to Dashboard
         </Link>
       </div>

@@ -275,6 +275,10 @@
   color: var(--color-text-disabled) !important;
 }
 
+.u-text-muted {
+  color: var(--color-text-muted) !important;
+}
+
 .u-text-success {
   color: var(--color-success) !important;
 }
@@ -1000,6 +1004,10 @@
   background-color: transparent !important;
 }
 
+.u-bg-warning-light {
+  background-color: var(--color-warning-light) !important;
+}
+
 /* Border utilities */
 .u-border {
   border: 1px solid var(--color-border-medium) !important;
@@ -1019,6 +1027,14 @@
 
 .u-border-none {
   border: none !important;
+}
+
+.u-border-b {
+  border-bottom: 1px solid var(--color-border-medium) !important;
+}
+
+.u-border-collapse {
+  border-collapse: collapse !important;
 }
 
 /* Shadow utilities */
@@ -1667,4 +1683,40 @@
   .u-honk-hover-heavy:hover {
     transition: none !important;
   }
+}
+
+/* ============================================
+   TRIBE STYLING - Header Color Lines Only
+   ============================================ */
+
+/* Tribe header styling - colored bottom border line */
+th.tribe-kele {
+  border-bottom: 3px solid var(--tribe-kele) !important;
+  color: var(--color-text-primary) !important;
+  position: relative;
+}
+
+th.tribe-hina {
+  border-bottom: 3px solid var(--tribe-hina) !important;
+  color: var(--color-text-primary) !important;
+  position: relative;
+}
+
+th.tribe-uli {
+  border-bottom: 3px solid var(--tribe-uli) !important;
+  color: var(--color-text-primary) !important;
+  position: relative;
+}
+
+/* Card tribe styling - subtle left border only for form sections */
+.card.tribe-kele {
+  border-left: 3px solid var(--tribe-kele) !important;
+}
+
+.card.tribe-hina {
+  border-left: 3px solid var(--tribe-hina) !important;
+}
+
+.card.tribe-uli {
+  border-left: 3px solid var(--tribe-uli) !important;
 }

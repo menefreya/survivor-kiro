@@ -68,6 +68,15 @@ const PredictionHistory = () => {
 
   const filteredPredictions = getFilteredAndSortedPredictions();
 
+  // Helper function to get tribe CSS class
+  const getTribeClass = (tribeName) => {
+    const tribe = tribeName.toLowerCase();
+    if (tribe === 'kele') return 'tribe-kele';
+    if (tribe === 'hina') return 'tribe-hina';
+    if (tribe === 'uli') return 'tribe-uli';
+    return '';
+  };
+
   // Group predictions by episode
   const groupedPredictions = filteredPredictions.reduce((acc, prediction) => {
     const episode = prediction.episode_number;
@@ -79,21 +88,32 @@ const PredictionHistory = () => {
   }, {});
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="content-container u-flex u-justify-center u-items-center" style={{minHeight: '400px'}}>
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="prediction-history">
-        <div className="error-message">{error}</div>
+      <div className="content-container">
+        <div className="card card-danger">
+          <div className="card-body u-text-center">
+            <h2 className="card-title">Error Loading History</h2>
+            <p className="card-text">{error}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (predictions.length === 0) {
     return (
-      <div className="prediction-history">
-        <h2>Prediction History</h2>
+      <div className="content-container">
+        <div className="layout-header">
+          <h1 className="layout-header__title">Prediction History</h1>
+        </div>
         <EmptyState 
           message="No prediction history yet"
           description="Your scored predictions will appear here after episodes air."
@@ -103,51 +123,61 @@ const PredictionHistory = () => {
   }
 
   return (
-    <div className="prediction-history">
-      <div className="prediction-history-header">
-        <h2>Prediction History</h2>
+    <div className="content-container">
+      <div className="layout-header">
+        <h1 className="layout-header__title">Prediction History</h1>
       </div>
 
       {/* Filters and Sort */}
-      <div className="prediction-filters">
-        <div className="filter-group">
-          <label htmlFor="episode-filter">Episode:</label>
-          <select 
-            id="episode-filter"
-            value={filterEpisode} 
-            onChange={(e) => setFilterEpisode(e.target.value)}
-          >
-            <option value="all">All Episodes</option>
-            {episodes.map(ep => (
-              <option key={ep} value={ep}>Episode {ep}</option>
-            ))}
-          </select>
+      <div className="card u-mb-6">
+        <div className="card-header">
+          <h2 className="card-header-title">Filter & Sort</h2>
         </div>
+        <div className="card-body">
+          <div className="layout-grid layout-grid--3 layout-grid--gap-sm">
+            <div className="form-group">
+              <label htmlFor="episode-filter" className="form-label">Episode:</label>
+              <select 
+                id="episode-filter"
+                className="form-select"
+                value={filterEpisode} 
+                onChange={(e) => setFilterEpisode(e.target.value)}
+              >
+                <option value="all">All Episodes</option>
+                {episodes.map(ep => (
+                  <option key={ep} value={ep}>Episode {ep}</option>
+                ))}
+              </select>
+            </div>
 
-        <div className="filter-group">
-          <label htmlFor="tribe-filter">Tribe:</label>
-          <select 
-            id="tribe-filter"
-            value={filterTribe} 
-            onChange={(e) => setFilterTribe(e.target.value)}
-          >
-            <option value="all">All Tribes</option>
-            {tribes.map(tribe => (
-              <option key={tribe} value={tribe}>{tribe}</option>
-            ))}
-          </select>
-        </div>
+            <div className="form-group">
+              <label htmlFor="tribe-filter" className="form-label">Tribe:</label>
+              <select 
+                id="tribe-filter"
+                className="form-select"
+                value={filterTribe} 
+                onChange={(e) => setFilterTribe(e.target.value)}
+              >
+                <option value="all">All Tribes</option>
+                {tribes.map(tribe => (
+                  <option key={tribe} value={tribe}>{tribe}</option>
+                ))}
+              </select>
+            </div>
 
-        <div className="filter-group">
-          <label htmlFor="sort-by">Sort by:</label>
-          <select 
-            id="sort-by"
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="episode">Episode (Newest First)</option>
-            <option value="correct">Correct First</option>
-          </select>
+            <div className="form-group">
+              <label htmlFor="sort-by" className="form-label">Sort by:</label>
+              <select 
+                id="sort-by"
+                className="form-select"
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="episode">Episode (Newest First)</option>
+                <option value="correct">Correct First</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -158,43 +188,58 @@ const PredictionHistory = () => {
           description="Try adjusting your filter settings."
         />
       ) : (
-        <div className="predictions-list">
+        <div className="layout-stack">
           {Object.keys(groupedPredictions).sort((a, b) => b - a).map(episodeNum => (
-            <div key={episodeNum} className="episode-predictions">
-              <h3 className="episode-header">Episode {episodeNum}</h3>
-              <div className="predictions-grid">
-                {groupedPredictions[episodeNum].map((prediction, index) => (
-                  <div 
-                    key={index} 
-                    className={`prediction-card ${prediction.is_correct ? 'correct' : 'incorrect'}`}
-                  >
-                    <div className="prediction-tribe">{prediction.tribe} Tribe</div>
-                    
-                    <div className="prediction-result">
-                      <div className="prediction-section">
-                        <div className="prediction-label">Your Prediction</div>
-                        <div className="entity-row__name">
-                          {prediction.predicted_contestant?.name || 'Unknown'}
+            <div key={episodeNum} className="card">
+              <div className="card-header">
+                <h2 className="card-header-title">Episode {episodeNum}</h2>
+              </div>
+              <div className="card-body">
+                <div className="layout-grid layout-grid--auto layout-grid--gap-sm">
+                  {groupedPredictions[episodeNum].map((prediction, index) => (
+                    <div 
+                      key={index} 
+                      className={`card ${prediction.is_correct ? 'card-success' : 'card-danger'} ${getTribeClass(prediction.tribe)}`}
+                    >
+                      <div className="card-header">
+                        <div className="card-header-title u-text-base">{prediction.tribe} Tribe</div>
+                        <div className="card-header-actions">
+                          <span className={`badge ${prediction.is_correct ? 'badge--success' : 'badge--danger'}`}>
+                            {prediction.is_correct ? '✓' : '✗'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="card-body">
+                        <div className="u-flex u-items-center u-justify-between u-gap-4">
+                          <div className="u-text-center">
+                            <div className="u-text-xs u-text-secondary u-mb-1">Your Prediction</div>
+                            <div className="u-text-sm u-text-bold">
+                              {prediction.predicted_contestant?.name || 'Unknown'}
+                            </div>
+                          </div>
+
+                          <div className="u-text-2xl">
+                            {prediction.is_correct ? '✓' : '✗'}
+                          </div>
+
+                          <div className="u-text-center">
+                            <div className="u-text-xs u-text-secondary u-mb-1">Actually Eliminated</div>
+                            <div className="u-text-sm u-text-bold">
+                              {prediction.actual_eliminated?.name || 'Unknown'}
+                            </div>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="prediction-arrow">
-                        {prediction.is_correct ? '✓' : '✗'}
-                      </div>
-
-                      <div className="prediction-section">
-                        <div className="prediction-label">Actually Eliminated</div>
-                        <div className="entity-row__name">
-                          {prediction.actual_eliminated?.name || 'Unknown'}
-                        </div>
+                      <div className="card-footer">
+                        <span className={`badge ${prediction.is_correct ? 'badge--success' : 'badge--danger'}`}>
+                          {prediction.is_correct ? '+3 points' : '0 points'}
+                        </span>
                       </div>
                     </div>
-
-                    <div className="prediction-points">
-                      {prediction.is_correct ? '+3 points' : '0 points'}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           ))}
