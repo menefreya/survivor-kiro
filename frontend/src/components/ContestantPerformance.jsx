@@ -255,11 +255,13 @@ const ContestantPerformance = () => {
               <div className="contestant-rank rank-badge-default">
                 <div className="skeleton skeleton-text skeleton-text--20"></div>
               </div>
-              <div className="contestant-info">
-                <div className="contestant-avatar">
-                  <div className="skeleton skeleton-avatar"></div>
+              <div className="entity-row__info">
+                <div className="entity-row__avatar">
+                  <div className="avatar avatar--lg">
+                    <div className="skeleton skeleton-avatar"></div>
+                  </div>
                 </div>
-                <div className="contestant-details">
+                <div className="entity-row__info">
                   <div className="skeleton skeleton-text skeleton-text--60"></div>
                   <div className="skeleton skeleton-text skeleton-text--40"></div>
                 </div>
@@ -311,7 +313,7 @@ const ContestantPerformance = () => {
           <div className="empty-state-action">
             {error.canRetry && (
               <button 
-                className={`btn-primary ${isRetrying ? 'btn-loading' : ''}`}
+                className={`btn btn--primary ${isRetrying ? 'btn-loading' : ''}`}
                 onClick={error.type === 'auth' ? () => window.location.href = '/login' : handleRetry}
                 disabled={isRetrying}
                 type="button"
@@ -324,7 +326,7 @@ const ContestantPerformance = () => {
             {/* Secondary action for non-auth errors */}
             {error.canRetry && error.type !== 'auth' && (
               <button 
-                className="btn-secondary"
+                className="btn btn--secondary"
                 onClick={() => window.location.reload()}
                 type="button"
                 style={{ marginLeft: 'var(--spacing-3)' }}
@@ -393,14 +395,14 @@ const ContestantPerformance = () => {
           </p>
           <div style={{ display: 'flex', gap: 'var(--spacing-3)', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button 
-              className="btn-secondary"
+              className="btn btn--secondary"
               onClick={() => window.location.href = '/'}
               type="button"
             >
               Go to Dashboard
             </button>
             <button 
-              className="btn-secondary"
+              className="btn btn--secondary"
               onClick={() => window.location.href = '/ranking'}
               type="button"
             >

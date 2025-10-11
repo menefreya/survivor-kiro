@@ -409,14 +409,14 @@ const PredictionInterface = () => {
                         <img
                           src={playerData.player.profile_image_url}
                           alt={playerData.player.name}
-                          className="player-avatar-small"
+                          className="avatar avatar--sm"
                         />
                       ) : (
-                        <div className="player-avatar-small-placeholder">
+                        <div className="avatar avatar--sm avatar__initials">
                           {playerData.player.name.charAt(0).toUpperCase()}
                         </div>
                       )}
-                      <span className="player-name-compact">{playerData.player.name}</span>
+                      <span className="entity-row__name">{playerData.player.name}</span>
                     </div>
                   </div>
 
@@ -446,7 +446,7 @@ const PredictionInterface = () => {
                                 </span>
                               )}
                             </div>
-                            <span className="prediction-contestant-name-compact">
+                            <span className="entity-row__name">
                               {prediction.contestant?.name?.split(' ')[0] || 'Unknown'}
                             </span>
                           </div>

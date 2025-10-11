@@ -147,10 +147,10 @@ const PredictionResultsNotification = () => {
           )}
 
           <div className="notification-actions">
-            <Link to="/predictions/history" className="btn-primary" onClick={handleDismiss}>
+            <Link to="/predictions/history" className="btn btn--primary" onClick={handleDismiss}>
               View Full Results
             </Link>
-            <button className="btn-secondary" onClick={handleDismiss}>
+            <button className="btn btn--secondary" onClick={handleDismiss}>
               Dismiss
             </button>
           </div>

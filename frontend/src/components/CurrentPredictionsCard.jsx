@@ -56,14 +56,16 @@ const CurrentPredictionsCard = () => {
 
   return (
     <div className="dashboard-card current-predictions-card" role="region" aria-label="Current Episode Predictions">
-      <div className="card-header">
-        <h2 id="predictions-title">Episode {episodeNumber} Predictions</h2>
-        <Link to="/predictions#compare" className="compare-link">
-          Compare Predictions →
-        </Link>
+      <div className="layout-section-header">
+        <h2 className="layout-section-header__title" id="predictions-title">Episode {episodeNumber} Predictions</h2>
+        <div className="layout-section-header__actions">
+          <Link to="/predictions#compare" className="compare-link">
+            Compare Predictions →
+          </Link>
+        </div>
       </div>
 
-      <div className="card-body">
+      <div className="layout-section-body">
         <div className="team-contestants-list" role="list" aria-labelledby="predictions-title">
           {predictions.map((prediction, index) => {
             const getTribeClass = (tribeName) => {
@@ -88,7 +90,7 @@ const CurrentPredictionsCard = () => {
             // Create custom stats content with tribe pill
             const customStats = (
               <div className="prediction-stats">
-                <div className={`tribe-pill ${getTribeClass(prediction.tribe)}`}>
+                <div className={`badge badge--tribe badge--tribe-${prediction.tribe.toLowerCase()}`}>
                   {prediction.tribe}
                 </div>
                 {prediction.is_correct === true && (

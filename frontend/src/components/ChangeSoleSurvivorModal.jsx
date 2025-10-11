@@ -151,7 +151,7 @@ const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerI
                       >
                         {contestant.name.split(' ').map(n => n[0]).join('')}
                       </div>
-                      <div className="contestant-info">
+                      <div className="entity-row__info">
                         <h4>{contestant.name}</h4>
                         <p className="profession">{contestant.profession}</p>
                         <p className="score">Score: {contestant.total_score || 0}</p>
@@ -164,7 +164,7 @@ const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerI
               <div className="modal-actions">
                 <button
                   type="button"
-                  className="btn-secondary"
+                  className="btn btn--secondary"
                   onClick={handleClose}
                   disabled={isSubmitting}
                 >
@@ -172,7 +172,7 @@ const ChangeSoleSurvivorModal = ({ isOpen, onClose, currentSoleSurvivor, playerI
                 </button>
                 <button
                   type="submit"
-                  className="btn-primary"
+                  className="btn btn--primary"
                   disabled={!selectedContestantId || isSubmitting}
                 >
                   {isSubmitting ? 'Updating...' : 'Update Sole Survivor'}

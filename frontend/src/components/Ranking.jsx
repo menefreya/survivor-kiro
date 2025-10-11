@@ -315,7 +315,7 @@ const Ranking = () => {
                   aria-label={`Change rank for ${contestant.name}, currently ${index + 1}`}
                 />
               )}
-              <div className="contestant-info">
+              <div className="entity-row__info">
                 <img 
                   src={contestant.image_url || 'https://via.placeholder.com/60?text=No+Image'} 
                   alt={`${contestant.name} profile picture`}
@@ -325,8 +325,8 @@ const Ranking = () => {
                     e.target.alt = 'Contestant profile placeholder';
                   }}
                 />
-                <div className="contestant-details">
-                  <div className="contestant-info-line">
+                <div className="entity-row__info">
+                  <div className="entity-row__name-wrapper">
                     <h3>{contestant.name}</h3>
                     <span className="contestant-separator" aria-hidden="true">•</span>
                     <p>{contestant.profession || 'Contestant'}</p>
@@ -347,7 +347,7 @@ const Ranking = () => {
         {!isLocked && (
           <button 
             type="submit" 
-            className="btn-primary btn-block"
+            className="btn btn--primary btn-block"
             disabled={isSubmitting}
             aria-busy={isSubmitting}
           >

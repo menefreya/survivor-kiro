@@ -77,7 +77,7 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
     const img = new Image();
     img.onload = () => {
       // If successful, update the main image
-      const mainImg = e.target.closest('.contestant-avatar').querySelector('.contestant-image');
+      const mainImg = e.target.closest('.entity-row__avatar').querySelector('.avatar__image');
       if (mainImg) {
         mainImg.src = image_url;
         mainImg.style.display = 'block';
@@ -117,15 +117,16 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
       </td>
 
       {/* Contestant Info */}
-      <td className="contestant-info" role="cell">
-        <div className="contestant-info-content">
-          <div className="contestant-avatar">
-            {image_url && !imageError ? (
-              <>
+      <td className="entity-row__info" role="cell">
+        <div className="entity-row__info-content">
+          <div className="entity-row__avatar">
+            <div className="avatar avatar--lg">
+              {image_url && !imageError ? (
+                <>
                 <img 
                   src={image_url} 
                   alt={`Profile photo of ${getFirstName(name)}`}
-                  className="contestant-image"
+                  className="avatar__image"
                   onLoad={handleImageLoad}
                   onError={handleImageError}
                   style={{ display: imageLoading ? 'none' : 'block' }}
@@ -139,7 +140,7 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
             ) : null}
             
             <div 
-              className={`contestant-initials ${image_url && !imageError && !imageLoading ? 'u-hidden' : 'u-flex'}`}
+              className={`avatar__initials ${image_url && !imageError && !imageLoading ? 'u-hidden' : 'u-flex'}`}
               aria-label={`${getFirstName(name)} profile avatar${imageError ? ' (image failed to load)' : ''} showing initials ${getInitials(name)}`}
               role="img"
             >
@@ -183,9 +184,10 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
                 </button>
               )}
             </div>
+            </div>
           </div>
-          <div className="contestant-details">
-            <h4 className="contestant-name" id={`contestant-${contestant.id}-name`}>
+          <div className="entity-row__info">
+            <h4 className="entity-row__name" id={`contestant-${contestant.id}-name`}>
               {getFirstName(name)}
             </h4>
           </div>

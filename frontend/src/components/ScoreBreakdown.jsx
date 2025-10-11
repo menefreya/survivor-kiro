@@ -113,7 +113,7 @@ function ScoreBreakdown({ playerId, onClose }) {
       <div className="score-breakdown-modal">
         <div className="score-breakdown-content">
           <div className="error-message">{error}</div>
-          <button onClick={onClose} className="btn-secondary">Close</button>
+          <button onClick={onClose} className="btn btn--secondary">Close</button>
         </div>
       </div>
     );

@@ -44,8 +44,7 @@
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';
 
-/* Layer 9: Legacy Overrides */
-@import './styles/09-legacy.css';
+/* Layer 9: Legacy Overrides - REMOVED (migrated to global design system) */
 
 /* Temporary font test */
 .font-test {

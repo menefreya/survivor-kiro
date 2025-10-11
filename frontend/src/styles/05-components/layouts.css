@@ -1,0 +1,635 @@
+/**
+ * Layout Component System
+ * 
+ * Reusable layout components for dashboard, grids, columns, and containers.
+ * Provides consistent spacing and responsive behavior.
+ */
+
+/* ============================================
+   CONTAINER LAYOUTS
+   ============================================ */
+
+/**
+ * Dashboard Container
+ * 
+ * Main container for dashboard pages with consistent max-width and padding
+ */
+.dashboard-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--spacing-8);
+  background-color: transparent;
+  position: relative;
+  z-index: 2;
+}
+
+/**
+ * Content Container
+ * 
+ * Standard content container with responsive padding
+ */
+.content-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-6);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/**
+ * Section Container
+ * 
+ * Container for individual sections with consistent spacing
+ */
+.section-container {
+  margin-bottom: var(--spacing-8);
+  width: 100%;
+}
+
+.section-container:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================
+   COLUMN LAYOUTS
+   ============================================ */
+
+/**
+ * Two Column Layout
+ */
+.layout-columns {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.layout-columns > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/**
+ * Three Column Layout
+ */
+.layout-columns--three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-6);
+  max-width: 1600px;
+}
+
+/**
+ * Four Column Layout
+ */
+.layout-columns--four {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-6);
+  max-width: 1800px;
+}
+
+/**
+ * Asymmetric Layouts
+ */
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--spacing-8);
+  align-items: start;
+}
+
+.layout-sidebar--left {
+  grid-template-columns: 300px 1fr;
+}
+
+/**
+ * Individual Column
+ */
+.layout-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--spacing-6);
+}
+
+/* ============================================
+   VERTICAL LAYOUTS
+   ============================================ */
+
+/**
+ * Vertical Stack Layout
+ */
+.layout-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.layout-stack--tight {
+  gap: var(--spacing-4);
+}
+
+.layout-stack--loose {
+  gap: var(--spacing-8);
+}
+
+/**
+ * Vertical Stack with Dividers
+ */
+.layout-stack--divided > * + * {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--spacing-6);
+}
+
+.layout-stack--divided.layout-stack--tight > * + * {
+  padding-top: var(--spacing-4);
+}
+
+.layout-stack--divided.layout-stack--loose > * + * {
+  padding-top: var(--spacing-8);
+}
+
+/* ============================================
+   GRID LAYOUTS
+   ============================================ */
+
+/**
+ * Responsive Grid
+ */
+.layout-grid {
+  display: grid;
+  gap: var(--spacing-6);
+  width: 100%;
+}
+
+.layout-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.layout-grid--auto-sm {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.layout-grid--auto-lg {
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+/**
+ * Fixed Grid Columns
+ */
+.layout-grid--1 {
+  grid-template-columns: 1fr;
+}
+
+.layout-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.layout-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.layout-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.layout-grid--5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.layout-grid--6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/**
+ * Grid Gap Variations
+ */
+.layout-grid--gap-sm {
+  gap: var(--spacing-4);
+}
+
+.layout-grid--gap-lg {
+  gap: var(--spacing-8);
+}
+
+.layout-grid--gap-xl {
+  gap: var(--spacing-10);
+}
+
+/* ============================================
+   HEADER LAYOUTS
+   ============================================ */
+
+/**
+ * Page Header
+ */
+.layout-header {
+  margin: var(--spacing-8) 0;
+  text-align: center;
+  padding: var(--spacing-6) 0;
+}
+
+.layout-header__title {
+  font-family: var(--font-family-heading-primary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-heading-primary);
+  margin: 0 0 var(--spacing-4) 0;
+  text-shadow: none;
+  line-height: var(--line-height-tight);
+}
+
+.layout-header__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+/**
+ * Section Header
+ */
+.layout-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.layout-section-header__title {
+  font-family: var(--font-family-heading-secondary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-heading-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.layout-section-header__actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+/**
+ * Section Body
+ */
+.layout-section-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+/**
+ * Section Footer
+ */
+.layout-section-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+/* ============================================
+   CONTENT LAYOUTS
+   ============================================ */
+
+/**
+ * Split Content Layout
+ */
+.layout-split {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: flex-start;
+}
+
+.layout-split__main {
+  flex: 2;
+  min-width: 0;
+}
+
+.layout-split__sidebar {
+  flex: 1;
+  min-width: 300px;
+}
+
+/**
+ * Hero Section Layout
+ */
+.layout-hero {
+  text-align: center;
+  margin: var(--spacing-8) 0 var(--spacing-12) 0;
+  transform: rotate(-2deg);
+  position: relative;
+  z-index: 1;
+}
+
+.layout-hero__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-6);
+}
+
+.layout-hero__logo {
+  height: 140px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.layout-hero__text {
+  font-family: var(--font-family-heading-primary);
+  font-size: var(--font-size-4xl);
+  margin: 0;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+
+/**
+ * Section Dividers
+ */
+.layout-divider {
+  height: 1px;
+  background-color: var(--color-border-subtle);
+  margin: var(--spacing-6) 0;
+  border: none;
+}
+
+.layout-divider--thick {
+  height: 2px;
+  background-color: var(--color-border-medium);
+}
+
+.layout-divider--dashed {
+  height: 0;
+  border-top: 1px dashed var(--color-border-medium);
+  background: none;
+}
+
+/**
+ * Spacer Elements
+ */
+.layout-spacer--sm {
+  height: var(--spacing-4);
+}
+
+.layout-spacer--md {
+  height: var(--spacing-6);
+}
+
+.layout-spacer--lg {
+  height: var(--spacing-8);
+}
+
+.layout-spacer--xl {
+  height: var(--spacing-12);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/**
+ * Tablet Adjustments (768px - 1024px)
+ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .dashboard-container {
+    padding: var(--spacing-6);
+  }
+  
+  .layout-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-6);
+    align-items: start;
+  }
+  
+  .layout-columns--three {
+    grid-template-columns: 1fr;
+  }
+  
+  .layout-columns--four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .layout-sidebar {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+  
+  .layout-sidebar--left {
+    grid-template-columns: 1fr;
+  }
+  
+  .layout-split {
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+  
+  .layout-split__sidebar {
+    min-width: 0;
+  }
+  
+  @media (orientation: landscape) {
+    .layout-columns {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-4);
+    }
+  }
+}
+
+/**
+ * Desktop Adjustments (1025px+)
+ */
+@media (min-width: 1025px) {
+  .layout-header {
+    padding: var(--spacing-8);
+    margin-bottom: var(--spacing-10);
+  }
+  
+  .layout-header__title {
+    font-family: var(--font-family-heading-primary);
+    font-size: var(--font-size-5xl);
+    color: var(--color-heading-primary);
+    text-shadow: var(--text-shadow-glow);
+  }
+  
+  .layout-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-8);
+    align-items: start;
+  }
+  
+  .layout-columns--three {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+  }
+  
+  .layout-columns--four {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .layout-hero__text {
+    font-size: var(--font-size-5xl);
+    letter-spacing: 2px;
+  }
+  
+  @media (min-width: 1400px) {
+    .layout-columns {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-6);
+    }
+    
+    .layout-columns--three {
+      gap: var(--spacing-8);
+    }
+  }
+}
+
+/**
+ * Mobile Adjustments (max-width: 640px)
+ */
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: var(--spacing-4);
+  }
+  
+  .content-container {
+    padding: var(--spacing-4);
+  }
+  
+  .layout-columns,
+  .layout-columns--three,
+  .layout-columns--four {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+  
+  .layout-columns > * {
+    width: 100%;
+  }
+  
+  .layout-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+  
+  .layout-split {
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+  
+  .layout-split__main,
+  .layout-split__sidebar {
+    width: 100%;
+    min-width: 0;
+  }
+  
+  .layout-hero__content {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+  
+  .layout-hero__logo {
+    height: 105px;
+  }
+  
+  .layout-header__title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .layout-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+  
+  .layout-section-header__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .layout-grid--auto {
+    grid-template-columns: 1fr;
+  }
+  
+  .layout-grid--2,
+  .layout-grid--3,
+  .layout-grid--4,
+  .layout-grid--5,
+  .layout-grid--6 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/**
+ * Large Mobile Screens (641px - 767px)
+ */
+@media (min-width: 641px) and (max-width: 767px) {
+  .layout-grid--auto {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .layout-grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/**
+ * Reduced motion support
+ */
+@media (prefers-reduced-motion: reduce) {
+  .layout-hero {
+    transform: none;
+  }
+}
+
+/**
+ * Print styles
+ */
+@media print {
+  .dashboard-container,
+  .content-container {
+    max-width: none;
+    padding: 0;
+  }
+  
+  .layout-columns,
+  .layout-columns--three,
+  .layout-columns--four {
+    display: block;
+  }
+  
+  .layout-columns > *,
+  .layout-columns--three > *,
+  .layout-columns--four > * {
+    margin-bottom: var(--spacing-6);
+    break-inside: avoid;
+  }
+}

@@ -252,10 +252,13 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { 
+
+  0%,
+  100% {
     box-shadow: var(--shadow-card), 0 0 20px rgba(255, 107, 53, 0.3);
   }
-  50% { 
+
+  50% {
     box-shadow: var(--shadow-card-hover), 0 0 30px rgba(255, 107, 53, 0.5);
   }
 }
@@ -366,15 +369,14 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
   }
 }
 
-.notification-content {
-  /* Content styling handled by parent container */
-}
+/* Notification content styling handled by parent container */
 
 .notification-header {
   display: flex;
@@ -565,7 +567,7 @@
     flex-direction: column;
     gap: var(--spacing-2);
   }
-  
+
   .contestant-prediction-card {
     flex-direction: row;
     align-items: center;
@@ -573,36 +575,36 @@
     padding: var(--spacing-3);
     gap: var(--spacing-3);
   }
-  
+
   .contestant-card-image-container {
     width: 60px;
     height: 60px;
     flex-shrink: 0;
   }
-  
+
   .contestant-card-placeholder {
     font-size: var(--font-size-xl);
   }
-  
+
   .contestant-card-info {
     flex: 1;
     align-items: flex-start;
   }
-  
+
   .contestant-card-name {
     font-size: var(--font-size-base);
     margin-bottom: var(--spacing-1);
   }
-  
+
   .contestant-card-details {
     flex-direction: row;
     gap: var(--spacing-2);
   }
-  
+
   .detail-item {
     font-size: var(--font-size-xs);
   }
-  
+
   .selected-indicator {
     position: static;
     margin-left: var(--spacing-2);
@@ -610,24 +612,24 @@
     height: 20px;
     font-size: var(--font-size-sm);
   }
-  
+
   .tribe-section {
     padding: var(--spacing-4);
   }
-  
+
   .tribe-section-title {
     font-size: var(--font-size-xl);
   }
-  
+
   .submit-button {
     font-size: var(--font-size-base);
     padding: var(--spacing-3) var(--spacing-6);
   }
-  
+
   .info-message {
     padding: var(--spacing-3) var(--spacing-4);
   }
-  
+
   /* Prediction Reminder Mobile */
   .prediction-reminder-content {
     flex-direction: column;
@@ -635,35 +637,35 @@
     gap: var(--spacing-4);
     padding: var(--spacing-4);
   }
-  
+
   .prediction-reminder-icon {
     width: 40px;
     height: 40px;
     font-size: var(--font-size-lg);
   }
-  
+
   .prediction-reminder-text strong {
     font-size: var(--font-size-lg);
   }
-  
+
   .prediction-reminder-text p {
     font-size: var(--font-size-sm);
   }
-  
+
   .prediction-deadline {
     font-size: var(--font-size-xs);
   }
-  
+
   .prediction-reminder-actions {
     width: 100%;
   }
-  
+
   .prediction-reminder-actions .btn-primary {
     width: 100%;
     text-align: center;
     padding: var(--spacing-4) var(--spacing-6);
   }
-  
+
   /* Prediction Results Notification Mobile */
   .prediction-results-notification {
     position: fixed;
@@ -673,42 +675,42 @@
     width: auto;
     max-width: none;
   }
-  
+
   .notification-content {
     padding: var(--spacing-4);
   }
-  
+
   .notification-header {
     gap: var(--spacing-2);
   }
-  
+
   .notification-icon {
     width: 32px;
     height: 32px;
     font-size: var(--font-size-base);
   }
-  
+
   .notification-title h3 {
     font-size: var(--font-size-base);
   }
-  
+
   .notification-title p {
     font-size: var(--font-size-xs);
   }
-  
+
   .results-summary {
     flex-direction: column;
     gap: var(--spacing-2);
   }
-  
+
   .result-stat {
     padding: var(--spacing-2);
   }
-  
+
   .stat-value {
     font-size: var(--font-size-base);
   }
-  
+
   .notification-actions {
     flex-direction: column;
   }
@@ -756,3 +758,256 @@
  * - Warning: >5 active overrides
  * - Critical: >10 active overrides or >100 lines of actual CSS
  */
+/*
+ [2024-01-15] - MIGRATION-001 - Dashboard CSS Refactoring Compatibility Layer
+ * Issue: Dashboard.css refactored into modular components, need compatibility for existing class names
+ * Timeline: Remove after all React components updated to use new class names (2-4 weeks)
+ * Tracking: Dashboard CSS Refactoring Migration
+ */
+
+/* ============================================
+   DASHBOARD COMPATIBILITY LAYER - ACTUAL STYLES
+   ============================================ */
+
+/* Note: This provides backward compatibility for existing class names
+   while the new component system is being adopted. */
+
+/* Avatar fallbacks */
+.player-avatar,
+.contestant-avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-avatar img,
+.contestant-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.player-avatar .avatar-initial,
+.contestant-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  color: white;
+  background: var(--gradient-avatar);
+  text-transform: uppercase;
+  font-size: var(--font-size-base);
+}
+
+.initials-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  flex-shrink: 0;
+  background: var(--gradient-avatar);
+}
+
+/* Badge fallbacks */
+.rank-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-lg);
+  color: white;
+}
+
+.rank-badge.gold {
+  background: var(--gradient-gold);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.rank-badge.silver {
+  background: var(--gradient-silver);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.rank-badge.bronze {
+  background: var(--gradient-bronze);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.rank-badge.blue {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border-medium);
+}
+
+/* Entity row fallbacks */
+.player-row,
+.contestant-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  transition: var(--transition-colors), var(--transition-shadow);
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+.player-row:hover,
+.contestant-row:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-medium);
+}
+
+.player-row.current-user {
+  background-color: var(--color-warning-light);
+  border-color: var(--color-warning);
+}
+
+/* Layout fallbacks */
+.dashboard-columns {
+  display: flex;
+  gap: var(--spacing-8);
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-columns>* {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dashboard-columns--three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-6);
+  max-width: 1600px;
+}
+
+/* Typography fallbacks */
+.dashboard-title {
+  font-size: var(--font-size-4xl);
+  text-align: center;
+  margin: var(--spacing-8) 0;
+}
+
+.dashboard-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-8) 0;
+}
+
+.card-title,
+.section-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.card-title {
+  font-size: var(--font-size-2xl);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-4);
+}
+
+/* ============================================
+   RESPONSIVE COMPATIBILITY
+   ============================================ */
+
+@media (max-width: 640px) {
+
+  .player-row,
+  .contestant-row {
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
+  }
+
+  .player-avatar,
+  .contestant-avatar,
+  .initials-badge {
+    width: 40px;
+    height: 40px;
+  }
+
+  .player-avatar .avatar-initial,
+  .contestant-initials {
+    font-size: var(--font-size-sm);
+  }
+
+  .rank-badge {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-base);
+  }
+
+  .dashboard-columns,
+  .dashboard-columns--three {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+
+  .dashboard-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .card-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .section-title {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (min-width: 1025px) {
+
+  .player-avatar,
+  .contestant-avatar,
+  .initials-badge {
+    width: 56px;
+    height: 56px;
+  }
+
+  .dashboard-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-8);
+    align-items: start;
+  }
+
+  .dashboard-columns--three {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+  }
+}

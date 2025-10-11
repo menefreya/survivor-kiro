@@ -317,9 +317,7 @@
   --spacing-24: 6rem;
   /* 96px */
 
-  /* Legacy spacing variables for backward compatibility */
-  --spacing-xs: var(--spacing-2);
-  /* 8px */
+  /* Spacing scale complete */
   --spacing-sm: var(--spacing-4);
   /* 16px */
   --spacing-md: var(--spacing-6);

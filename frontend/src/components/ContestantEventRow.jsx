@@ -60,33 +60,35 @@ const ContestantEventRow = ({
   return (
     <div className={`contestant-event-row ${!contestant.current_tribe ? 'no-tribe' : ''}`}>
       {/* Contestant Info */}
-      <div className="contestant-info">
-        <div className="contestant-avatar">
-          {contestant.image_url ? (
-            <img 
-              src={contestant.image_url} 
-              alt={contestant.name}
-              className="contestant-avatar-image"
-              onError={(e) => {
-                e.target.classList.add('u-hidden');
-                e.target.nextSibling.classList.remove('u-hidden');
-                e.target.nextSibling.classList.add('u-flex');
-              }}
-            />
-          ) : null}
-          <div 
-            className={`contestant-avatar-placeholder ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
-          >
-            {contestant.name.charAt(0)}
+      <div className="entity-row__info">
+        <div className="entity-row__avatar">
+          <div className="avatar avatar--lg">
+            {contestant.image_url ? (
+              <img 
+                src={contestant.image_url} 
+                alt={contestant.name}
+                className="avatar__image"
+                onError={(e) => {
+                  e.target.classList.add('u-hidden');
+                  e.target.nextSibling.classList.remove('u-hidden');
+                  e.target.nextSibling.classList.add('u-flex');
+                }}
+              />
+            ) : null}
+            <div 
+              className={`avatar__initials ${contestant.image_url ? 'u-hidden' : 'u-flex'}`}
+            >
+              {contestant.name.charAt(0)}
+            </div>
           </div>
         </div>
-        <div className="contestant-details">
-          <div className="contestant-name-tribe">
-            <h4 className="contestant-name">{contestant.name}</h4>
+        <div className="entity-row__info">
+          <div className="entity-row__name-wrapper">
+            <h4 className="entity-row__name">{contestant.name}</h4>
             {contestant.current_tribe ? (
-              <span className={`contestant-tribe-badge tribe-${contestant.current_tribe.toLowerCase()}`}>{contestant.current_tribe}</span>
+              <span className={`badge badge--tribe badge--tribe-${contestant.current_tribe.toLowerCase()}`}>{contestant.current_tribe}</span>
             ) : (
-              <span className="contestant-no-tribe-badge" title="No tribe assigned">⚠️ No Tribe</span>
+              <span className="badge badge--warning" title="No tribe assigned">⚠️ No Tribe</span>
             )}
           </div>
           <div className="contestant-scores">

@@ -45,20 +45,17 @@ const ContestantRow = ({
 
   return (
     <div
-      className={`contestant-row ${contestantData.is_eliminated ? 'eliminated' : ''} ${isSoleSurvivor ? 'sole-survivor' : ''}`}
+      className={`entity-row entity-row--interactive ${contestantData.is_eliminated ? 'eliminated' : ''} ${isSoleSurvivor ? 'sole-survivor' : ''}`}
       role="listitem"
       aria-label={`${isSoleSurvivor ? 'Sole survivor' : 'Draft pick'}: ${contestantData.name}, ${contestantData.profession}, ${contestantData.total_score || 0} points${contestantData.is_eliminated ? ', eliminated' : ''}`}
     >
-      <div className="contestant-left">
-        <div
-          className={`contestant-avatar ${getBadgeColorClass(rank)}`}
-          aria-label={isSoleSurvivor ? 'Sole survivor' : `Draft pick ${rank || ''}`}
-        >
+      <div className="entity-row__avatar">
+        <div className="avatar avatar--lg">
           {contestantData.image_url ? (
             <img
               src={contestantData.image_url}
               alt={`${contestantData.name}'s profile picture`}
-              className="contestant-avatar-image"
+              className="avatar__image"
               onError={(e) => {
                 e.target.classList.add('u-hidden');
                 e.target.nextElementSibling.classList.remove('u-hidden');
@@ -67,35 +64,36 @@ const ContestantRow = ({
             />
           ) : null}
           <div
-            className={`contestant-initials ${contestantData.image_url ? 'u-hidden' : 'u-flex'}`}
+            className={`avatar__initials ${contestantData.image_url ? 'u-hidden' : 'u-flex'}`}
             aria-label={`${contestantData.name} initials`}
           >
             {getInitials(contestantData.name)}
           </div>
         </div>
 
-        <div className="contestant-details">
-          <div className="contestant-name-wrapper">
+        <div className="entity-row__info">
+          <div className="entity-row__name-wrapper">
             {showCrown && (
               <span className="crown-icon" role="img" aria-label="Sole survivor crown">👑</span>
             )}
-            <h4 className="contestant-name">{contestantData.name}</h4>
+            <h4 className="entity-row__name">{contestantData.name}</h4>
           </div>
-          <p className="contestant-profession">{contestantData.profession}</p>
+          <p className="entity-row__subtitle">{contestantData.profession}</p>
         </div>
       </div>
 
-      <div className="contestant-stats">
+      <div className="entity-row__stats">
         {customStats ? (
           customStats
         ) : (
           <>
-            <span className="contestant-points" aria-label={`${contestantData.total_score || 0} points`}>
-              {contestantData.total_score || 0} <span className="pts-label" aria-hidden="true">pts</span>
-            </span>
+            <div className="entity-row__score" aria-label={`${contestantData.total_score || 0} points`}>
+              {contestantData.total_score || 0}
+            </div>
+            <div className="entity-row__score-label" aria-hidden="true">pts</div>
             {contestantData.is_eliminated && (
               <span
-                className="contestant-status status-eliminated"
+                className="badge badge--status badge--status-eliminated"
                 role="status"
                 aria-label="Status: eliminated"
               >

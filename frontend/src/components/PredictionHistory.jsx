@@ -173,7 +173,7 @@ const PredictionHistory = () => {
                     <div className="prediction-result">
                       <div className="prediction-section">
                         <div className="prediction-label">Your Prediction</div>
-                        <div className="contestant-name">
+                        <div className="entity-row__name">
                           {prediction.predicted_contestant?.name || 'Unknown'}
                         </div>
                       </div>
@@ -184,7 +184,7 @@ const PredictionHistory = () => {
 
                       <div className="prediction-section">
                         <div className="prediction-label">Actually Eliminated</div>
-                        <div className="contestant-name">
+                        <div className="entity-row__name">
                           {prediction.actual_eliminated?.name || 'Unknown'}
                         </div>
                       </div>

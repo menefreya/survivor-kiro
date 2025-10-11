@@ -381,13 +381,9 @@
   backdrop-filter: var(--backdrop-blur);
 }
 
-/* Legacy class for compatibility */
-.loading-overlay-dark {
-  background-color: var(--color-bg-overlay);
-}
+/* Loading overlay styles complete */
 
-.loading-overlay .loading-text,
-.loading-overlay-dark .loading-text {
+.loading-overlay .loading-text {
   color: var(--color-text-primary);
   text-shadow: var(--text-shadow-subtle);
 }

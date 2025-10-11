@@ -98,7 +98,7 @@ const PredictionReminder = () => {
         </div>
         <div className="prediction-reminder-actions">
           <button 
-            className="btn-primary"
+            className="btn btn--primary"
             onClick={handleMakePredictions}
           >
             Submit Prediction
