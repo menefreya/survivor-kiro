@@ -181,7 +181,7 @@ const Profile = () => {
 
           <button
             type="submit"
-            className="btn-primary"
+            className="btn btn--primary"
             disabled={isUpdating}
             aria-busy={isUpdating}
           >
@@ -193,7 +193,7 @@ const Profile = () => {
       <div className="profile-actions">
         <button 
           onClick={handleLogout} 
-          className="btn-danger"
+          className="btn btn--danger"
           aria-label="Logout from your account"
         >
           Logout

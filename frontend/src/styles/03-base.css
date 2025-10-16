@@ -22,24 +22,24 @@ body {
 
 /* Typography Hierarchy */
 
-/* H1 - Brushed font with flat orange color */
+/* H1 - Rubik Glitch font with flat orange color */
 h1 {
   font-family: var(--font-family-heading-primary) !important;
   font-weight: var(--font-weight-normal);
-  color: var(--color-heading-primary); /* Flat orange color */
+  color: var(--color-heading-primary);
   line-height: var(--line-height-tight);
   margin-bottom: var(--spacing-4);
   text-shadow: none;
   -webkit-text-stroke: 0;
   text-rendering: optimizeLegibility;
-  font-size: var(--font-size-5xl); /* Larger size */
+  font-size: var(--font-size-5xl);
 }
 
-/* H2 - Permanent Marker with orange color */
+/* H2 - Rubik Glitch font with orange color */
 h2 {
   font-family: var(--font-family-heading-secondary);
   font-weight: var(--font-weight-normal);
-  color: var(--color-heading-primary); /* Flat orange color */
+  color: var(--color-heading-primary);
   line-height: var(--line-height-tight);
   margin-bottom: var(--spacing-4);
   text-shadow: none;

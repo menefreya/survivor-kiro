@@ -1,0 +1,589 @@
+/**
+ * Avatar Component System
+ * 
+ * Unified avatar components for profile images, initials, and badges.
+ * Used across dashboard, leaderboard, team displays, and user profiles.
+ */
+
+/* ============================================
+   BASE AVATAR STYLES
+   ============================================ */
+
+/**
+ * Standard Avatar Component
+ * 
+ * Base avatar with consistent sizing and styling
+ */
+.avatar {
+  position: relative;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Avatar Image
+ */
+.avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+/**
+ * Avatar Initials Fallback
+ */
+.avatar__initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  color: white;
+  background: var(--gradient-avatar);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   AVATAR SIZES
+   ============================================ */
+
+.avatar--xs {
+  width: 24px;
+  height: 24px;
+}
+
+.avatar--xs .avatar__initials {
+  font-size: var(--font-size-xs);
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.avatar--sm .avatar__initials {
+  font-size: var(--font-size-sm);
+}
+
+.avatar--md {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar--md .avatar__initials {
+  font-size: var(--font-size-sm);
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+}
+
+.avatar--lg .avatar__initials {
+  font-size: var(--font-size-base);
+}
+
+.avatar--xl {
+  width: 56px;
+  height: 56px;
+}
+
+.avatar--xl .avatar__initials {
+  font-size: var(--font-size-base);
+}
+
+.avatar--2xl {
+  width: 64px;
+  height: 64px;
+}
+
+.avatar--2xl .avatar__initials {
+  font-size: var(--font-size-lg);
+}
+
+.avatar--3xl {
+  width: 72px;
+  height: 72px;
+}
+
+.avatar--3xl .avatar__initials {
+  font-size: var(--font-size-xl);
+}
+
+.avatar--2xl {
+  width: 120px;
+  height: 120px;
+}
+
+.avatar--2xl .avatar__initials {
+  font-size: var(--font-size-4xl);
+}
+
+/* ============================================
+   AVATAR VARIANTS
+   ============================================ */
+
+/**
+ * Square Avatar
+ */
+.avatar--square {
+  border-radius: var(--radius-md);
+}
+
+/**
+ * Avatar with Border
+ */
+.avatar--bordered {
+  border: 2px solid var(--color-border-medium);
+}
+
+.avatar--bordered.avatar--primary {
+  border-color: var(--color-primary);
+}
+
+.avatar--bordered.avatar--success {
+  border-color: var(--color-success);
+}
+
+.avatar--bordered.avatar--warning {
+  border-color: var(--color-warning);
+}
+
+.avatar--bordered.avatar--danger {
+  border-color: var(--color-danger);
+}
+
+/**
+ * Avatar with Status Indicator
+ */
+.avatar--status {
+  position: relative;
+}
+
+.avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 25%;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-bg-primary);
+  background-color: var(--color-text-tertiary);
+}
+
+.avatar__status--online {
+  background-color: var(--color-success);
+}
+
+.avatar__status--away {
+  background-color: var(--color-warning);
+}
+
+.avatar__status--offline {
+  background-color: var(--color-text-tertiary);
+}
+
+/* ============================================
+   BADGE COMPONENTS
+   ============================================ */
+
+/**
+ * Base Badge Component
+ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
+}
+
+/**
+ * Badge Sizes - Only for circular/numeric badges
+ */
+.badge--sm {
+  min-width: 24px;
+  height: 24px;
+  font-size: var(--font-size-xs);
+  padding: 0 var(--spacing-1);
+}
+
+.badge--md {
+  min-width: 32px;
+  height: 32px;
+  font-size: var(--font-size-sm);
+  padding: 0 var(--spacing-2);
+}
+
+.badge--lg {
+  min-width: 40px;
+  height: 40px;
+  font-size: var(--font-size-base);
+  padding: 0 var(--spacing-2);
+}
+
+.badge--xl {
+  min-width: 48px;
+  height: 48px;
+  font-size: var(--font-size-lg);
+  padding: 0 var(--spacing-3);
+}
+
+/**
+ * Rank Badges with Gradients
+ */
+.badge--rank-gold {
+  background: var(--gradient-gold);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge--rank-silver {
+  background: var(--gradient-silver);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge--rank-bronze {
+  background: var(--gradient-bronze);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge--rank-default {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border-medium);
+}
+
+/**
+ * Status Badges
+ */
+.badge--status {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.badge--status-active {
+  background-color: rgba(0, 208, 132, 0.2);
+  color: var(--color-success);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+}
+
+.badge--status-eliminated {
+  background-color: rgba(255, 68, 68, 0.2);
+  color: var(--color-danger);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.badge--status-inactive {
+  background-color: rgba(184, 184, 184, 0.2);
+  color: var(--color-text-tertiary);
+  border: 1px solid rgba(184, 184, 184, 0.3);
+}
+
+/**
+ * Tribe Badges
+ */
+.badge--tribe {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.badge--tribe-kele {
+  color: var(--tribe-kele);
+  background-color: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.badge--tribe-hina {
+  color: var(--tribe-hina-dark);
+  background-color: rgba(234, 179, 8, 0.2);
+  border-color: rgba(234, 179, 8, 0.4);
+}
+
+.badge--tribe-uli {
+  color: var(--tribe-uli);
+  background-color: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/**
+ * Notification Badge
+ */
+.badge--notification {
+  background: var(--gradient-danger);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 var(--spacing-1);
+  border: 2px solid var(--color-bg-primary);
+  box-shadow: var(--glow-accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: var(--glow-accent);
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+  }
+}
+
+/**
+ * Lock Status Badge
+ */
+.badge--lock {
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.badge--lock-locked {
+  background-color: rgba(255, 68, 68, 0.2);
+  color: var(--color-danger);
+  border: 1px solid rgba(255, 68, 68, 0.4);
+}
+
+.badge--lock-open {
+  background-color: rgba(0, 208, 132, 0.2);
+  color: var(--color-success);
+  border: 1px solid rgba(0, 208, 132, 0.4);
+}
+
+/**
+ * Prediction Result Badges
+ */
+.badge--prediction {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.badge--prediction-correct {
+  background-color: rgba(0, 208, 132, 0.2);
+  color: var(--color-success);
+  border: 1px solid rgba(0, 208, 132, 0.4);
+}
+
+.badge--prediction-incorrect {
+  background-color: rgba(255, 68, 68, 0.2);
+  color: var(--color-danger);
+  border: 1px solid rgba(255, 68, 68, 0.4);
+}
+
+/**
+ * Warning Badge
+ */
+.badge--warning {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 184, 0, 0.2);
+  color: var(--color-warning);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/**
+ * Primary Badge
+ */
+.badge--primary {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: 1px solid var(--color-primary);
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/**
+ * Success Badge
+ */
+.badge--success {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/**
+ * Danger Badge
+ */
+.badge--danger {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+/**
+ * Extra Small Badge Size
+ */
+.badge--xs {
+  min-width: 16px;
+  height: 16px;
+  font-size: 10px;
+  padding: 0 var(--spacing-1);
+}
+
+/**
+ * Prediction Stats Layout
+ */
+.prediction-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+}
+
+/**
+ * Entity Row Container
+ */
+.entity-row-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+/**
+ * Entity Rows Collection
+ */
+.entity-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 640px) {
+  .avatar--lg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .avatar--xl {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .avatar--2xl {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .avatar--2xl .avatar__initials {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .badge--lg {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .badge--xl {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-base);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/**
+ * Reduced motion support
+ */
+@media (prefers-reduced-motion: reduce) {
+  .badge--notification {
+    animation: none;
+  }
+}
+
+/**
+ * High contrast mode support
+ */
+@media (prefers-contrast: high) {
+  .avatar--bordered {
+    border-width: 3px;
+  }
+  
+  .badge--rank-gold,
+  .badge--rank-silver,
+  .badge--rank-bronze {
+    border: 2px solid var(--color-text-primary);
+  }
+}

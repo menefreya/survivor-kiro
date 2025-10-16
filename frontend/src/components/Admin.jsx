@@ -232,7 +232,7 @@ const Admin = () => {
               <div className="tribe-management-controls">
                 <button
                   onClick={handleToggleBulkMode}
-                  className={bulkTribeMode ? 'btn-primary' : 'btn-secondary'}
+                  className={bulkTribeMode ? 'btn btn--primary' : 'btn btn--secondary'}
                   aria-pressed={bulkTribeMode}
                 >
                   {bulkTribeMode ? '✓ Bulk Mode Active' : 'Bulk Tribe Update'}
@@ -251,13 +251,13 @@ const Admin = () => {
                     <button
                       onClick={handleBulkTribeUpdate}
                       disabled={selectedContestants.length === 0}
-                      className="btn-primary"
+                      className="btn btn--primary"
                     >
                       Update {selectedContestants.length} Selected
                     </button>
                     <button
                       onClick={handleToggleBulkMode}
-                      className="btn-secondary"
+                      className="btn btn--secondary"
                     >
                       Cancel
                     </button>
@@ -311,14 +311,14 @@ const Admin = () => {
                                 />
                                 <button
                                   onClick={() => handleSaveTribe(contestant.id)}
-                                  className="btn-sm btn-primary"
+                                  className="btn btn--sm btn--primary"
                                   title="Save"
                                 >
                                   ✓
                                 </button>
                                 <button
                                   onClick={handleCancelEditTribe}
-                                  className="btn-sm btn-secondary"
+                                  className="btn btn--sm btn--secondary"
                                   title="Cancel"
                                 >
                                   ✕
@@ -350,7 +350,7 @@ const Admin = () => {
                             <div className="action-buttons">
                               <button
                                 onClick={() => handleViewEventHistory(contestant.id)}
-                                className="btn-secondary btn-sm"
+                                className="btn btn--secondary btn--sm"
                                 aria-label={`View event history for ${contestant.name}`}
                                 title="View Event History"
                               >
@@ -358,7 +358,7 @@ const Admin = () => {
                               </button>
                               <button
                                 onClick={() => handleToggleEliminated(contestant.id, contestant.is_eliminated)}
-                                className="btn-secondary btn-sm"
+                                className="btn btn--secondary btn--sm"
                                 aria-label={`${contestant.is_eliminated ? 'Reactivate' : 'Eliminate'} ${contestant.name}`}
                               >
                                 {contestant.is_eliminated ? 'Reactivate' : 'Eliminate'}
@@ -427,7 +427,7 @@ const Admin = () => {
               <button
                 onClick={handleTriggerDraft}
                 disabled={draftLoading || draftStatus?.isComplete}
-                className="btn-primary"
+                className="btn btn--primary"
                 aria-busy={draftLoading}
                 aria-label="Trigger draft to assign contestants to players"
               >

@@ -340,7 +340,8 @@ a:focus-visible {
 /* Enhanced focus for interactive cards */
 .card[tabindex]:focus-visible,
 .player-row:focus-visible,
-.contestant-row:focus-visible {
+.contestant-row:focus-visible,
+.entity-row:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
   background-color: rgba(255, 107, 53, 0.05);

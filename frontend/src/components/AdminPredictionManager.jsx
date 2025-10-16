@@ -159,7 +159,7 @@ const AdminPredictionManager = () => {
             <button
               onClick={handleToggleLock}
               disabled={lockLoading}
-              className={episodeData.predictions_locked ? 'btn-secondary' : 'btn-primary'}
+              className={episodeData.predictions_locked ? 'btn btn--secondary' : 'btn btn--primary'}
               aria-label={episodeData.predictions_locked ? 'Unlock predictions' : 'Lock predictions'}
             >
               {lockLoading ? 'Processing...' : (
@@ -220,12 +220,12 @@ const AdminPredictionManager = () => {
                               </div>
                             </td>
                             <td>
-                              <div className="contestant-info">
+                              <div className="entity-row__info">
                                 {prediction.contestant.image_url && (
                                   <img
                                     src={prediction.contestant.image_url}
                                     alt={prediction.contestant.name}
-                                    className="contestant-avatar-small"
+                                    className="avatar avatar--sm"
                                   />
                                 )}
                                 <span>{prediction.contestant.name}</span>

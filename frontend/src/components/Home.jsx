@@ -162,9 +162,9 @@ const Home = () => {
         <PredictionReminder />
 
         {/* Dashboard Layout - 3 Columns */}
-        <div className="dashboard-columns dashboard-columns--three">
+        <div className="layout-columns--three">
           {/* Left Column: Leaderboard */}
-          <div className="dashboard-column">
+          <div className="layout-column">
             <LeaderboardCard 
               players={leaderboard}
               userPosition={userPosition}
@@ -176,7 +176,7 @@ const Home = () => {
           </div>
 
           {/* Center Column: My Team */}
-          <div className="dashboard-column">
+          <div className="layout-column">
             <MyTeamCard
               soleSurvivor={myTeam?.sole_survivor || null}
               draftPicks={myTeam?.drafted_contestants || []}
@@ -189,7 +189,7 @@ const Home = () => {
           </div>
 
           {/* Right Column: Episode Predictions */}
-          <div className="dashboard-column">
+          <div className="layout-column">
             <CurrentPredictionsCard />
           </div>
         </div>

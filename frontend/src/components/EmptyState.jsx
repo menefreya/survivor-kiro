@@ -17,7 +17,7 @@ const EmptyState = ({ icon, title, description, action }) => {
       {action && (
         <div className="empty-state-action">
           <button 
-            className="btn-primary" 
+            className="btn btn--primary" 
             onClick={action.onClick}
             type="button"
           >

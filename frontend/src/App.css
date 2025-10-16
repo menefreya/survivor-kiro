@@ -19,6 +19,10 @@
 @import './styles/05-components/cards.css';
 @import './styles/05-components/navigation.css';
 @import './styles/05-components/scoring-rules.css';
+@import './styles/05-components/avatars.css';
+@import './styles/05-components/entity-rows.css';
+@import './styles/05-components/layouts.css';
+@import './styles/05-components/notifications.css';
 
 /* Layer 6: Feature Styles */
 @import './styles/06-features/loading.css';
@@ -35,7 +39,6 @@
 /* Layer 7: Page Styles */
 @import './styles/07-pages/dashboard.css';
 @import './styles/07-pages/profile.css';
-@import './styles/07-pages/ranking.css';
 @import './styles/07-pages/admin.css';
 @import './styles/07-pages/auth.css';
 @import './styles/07-pages/contestants.css';
@@ -45,8 +48,7 @@
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';
 
-/* Layer 9: Legacy Overrides */
-@import './styles/09-legacy.css';
+/* Layer 9: Legacy Overrides - REMOVED (migrated to global design system) */
 
 /* Temporary font test */
 .font-test {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import ContestantRow from './ContestantRow';
+import { TribeBadge, PredictionBadge } from './badges';
 // Prediction styles are included in dashboard.css
 
 const CurrentPredictionsCard = () => {
@@ -56,14 +57,16 @@ const CurrentPredictionsCard = () => {
 
   return (
     <div className="dashboard-card current-predictions-card" role="region" aria-label="Current Episode Predictions">
-      <div className="card-header">
-        <h2 id="predictions-title">Episode {episodeNumber} Predictions</h2>
-        <Link to="/predictions#compare" className="compare-link">
-          Compare Predictions →
-        </Link>
+      <div className="layout-section-header">
+        <h2 className="layout-section-header__title" id="predictions-title">Episode {episodeNumber} Predictions</h2>
+        <div className="layout-section-header__actions">
+          <Link to="/predictions#compare" className="compare-link">
+            Compare Predictions →
+          </Link>
+        </div>
       </div>
 
-      <div className="card-body">
+      <div className="layout-section-body">
         <div className="team-contestants-list" role="list" aria-labelledby="predictions-title">
           {predictions.map((prediction, index) => {
             const getTribeClass = (tribeName) => {
@@ -88,13 +91,13 @@ const CurrentPredictionsCard = () => {
             // Create custom stats content with tribe pill
             const customStats = (
               <div className="prediction-stats">
-                <div className={`tribe-pill ${getTribeClass(prediction.tribe)}`}>
-                  {prediction.tribe}
-                </div>
-                {prediction.is_correct === true && (
-                  <div className="prediction-result-badge correct">
-                    ✓ Correct (+3)
-                  </div>
+                <TribeBadge tribe={prediction.tribe} size="sm" />
+                {prediction.is_correct !== null && (
+                  <PredictionBadge
+                    result={prediction.is_correct}
+                    points={prediction.is_correct ? 3 : 0}
+                    size="sm"
+                  />
                 )}
               </div>
             );

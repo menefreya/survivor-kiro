@@ -169,6 +169,8 @@
   /* Darker when pressed */
   --color-success-light: rgba(0, 208, 132, 0.1);
   /* Success background */
+  --color-success-lighter: rgba(0, 208, 132, 0.05);
+  /* Very light success background */
   --color-success-dark: #009A64;
 
   /* Danger Colors (Bright Red for Dark Theme) */
@@ -180,6 +182,8 @@
   /* Darker when pressed */
   --color-danger-light: rgba(255, 68, 68, 0.1);
   /* Error background */
+  --color-danger-lighter: rgba(255, 68, 68, 0.05);
+  /* Very light error background */
   --color-danger-dark: #CC3333;
 
   /* Warning Colors (Bright Yellow for Dark Theme) */
@@ -317,9 +321,7 @@
   --spacing-24: 6rem;
   /* 96px */
 
-  /* Legacy spacing variables for backward compatibility */
-  --spacing-xs: var(--spacing-2);
-  /* 8px */
+  /* Spacing scale complete */
   --spacing-sm: var(--spacing-4);
   /* 16px */
   --spacing-md: var(--spacing-6);

@@ -86,7 +86,7 @@
   
   .dashboard-header h1 {
     font-size: var(--font-size-4xl);
-    text-shadow: var(--text-shadow-dramatic);
+    text-shadow: none;
     margin-bottom: var(--spacing-4);
   }
   
@@ -154,7 +154,7 @@
   .card-title {
     font-size: var(--font-size-2xl);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
   }
   
   .card-header-actions {
@@ -225,7 +225,7 @@
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
   }
   
   .player-score .score-label {
@@ -245,7 +245,7 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
   }
   
   .player-username {
@@ -375,14 +375,14 @@
   h1, .u-text-4xl {
     font-size: var(--font-size-4xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-dramatic);
+    text-shadow: none;
     margin-bottom: var(--spacing-5);
   }
   
   h2, .u-text-3xl {
     font-size: var(--font-size-3xl);
     line-height: var(--line-height-tight);
-    text-shadow: var(--text-shadow-subtle);
+    text-shadow: none;
     margin-bottom: var(--spacing-4);
   }
   
