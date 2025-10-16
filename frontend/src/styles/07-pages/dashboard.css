@@ -557,7 +557,6 @@
 .contestant-info {
   flex: 1;
   min-width: 0;
-  max-width: 100px;
   margin-right: var(--spacing-1);
   overflow: hidden;
 }
@@ -1458,7 +1457,6 @@
   .contestant-info {
     flex: 1;
     min-width: 0;
-    max-width: 100px;
     overflow: hidden;
   }
 
