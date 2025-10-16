@@ -35,6 +35,37 @@ class ScoreCalculationService {
   }
 
   /**
+   * Calculate contestant score for a specific episode range (by episode number)
+   * @param {number} contestantId - Contestant ID
+   * @param {number} startEpisodeNumber - Start episode number
+   * @param {number|null} endEpisodeNumber - End episode number (null for ongoing)
+   * @returns {Promise<number>} Total score for the episode range
+   */
+  async calculateContestantScoreForEpisodeRangeByNumber(contestantId, startEpisodeNumber, endEpisodeNumber) {
+    // Get episode scores directly using episode numbers
+    let query = supabase
+      .from('episode_scores')
+      .select('score, episodes!inner(episode_number)')
+      .eq('contestant_id', contestantId)
+      .gte('episodes.episode_number', startEpisodeNumber);
+
+    // Add end episode filter if specified
+    if (endEpisodeNumber !== null) {
+      query = query.lte('episodes.episode_number', endEpisodeNumber);
+    }
+
+    const { data: scores, error } = await query;
+
+    if (error) {
+      throw new Error(`Failed to fetch episode scores: ${error.message}`);
+    }
+
+    // Sum up all scores in the range
+    const totalScore = scores ? scores.reduce((sum, scoreRecord) => sum + scoreRecord.score, 0) : 0;
+    return totalScore;
+  }
+
+  /**
    * Calculate contestant score for a specific episode range (for draft picks)
    * @param {number} contestantId - Contestant ID
    * @param {number} startEpisodeId - Starting episode ID (foreign key to episodes table)
@@ -159,20 +190,19 @@ class ScoreCalculationService {
    * @returns {Promise<{episodeBonus: number, winnerBonus: number, totalBonus: number, episodeCount: number}>}
    */
   async calculateSoleSurvivorBonus(playerId) {
-    // Get current sole survivor selection from sole_survivor_history
-    const { data: currentSelection, error: selectionError } = await supabase
+    // Get all sole survivor selections from history
+    const { data: allSelections, error: selectionError } = await supabase
       .from('sole_survivor_history')
-      .select('contestant_id, start_episode')
+      .select('contestant_id, start_episode, end_episode')
       .eq('player_id', playerId)
-      .is('end_episode', null)
-      .maybeSingle();
+      .order('start_episode');
 
     if (selectionError) {
       throw new Error(`Failed to fetch sole survivor history: ${selectionError.message}`);
     }
 
-    // If no current selection, return 0
-    if (!currentSelection) {
+    // If no selections, return 0
+    if (!allSelections || allSelections.length === 0) {
       return {
         episodeBonus: 0,
         winnerBonus: 0,
@@ -181,7 +211,7 @@ class ScoreCalculationService {
       };
     }
 
-    // Get current episode number
+    // Get current episode number for calculating active periods
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
       .select('episode_number')
@@ -214,7 +244,7 @@ class ScoreCalculationService {
     // Check if there's actually a sole survivor (only one contestant remaining)
     const { data: remainingContestants, error: remainingError } = await supabase
       .from('contestants')
-      .select('id')
+      .select('id, is_winner')
       .eq('is_eliminated', false);
 
     if (remainingError) {
@@ -232,45 +262,37 @@ class ScoreCalculationService {
       };
     }
 
-    // Check if the remaining contestant is the one this player selected
-    const soleSurvivorId = remainingContestants[0].id;
-    if (soleSurvivorId !== currentSelection.contestant_id) {
-      return {
-        episodeBonus: 0,
-        winnerBonus: 0,
-        totalBonus: 0,
-        episodeCount: 0,
-        reason: 'Player selected wrong sole survivor'
-      };
-    }
-
-    // Calculate episodes in contiguous period (current_episode - start_episode + 1)
-    const episodeCount = currentEpisodeNumber - currentSelection.start_episode + 1;
-    const episodeBonus = episodeCount * 1; // +1 point per episode
-
-    // Check if contestant is winner and selected by episode 2
-    const { data: contestant, error: contestantError } = await supabase
-      .from('contestants')
-      .select('is_winner')
-      .eq('id', currentSelection.contestant_id)
-      .single();
-
-    if (contestantError) {
-      throw new Error(`Failed to fetch contestant: ${contestantError.message}`);
-    }
-
-    // Award +25 bonus if conditions met
+    const actualSoleSurvivor = remainingContestants[0];
+    let totalEpisodeBonus = 0;
+    let totalEpisodeCount = 0;
     let winnerBonus = 0;
-    if (contestant.is_winner && currentSelection.start_episode <= 2) {
-      winnerBonus = 25;
+
+    // Calculate bonus for each selection period where player had the correct sole survivor
+    for (const selection of allSelections) {
+      if (selection.contestant_id === actualSoleSurvivor.id) {
+        // Calculate end episode for this selection
+        const endEpisode = selection.end_episode || currentEpisodeNumber;
+        
+        // Calculate episodes in this period
+        const episodeCount = endEpisode - selection.start_episode + 1;
+        const episodeBonus = episodeCount * 1; // +1 point per episode
+        
+        totalEpisodeBonus += episodeBonus;
+        totalEpisodeCount += episodeCount;
+
+        // Check for winner bonus (only awarded once, for earliest qualifying selection)
+        if (winnerBonus === 0 && actualSoleSurvivor.is_winner && selection.start_episode <= 2) {
+          winnerBonus = 25;
+        }
+      }
     }
 
     return {
-      episodeBonus,
+      episodeBonus: totalEpisodeBonus,
       winnerBonus,
-      totalBonus: episodeBonus + winnerBonus,
-      episodeCount,
-      reason: 'Sole survivor bonus awarded'
+      totalBonus: totalEpisodeBonus + winnerBonus,
+      episodeCount: totalEpisodeCount,
+      reason: totalEpisodeBonus > 0 ? 'Sole survivor bonus awarded' : 'Player did not select correct sole survivor'
     };
   }
 
@@ -303,18 +325,31 @@ class ScoreCalculationService {
       }
     }
 
-    // Get sole survivor and add contestant score
-    const { data: player, error: playerError } = await supabase
-      .from('players')
-      .select('sole_survivor_id, contestants(total_score)')
-      .eq('id', playerId)
-      .single();
+    // Calculate sole survivor score based on history (similar to draft picks)
+    let soleSurvivorScore = 0;
+    
+    // Get all sole survivor history for this player
+    const { data: soleSurvivorHistory, error: historyError } = await supabase
+      .from('sole_survivor_history')
+      .select('contestant_id, start_episode, end_episode')
+      .eq('player_id', playerId)
+      .order('start_episode');
 
-    if (playerError) {
-      throw new Error(`Failed to fetch player: ${playerError.message}`);
+    if (historyError) {
+      throw new Error(`Failed to fetch sole survivor history: ${historyError.message}`);
     }
 
-    const soleSurvivorScore = player.contestants?.total_score || 0;
+    // Calculate score for each sole survivor period
+    if (soleSurvivorHistory && soleSurvivorHistory.length > 0) {
+      for (const selection of soleSurvivorHistory) {
+        const contestantScore = await this.calculateContestantScoreForEpisodeRangeByNumber(
+          selection.contestant_id,
+          selection.start_episode,
+          selection.end_episode
+        );
+        soleSurvivorScore += contestantScore;
+      }
+    }
 
     // Calculate and add sole survivor bonus
     const bonusBreakdown = await this.calculateSoleSurvivorBonus(playerId);

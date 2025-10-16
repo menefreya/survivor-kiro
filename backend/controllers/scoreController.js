@@ -12,23 +12,23 @@ async function addEpisodeScores(req, res) {
 
     // Validate required fields
     if (!episode_number || !scores || !Array.isArray(scores)) {
-      return res.status(400).json({ 
-        error: 'Episode number and scores array are required' 
+      return res.status(400).json({
+        error: 'Episode number and scores array are required'
       });
     }
 
     // Validate episode number is a positive integer
     if (!Number.isInteger(episode_number) || episode_number <= 0) {
-      return res.status(400).json({ 
-        error: 'Episode number must be a positive integer' 
+      return res.status(400).json({
+        error: 'Episode number must be a positive integer'
       });
     }
 
     // Validate scores array format
     for (const score of scores) {
       if (!score.contestant_id || typeof score.score !== 'number') {
-        return res.status(400).json({ 
-          error: 'Each score must have contestant_id and numeric score value' 
+        return res.status(400).json({
+          error: 'Each score must have contestant_id and numeric score value'
         });
       }
     }
@@ -41,8 +41,8 @@ async function addEpisodeScores(req, res) {
       .single();
 
     if (existingEpisode) {
-      return res.status(400).json({ 
-        error: `Episode ${episode_number} scores have already been added` 
+      return res.status(400).json({
+        error: `Episode ${episode_number} scores have already been added`
       });
     }
 
@@ -249,7 +249,7 @@ async function recalculateAllScores(req, res) {
     // Recalculate prediction scores for all episodes
     const predictionScoringService = require('../services/predictionScoringService');
     summary.predictions_recalculated = 0;
-    
+
     for (const episode of episodes) {
       try {
         await predictionScoringService.recalculatePredictionScores(episode.id);
@@ -322,15 +322,15 @@ async function createEpisode(req, res) {
 
     // Validate required fields
     if (!episode_number) {
-      return res.status(400).json({ 
-        error: 'Episode number is required' 
+      return res.status(400).json({
+        error: 'Episode number is required'
       });
     }
 
     // Validate episode number is a positive integer
     if (!Number.isInteger(episode_number) || episode_number <= 0) {
-      return res.status(400).json({ 
-        error: 'Episode number must be a positive integer' 
+      return res.status(400).json({
+        error: 'Episode number must be a positive integer'
       });
     }
 
@@ -342,8 +342,8 @@ async function createEpisode(req, res) {
       .maybeSingle();
 
     if (existingEpisode) {
-      return res.status(400).json({ 
-        error: `Episode ${episode_number} already exists` 
+      return res.status(400).json({
+        error: `Episode ${episode_number} already exists`
       });
     }
 

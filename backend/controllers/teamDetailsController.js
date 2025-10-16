@@ -54,12 +54,14 @@ async function getTeamDetailsForEpisode(req, res) {
       return res.status(500).json({ error: 'Failed to fetch team data' });
     }
 
-    // Get player's sole survivor pick
-    const { data: player, error: playerError } = await supabase
-      .from('players')
+    // Get player's sole survivor pick for this specific episode
+    const { data: soleSurvivorHistory, error: historyError } = await supabase
+      .from('sole_survivor_history')
       .select(`
-        sole_survivor_id,
-        contestants:sole_survivor_id (
+        contestant_id,
+        start_episode,
+        end_episode,
+        contestants:contestant_id (
           id,
           name,
           profession,
@@ -68,18 +70,26 @@ async function getTeamDetailsForEpisode(req, res) {
           is_eliminated
         )
       `)
-      .eq('id', playerId)
-      .single();
+      .eq('player_id', playerId)
+      .lte('start_episode', episode.episode_number)
+      .or(`end_episode.is.null,end_episode.gte.${episode.episode_number}`)
+      .order('start_episode', { ascending: false })
+      .limit(1);
 
-    if (playerError) {
-      console.error('Error fetching player data:', playerError);
-      return res.status(500).json({ error: 'Failed to fetch player data' });
+    if (historyError) {
+      console.error('Error fetching sole survivor history:', historyError);
+      return res.status(500).json({ error: 'Failed to fetch sole survivor history' });
     }
+
+    // Get the active sole survivor for this episode
+    const activeSoleSurvivor = soleSurvivorHistory && soleSurvivorHistory.length > 0 
+      ? soleSurvivorHistory[0] 
+      : null;
 
     // Get episode scores for all team members
     const teamContestantIds = [
       ...(draftPicks || []).map(pick => pick.contestant_id),
-      ...(player.sole_survivor_id ? [player.sole_survivor_id] : [])
+      ...(activeSoleSurvivor ? [activeSoleSurvivor.contestant_id] : [])
     ].filter(Boolean);
 
     let episodeScores = [];
@@ -205,9 +215,9 @@ async function getTeamDetailsForEpisode(req, res) {
     }).filter(Boolean);
 
     let soleSurvivor = null;
-    if (player.contestants) {
-      const scoreData = episodeScores?.find(s => s.contestant_id === player.contestants.id);
-      const events = episodeEvents?.filter(e => e.contestant_id === player.contestants.id) || [];
+    if (activeSoleSurvivor && activeSoleSurvivor.contestants) {
+      const scoreData = episodeScores?.find(s => s.contestant_id === activeSoleSurvivor.contestants.id);
+      const events = episodeEvents?.filter(e => e.contestant_id === activeSoleSurvivor.contestants.id) || [];
       
       // Transform events to match frontend expectations
       const transformedEvents = events.map(event => ({
@@ -217,10 +227,15 @@ async function getTeamDetailsForEpisode(req, res) {
       }));
       
       soleSurvivor = {
-        ...player.contestants,
+        ...activeSoleSurvivor.contestants,
         episode_score: scoreData?.score || 0,
         events: transformedEvents,
-        pick_type: 'sole_survivor'
+        pick_type: 'sole_survivor',
+        // Add history info to show when this contestant was active
+        active_period: {
+          start_episode: activeSoleSurvivor.start_episode,
+          end_episode: activeSoleSurvivor.end_episode
+        }
       };
     }
 
@@ -300,29 +315,32 @@ async function getAllEpisodesWithTeamSummary(req, res) {
       return res.status(500).json({ error: 'Failed to fetch team data' });
     }
 
-    // Get sole survivor
-    const { data: player, error: playerError } = await supabase
-      .from('players')
+    // Get all sole survivor history for this player
+    const { data: allSoleSurvivorHistory, error: playerError } = await supabase
+      .from('sole_survivor_history')
       .select(`
-        sole_survivor_id,
-        contestants:sole_survivor_id (
+        contestant_id,
+        start_episode,
+        end_episode,
+        contestants:contestant_id (
           id,
           name,
           image_url
         )
       `)
-      .eq('id', playerId)
-      .single();
+      .eq('player_id', playerId)
+      .order('start_episode');
 
     if (playerError) {
-      console.error('Error fetching player data:', playerError);
-      return res.status(500).json({ error: 'Failed to fetch player data' });
+      console.error('Error fetching sole survivor history:', playerError);
+      return res.status(500).json({ error: 'Failed to fetch sole survivor history' });
     }
 
     // Get all episode scores for player's team
+    const allSoleSurvivorIds = (allSoleSurvivorHistory || []).map(h => h.contestant_id);
     const allContestantIds = [
       ...(draftPicks || []).map(pick => pick.contestant_id),
-      ...(player.sole_survivor_id ? [player.sole_survivor_id] : [])
+      ...allSoleSurvivorIds
     ].filter(Boolean);
 
     let allEpisodeScores = [];
@@ -359,14 +377,20 @@ async function getAllEpisodesWithTeamSummary(req, res) {
         (pick.end_episode === null || pick.end_episode >= episode.episode_number)
       );
 
+      // Find active sole survivor for this episode
+      const activeSoleSurvivorForEpisode = (allSoleSurvivorHistory || []).find(h => 
+        h.start_episode <= episode.episode_number &&
+        (h.end_episode === null || h.end_episode >= episode.episode_number)
+      );
+
       // Calculate scores for this episode
       const episodeScoreData = allEpisodeScores.filter(s => s.episode_id === episode.id);
       const draftScore = episodeScoreData
         .filter(s => activeContestants.some(c => c.contestant_id === s.contestant_id))
         .reduce((sum, s) => sum + s.score, 0);
       
-      const soleSurvivorScore = player.sole_survivor_id ? 
-        (episodeScoreData.find(s => s.contestant_id === player.sole_survivor_id)?.score || 0) : 0;
+      const soleSurvivorScore = activeSoleSurvivorForEpisode ? 
+        (episodeScoreData.find(s => s.contestant_id === activeSoleSurvivorForEpisode.contestant_id)?.score || 0) : 0;
 
       const predictionBonus = allPredictionBonuses ? 
         allPredictionBonuses
@@ -378,7 +402,7 @@ async function getAllEpisodesWithTeamSummary(req, res) {
       return {
         ...episode,
         team_summary: {
-          active_contestants: activeContestants.length + (player.sole_survivor_id ? 1 : 0),
+          active_contestants: activeContestants.length + (activeSoleSurvivorForEpisode ? 1 : 0),
           draft_score: draftScore,
           sole_survivor_score: soleSurvivorScore,
           prediction_bonus: predictionBonus,
@@ -391,7 +415,11 @@ async function getAllEpisodesWithTeamSummary(req, res) {
       episodes: episodeSummaries,
       team_info: {
         drafted_contestants: (draftPicks || []).map(pick => pick.contestants).filter(Boolean),
-        sole_survivor: player?.contestants || null
+        sole_survivor_history: (allSoleSurvivorHistory || []).map(h => ({
+          ...h.contestants,
+          start_episode: h.start_episode,
+          end_episode: h.end_episode
+        }))
       }
     });
 
@@ -480,29 +508,33 @@ async function getTeamAuditData(req, res) {
       return res.status(500).json({ error: 'Failed to fetch team data' });
     }
 
-    // Get sole survivor
-    const { data: player, error: playerError } = await supabase
-      .from('players')
+    // Get sole survivor history
+    const { data: soleSurvivorHistory, error: playerError } = await supabase
+      .from('sole_survivor_history')
       .select(`
-        sole_survivor_id,
-        contestants:sole_survivor_id (
+        contestant_id,
+        start_episode,
+        end_episode,
+        contestants:contestant_id (
           id,
           name,
-          image_url
+          image_url,
+          is_eliminated
         )
       `)
-      .eq('id', playerId)
-      .single();
+      .eq('player_id', playerId)
+      .order('start_episode');
 
     if (playerError) {
-      console.error('Error fetching player data:', playerError);
-      return res.status(500).json({ error: 'Failed to fetch player data' });
+      console.error('Error fetching sole survivor history:', playerError);
+      return res.status(500).json({ error: 'Failed to fetch sole survivor history' });
     }
 
     // Get all contestant IDs for this player
+    const allSoleSurvivorIds = (soleSurvivorHistory || []).map(h => h.contestant_id);
     const allContestantIds = [
       ...(draftPicks || []).map(pick => pick.contestant_id),
-      ...(player.sole_survivor_id ? [player.sole_survivor_id] : [])
+      ...allSoleSurvivorIds
     ].filter(Boolean);
 
     // Get all episode scores and events for all episodes
@@ -613,11 +645,16 @@ async function getTeamAuditData(req, res) {
         };
       }).filter(Boolean);
 
-      // Handle sole survivor
+      // Handle sole survivor - find who was active for this episode
       let soleSurvivor = null;
-      if (player.contestants) {
-        const scoreData = episodeScoreData.find(s => s.contestant_id === player.contestants.id);
-        const events = episodeEventData.filter(e => e.contestant_id === player.contestants.id) || [];
+      const activeSoleSurvivorForEpisode = (soleSurvivorHistory || []).find(h => 
+        h.start_episode <= episode.episode_number &&
+        (h.end_episode === null || h.end_episode >= episode.episode_number)
+      );
+
+      if (activeSoleSurvivorForEpisode && activeSoleSurvivorForEpisode.contestants) {
+        const scoreData = episodeScoreData.find(s => s.contestant_id === activeSoleSurvivorForEpisode.contestants.id);
+        const events = episodeEventData.filter(e => e.contestant_id === activeSoleSurvivorForEpisode.contestants.id) || [];
         
         const transformedEvents = events.map(event => ({
           event_type: event.event_types?.name || 'unknown',
@@ -626,10 +663,15 @@ async function getTeamAuditData(req, res) {
         }));
         
         soleSurvivor = {
-          ...player.contestants,
+          ...activeSoleSurvivorForEpisode.contestants,
           episode_score: scoreData?.score || 0,
           events: transformedEvents,
-          pick_type: 'sole_survivor'
+          pick_type: 'sole_survivor',
+          // Add history info to show when this contestant was active
+          active_period: {
+            start_episode: activeSoleSurvivorForEpisode.start_episode,
+            end_episode: activeSoleSurvivorForEpisode.end_episode
+          }
         };
       }
 
@@ -675,7 +717,15 @@ async function getTeamAuditData(req, res) {
 
     res.json({ 
       audit_data: auditData,
-      overall_totals: overallTotals
+      overall_totals: overallTotals,
+      team_info: {
+        drafted_contestants: (draftPicks || []).map(pick => pick.contestants).filter(Boolean),
+        sole_survivor_history: (soleSurvivorHistory || []).map(h => ({
+          ...h.contestants,
+          start_episode: h.start_episode,
+          end_episode: h.end_episode
+        }))
+      }
     });
 
   } catch (error) {

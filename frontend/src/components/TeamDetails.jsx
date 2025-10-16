@@ -499,7 +499,14 @@ const TeamDetails = () => {
                       </div>
                     )}
                     <span className="breakdown-contestant__name">{team.sole_survivor.name}</span>
-                    <span className="breakdown-contestant__badge">Sole Survivor Pick</span>
+                    <span className="breakdown-contestant__badge">
+                      Sole Survivor Pick
+                      {team.sole_survivor.active_period && (
+                        <span className="breakdown-contestant__period">
+                          (Episodes {team.sole_survivor.active_period.start_episode}-{team.sole_survivor.active_period.end_episode || 'current'})
+                        </span>
+                      )}
+                    </span>
                   </div>
                   <span className={`breakdown-contestant__score ${team.sole_survivor.episode_score >= 0 ? 'positive' : 'negative'}`}>
                     {team.sole_survivor.episode_score > 0 ? '+' : ''}{team.sole_survivor.episode_score}

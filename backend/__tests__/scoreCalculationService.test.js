@@ -103,11 +103,11 @@ describe('Score Calculation Service', () => {
 
     describe('calculateSoleSurvivorBonus', () => {
         it('should calculate bonus with contiguous periods', async () => {
-            const mockSelection = { contestant_id: 1, start_episode: 1 };
+            const mockSelections = [{ contestant_id: 1, start_episode: 1, end_episode: null }];
             const mockCurrentEpisode = { episode_number: 5 };
-            const mockContestant = { is_winner: false };
+            const mockRemainingContestants = [{ id: 1, is_winner: false }];
 
-            setupSoleSurvivorMocks(mockSelection, mockCurrentEpisode, mockContestant);
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants);
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
@@ -118,37 +118,40 @@ describe('Score Calculation Service', () => {
         });
 
         it('should calculate bonus with switches', async () => {
-            const mockSelection = { contestant_id: 2, start_episode: 4 };
+            const mockSelections = [
+                { contestant_id: 1, start_episode: 1, end_episode: 3 },
+                { contestant_id: 2, start_episode: 4, end_episode: null }
+            ];
             const mockCurrentEpisode = { episode_number: 6 };
-            const mockContestant = { is_winner: false };
+            const mockRemainingContestants = [{ id: 2, is_winner: false }];
 
-            setupSoleSurvivorMocks(mockSelection, mockCurrentEpisode, mockContestant);
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants);
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
-            expect(bonus.episodeCount).toBe(3);
+            expect(bonus.episodeCount).toBe(3); // Episodes 4, 5, 6
             expect(bonus.episodeBonus).toBe(3);
         });
 
         it('should award winner bonus if selected by episode 2', async () => {
-            const mockSelection = { contestant_id: 1, start_episode: 2 };
+            const mockSelections = [{ contestant_id: 1, start_episode: 2, end_episode: null }];
             const mockCurrentEpisode = { episode_number: 10 };
-            const mockContestant = { is_winner: true };
+            const mockRemainingContestants = [{ id: 1, is_winner: true }];
 
-            setupSoleSurvivorMocks(mockSelection, mockCurrentEpisode, mockContestant);
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants);
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
             expect(bonus.winnerBonus).toBe(25);
-            expect(bonus.totalBonus).toBe(34);
+            expect(bonus.totalBonus).toBe(34); // 9 episodes + 25 winner bonus
         });
 
         it('should not award winner bonus if selected after episode 2', async () => {
-            const mockSelection = { contestant_id: 1, start_episode: 3 };
+            const mockSelections = [{ contestant_id: 1, start_episode: 3, end_episode: null }];
             const mockCurrentEpisode = { episode_number: 10 };
-            const mockContestant = { is_winner: true };
+            const mockRemainingContestants = [{ id: 1, is_winner: true }];
 
-            setupSoleSurvivorMocks(mockSelection, mockCurrentEpisode, mockContestant);
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants);
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
@@ -156,11 +159,11 @@ describe('Score Calculation Service', () => {
         });
 
         it('should return 0 when no sole survivor selected', async () => {
-            const maybeSingleMock = jest.fn().mockResolvedValue({ data: null, error: null });
-            const isMock = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock });
-            const eqMock = jest.fn().mockReturnValue({ is: isMock });
-            const selectMock = jest.fn().mockReturnValue({ eq: eqMock });
-            supabase.from.mockReturnValue({ select: selectMock });
+            const mockSelections = [];
+            const mockCurrentEpisode = { episode_number: 5 };
+            const mockRemainingContestants = [{ id: 1, is_winner: false }];
+
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants);
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
@@ -170,93 +173,171 @@ describe('Score Calculation Service', () => {
 
     describe('calculatePlayerScore', () => {
         it('should calculate player score with all components', async () => {
-            const mockDraftPicks = [
-                { contestant_id: 1, contestants: { total_score: 10 } },
-                { contestant_id: 2, contestants: { total_score: 8 } }
-            ];
-            const mockPlayer = { sole_survivor_id: 3, contestants: { total_score: 12 } };
-            const mockSelection = { contestant_id: 3, start_episode: 1 };
-            const mockCurrentEpisode = { episode_number: 5 };
-            const mockContestant = { is_winner: false };
+            // Mock the methods that have complex database queries
+            const originalScoreMethod = scoreCalculationService.calculateContestantScoreForEpisodeRange;
+            const originalScoreByNumberMethod = scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber;
+            const originalBonusMethod = scoreCalculationService.calculateSoleSurvivorBonus;
+            
+            scoreCalculationService.calculateContestantScoreForEpisodeRange = jest.fn()
+                .mockResolvedValueOnce(10) // First draft pick
+                .mockResolvedValueOnce(8); // Second draft pick
 
-            setupPlayerScoreMocks(mockDraftPicks, mockPlayer, mockSelection, mockCurrentEpisode, mockContestant);
+            scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber = jest.fn()
+                .mockResolvedValueOnce(12); // Sole survivor
+
+            scoreCalculationService.calculateSoleSurvivorBonus = jest.fn()
+                .mockResolvedValue({ totalBonus: 5 });
+
+            const mockDraftPicks = [
+                { contestant_id: 1, start_episode: 1, end_episode: null },
+                { contestant_id: 2, start_episode: 1, end_episode: null }
+            ];
+            const mockSoleSurvivorHistory = [
+                { contestant_id: 3, start_episode: 1, end_episode: null }
+            ];
+
+            // Simple mock for draft picks and sole survivor history
+            const eqMock1 = jest.fn().mockResolvedValue({ data: mockDraftPicks, error: null });
+            const selectMock1 = jest.fn().mockReturnValue({ eq: eqMock1 });
+
+            const orderMock2 = jest.fn().mockResolvedValue({ data: mockSoleSurvivorHistory, error: null });
+            const eqMock2 = jest.fn().mockReturnValue({ order: orderMock2 });
+            const selectMock2 = jest.fn().mockReturnValue({ eq: eqMock2 });
+
+            supabase.from.mockImplementation((table) => {
+                if (table === 'draft_picks') return { select: selectMock1 };
+                if (table === 'sole_survivor_history') return { select: selectMock2 };
+                return { select: selectMock1 };
+            });
 
             const score = await scoreCalculationService.calculatePlayerScore(1);
 
-            expect(score.draft_score).toBe(18);
-            expect(score.sole_survivor_score).toBe(12);
-            expect(score.sole_survivor_bonus).toBe(5);
-            expect(score.total).toBe(35);
+            expect(score.draft_score).toBe(18); // 10 + 8
+            expect(score.sole_survivor_score).toBe(12); // 12
+            expect(score.sole_survivor_bonus).toBe(5); // Mocked value
+            expect(score.total).toBe(35); // 18 + 12 + 5
+
+            // Restore original methods
+            scoreCalculationService.calculateContestantScoreForEpisodeRange = originalScoreMethod;
+            scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber = originalScoreByNumberMethod;
+            scoreCalculationService.calculateSoleSurvivorBonus = originalBonusMethod;
         });
 
         it('should include winner bonus in total', async () => {
-            const mockDraftPicks = [{ contestant_id: 1, contestants: { total_score: 10 } }];
-            const mockPlayer = { sole_survivor_id: 3, contestants: { total_score: 15 } };
-            const mockSelection = { contestant_id: 3, start_episode: 1 };
-            const mockCurrentEpisode = { episode_number: 10 };
-            const mockContestant = { is_winner: true };
+            // Mock the methods that have complex database queries
+            const originalScoreMethod = scoreCalculationService.calculateContestantScoreForEpisodeRange;
+            const originalScoreByNumberMethod = scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber;
+            const originalBonusMethod = scoreCalculationService.calculateSoleSurvivorBonus;
+            
+            scoreCalculationService.calculateContestantScoreForEpisodeRange = jest.fn()
+                .mockResolvedValueOnce(10); // Draft pick
 
-            setupPlayerScoreMocks(mockDraftPicks, mockPlayer, mockSelection, mockCurrentEpisode, mockContestant);
+            scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber = jest.fn()
+                .mockResolvedValueOnce(15); // Sole survivor
+
+            scoreCalculationService.calculateSoleSurvivorBonus = jest.fn()
+                .mockResolvedValue({ totalBonus: 35 }); // 10 episodes + 25 winner bonus
+
+            const mockDraftPicks = [{ contestant_id: 1, start_episode: 1, end_episode: null }];
+            const mockSoleSurvivorHistory = [
+                { contestant_id: 3, start_episode: 1, end_episode: null }
+            ];
+
+            // Simple mock for draft picks and sole survivor history
+            const eqMock1 = jest.fn().mockResolvedValue({ data: mockDraftPicks, error: null });
+            const selectMock1 = jest.fn().mockReturnValue({ eq: eqMock1 });
+
+            const orderMock2 = jest.fn().mockResolvedValue({ data: mockSoleSurvivorHistory, error: null });
+            const eqMock2 = jest.fn().mockReturnValue({ order: orderMock2 });
+            const selectMock2 = jest.fn().mockReturnValue({ eq: eqMock2 });
+
+            supabase.from.mockImplementation((table) => {
+                if (table === 'draft_picks') return { select: selectMock1 };
+                if (table === 'sole_survivor_history') return { select: selectMock2 };
+                return { select: selectMock1 };
+            });
 
             const score = await scoreCalculationService.calculatePlayerScore(1);
 
-            expect(score.sole_survivor_bonus).toBe(35);
-            expect(score.total).toBe(60);
+            expect(score.sole_survivor_bonus).toBe(35); // Mocked value
+            expect(score.total).toBe(60); // 10 draft + 15 sole survivor + 35 bonus
+
+            // Restore original methods
+            scoreCalculationService.calculateContestantScoreForEpisodeRange = originalScoreMethod;
+            scoreCalculationService.calculateContestantScoreForEpisodeRangeByNumber = originalScoreByNumberMethod;
+            scoreCalculationService.calculateSoleSurvivorBonus = originalBonusMethod;
         });
     });
 });
 
-function setupSoleSurvivorMocks(mockSelection, mockCurrentEpisode, mockContestant) {
-    const maybeSingleMock1 = jest.fn().mockResolvedValue({ data: mockSelection, error: null });
-    const isMock = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock1 });
-    const eqMock1 = jest.fn().mockReturnValue({ is: isMock });
+function setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants) {
+    // Mock sole_survivor_history query (returns array of selections)
+    const orderMock1 = jest.fn().mockResolvedValue({ data: mockSelections, error: null });
+    const eqMock1 = jest.fn().mockReturnValue({ order: orderMock1 });
     const selectMock1 = jest.fn().mockReturnValue({ eq: eqMock1 });
 
+    // Mock current episode query
     const maybeSingleMock2 = jest.fn().mockResolvedValue({ data: mockCurrentEpisode, error: null });
     const eqMock2 = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock2 });
     const selectMock2 = jest.fn().mockReturnValue({ eq: eqMock2 });
 
-    const singleMock = jest.fn().mockResolvedValue({ data: mockContestant, error: null });
-    const eqMock3 = jest.fn().mockReturnValue({ single: singleMock });
+    // Mock remaining contestants query
+    const eqMock3 = jest.fn().mockResolvedValue({ data: mockRemainingContestants, error: null });
     const selectMock3 = jest.fn().mockReturnValue({ eq: eqMock3 });
 
     let callCount = 0;
     supabase.from.mockImplementation((table) => {
         callCount++;
-        if (callCount === 1) return { select: selectMock1 };
-        if (callCount === 2) return { select: selectMock2 };
-        return { select: selectMock3 };
+        if (table === 'sole_survivor_history') return { select: selectMock1 };
+        if (table === 'episodes') return { select: selectMock2 };
+        if (table === 'contestants') return { select: selectMock3 };
+        return { select: selectMock1 }; // fallback
     });
 }
 
-function setupPlayerScoreMocks(mockDraftPicks, mockPlayer, mockSelection, mockCurrentEpisode, mockContestant) {
+function setupPlayerScoreMocks(mockDraftPicks, mockSoleSurvivorHistory, mockSelections, mockCurrentEpisode, mockRemainingContestants) {
+    // Mock draft_picks query
     const eqMock1 = jest.fn().mockResolvedValue({ data: mockDraftPicks, error: null });
     const selectMock1 = jest.fn().mockReturnValue({ eq: eqMock1 });
 
-    const singleMock1 = jest.fn().mockResolvedValue({ data: mockPlayer, error: null });
-    const eqMock2 = jest.fn().mockReturnValue({ single: singleMock1 });
+    // Mock sole_survivor_history query
+    const orderMock2 = jest.fn().mockResolvedValue({ data: mockSoleSurvivorHistory, error: null });
+    const eqMock2 = jest.fn().mockReturnValue({ order: orderMock2 });
     const selectMock2 = jest.fn().mockReturnValue({ eq: eqMock2 });
 
-    const maybeSingleMock1 = jest.fn().mockResolvedValue({ data: mockSelection, error: null });
-    const isMock = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock1 });
-    const eqMock3 = jest.fn().mockReturnValue({ is: isMock });
+    // Mock episodes queries (for calculateContestantScoreForEpisodeRange)
+    const singleMock3 = jest.fn().mockResolvedValue({ data: { episode_number: 1 }, error: null });
+    const eqMock3 = jest.fn().mockReturnValue({ single: singleMock3 });
     const selectMock3 = jest.fn().mockReturnValue({ eq: eqMock3 });
 
-    const maybeSingleMock2 = jest.fn().mockResolvedValue({ data: mockCurrentEpisode, error: null });
-    const eqMock4 = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock2 });
+    // Mock episode_scores queries (for calculateContestantScoreForEpisodeRange)
+    const eqMock4 = jest.fn().mockResolvedValue({ data: [], error: null });
     const selectMock4 = jest.fn().mockReturnValue({ eq: eqMock4 });
 
-    const singleMock2 = jest.fn().mockResolvedValue({ data: mockContestant, error: null });
-    const eqMock5 = jest.fn().mockReturnValue({ single: singleMock2 });
+    // Mock current episode query (for calculateSoleSurvivorBonus)
+    const maybeSingleMock5 = jest.fn().mockResolvedValue({ data: mockCurrentEpisode, error: null });
+    const eqMock5 = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock5 });
     const selectMock5 = jest.fn().mockReturnValue({ eq: eqMock5 });
+
+    // Mock remaining contestants query (for calculateSoleSurvivorBonus)
+    const eqMock6 = jest.fn().mockResolvedValue({ data: mockRemainingContestants, error: null });
+    const selectMock6 = jest.fn().mockReturnValue({ eq: eqMock6 });
+
+    // Mock sole_survivor_history query for bonus calculation
+    const orderMock7 = jest.fn().mockResolvedValue({ data: mockSelections, error: null });
+    const eqMock7 = jest.fn().mockReturnValue({ order: orderMock7 });
+    const selectMock7 = jest.fn().mockReturnValue({ eq: eqMock7 });
 
     let callCount = 0;
     supabase.from.mockImplementation((table) => {
         callCount++;
         if (table === 'draft_picks') return { select: selectMock1 };
-        if (table === 'players') return { select: selectMock2 };
-        if (table === 'sole_survivor_history') return { select: selectMock3 };
-        if (table === 'episodes') return { select: selectMock4 };
-        if (table === 'contestants') return { select: selectMock5 };
+        if (table === 'sole_survivor_history' && callCount <= 2) return { select: selectMock2 };
+        if (table === 'episodes' && callCount <= 10) return { select: selectMock3 };
+        if (table === 'episode_scores') return { select: selectMock4 };
+        if (table === 'episodes' && callCount > 10) return { select: selectMock5 };
+        if (table === 'contestants') return { select: selectMock6 };
+        if (table === 'sole_survivor_history' && callCount > 2) return { select: selectMock7 };
+        return { select: selectMock1 }; // fallback
     });
 }

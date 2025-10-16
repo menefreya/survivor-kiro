@@ -1160,3 +1160,112 @@
     width: 100%;
   }
 }
+
+/* Sole Survivor History Styles */
+.sole-survivor-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.sole-survivor-period {
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  transition: var(--transition-colors);
+}
+
+.sole-survivor-period:hover {
+  border-color: var(--color-border-medium);
+}
+
+.sole-survivor-period__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sole-survivor-period__info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.sole-survivor-period__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 2px solid var(--color-border-light);
+}
+
+.sole-survivor-period__avatar--placeholder {
+  background: var(--color-bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+.sole-survivor-period__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.sole-survivor-period__name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.sole-survivor-period__episodes {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.sole-survivor-period__badge {
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sole-survivor-period__badge:contains("Current") {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.sole-survivor-period__badge:contains("Former") {
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-medium);
+}
+
+/* Add period info to breakdown contestant badge */
+.breakdown-contestant__period {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+  margin-left: var(--spacing-2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sole-survivor-period__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .sole-survivor-period__badge {
+    align-self: flex-start;
+  }
+}
