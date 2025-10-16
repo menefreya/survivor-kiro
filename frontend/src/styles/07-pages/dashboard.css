@@ -237,7 +237,6 @@
   box-shadow: var(--shadow-md);
 }
 
-<<<<<<< HEAD
 .dashboard-card .card-body,
 .dashboard-card .card-header,
 .dashboard-card .card-footer {
@@ -282,12 +281,6 @@
   border-radius: var(--radius-sm);
 }
 
-=======
-/**
- * Team Total Score Display
- * Uses entity-row__stats component structure
- */
->>>>>>> ce75b0c (dashboard styling)
 .team-total-score {
   display: flex;
   flex-direction: column;
@@ -884,14 +877,12 @@
   display: inline-block;
 }
 
-<<<<<<< HEAD
 .dashboard-section {
   margin-bottom: var(--spacing-8);
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
 }
-=======
 /* ============================================
    TEAM COMPONENTS
    ============================================ */
@@ -1234,7 +1225,6 @@
 /* ============================================
    ERROR & EMPTY STATES
    ============================================ */
->>>>>>> ce75b0c (dashboard styling)
 
 .dashboard-section:last-child {
   margin-bottom: 0;
@@ -1756,7 +1746,6 @@
     font-size: var(--font-size-3xl);
   }
 
-<<<<<<< HEAD
   .card-footer {
     flex-direction: column;
     align-items: flex-start;
@@ -1870,7 +1859,8 @@
 
   .draft-pick-initials {
     font-size: var(--font-size-sm);
-=======
+
+  }
   /* Keep My Team header and score on same line in mobile */
   .my-team-card .layout-section-header {
     flex-direction: row;
@@ -1897,7 +1887,6 @@
   .my-team-card .total-score-value {
     font-size: var(--font-size-2xl);
     white-space: nowrap;
->>>>>>> ce75b0c (dashboard styling)
   }
 
   /* Current Predictions Card - Mobile */
@@ -4206,8 +4195,6 @@
     min-width: 0;
     flex: 1;
   }
-<<<<<<< HEAD
-=======
 
   /* Leaderboard - Mobile */
   .rank-badge {
@@ -4239,10 +4226,8 @@
     font-size: var(--font-size-xs);
   }
 }
->>>>>>> ce75b0c (dashboard styling)
 
   .prediction-contestant-name,
   .prediction-tribe {
     max-width: 100%;
   }
-}

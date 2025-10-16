@@ -18,14 +18,11 @@
 @import './styles/05-components/forms.css';
 @import './styles/05-components/cards.css';
 @import './styles/05-components/navigation.css';
-<<<<<<< HEAD
 @import './styles/05-components/scoring-rules.css';
-=======
 @import './styles/05-components/avatars.css';
 @import './styles/05-components/entity-rows.css';
 @import './styles/05-components/layouts.css';
 @import './styles/05-components/notifications.css';
->>>>>>> 13609d2 (badge and info banner styling)
 
 /* Layer 6: Feature Styles */
 @import './styles/06-features/loading.css';
@@ -44,11 +41,7 @@
 @import './styles/07-pages/profile.css';
 @import './styles/07-pages/admin.css';
 @import './styles/07-pages/auth.css';
-<<<<<<< HEAD
 @import './styles/07-pages/contestants.css';
-@import './styles/07-pages/scoring-rules.css';
-=======
->>>>>>> 13609d2 (badge and info banner styling)
 
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';
