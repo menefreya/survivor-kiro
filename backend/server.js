@@ -63,6 +63,7 @@ const eventTypeRoutes = require('./routes/eventTypes');
 const eventRoutes = require('./routes/events');
 const predictionRoutes = require('./routes/predictions');
 const episodeRoutes = require('./routes/episodes');
+const teamDetailsRoutes = require('./routes/teamDetails');
 const rulesRoutes = require('./routes/rules');
 const debugRoutes = require('./routes/debug');
 
@@ -79,6 +80,7 @@ app.use('/api/event-types', eventTypeRoutes);
 app.use('/api', eventRoutes);
 app.use('/api/predictions', predictionRoutes);
 app.use('/api/episodes', episodeRoutes);
+app.use('/api/team-details', teamDetailsRoutes);
 app.use('/api/rules', rulesRoutes);
 app.use('/api/debug', debugRoutes);
 

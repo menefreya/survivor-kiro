@@ -40,6 +40,7 @@
 @import './styles/07-pages/auth.css';
 @import './styles/07-pages/contestants.css';
 @import './styles/07-pages/scoring-rules.css';
+@import './styles/07-pages/team-details.css';
 
 /* Layer 8: Utility Classes */
 @import './styles/08-utilities.css';

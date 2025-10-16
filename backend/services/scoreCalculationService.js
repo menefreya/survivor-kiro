@@ -39,9 +39,10 @@ class ScoreCalculationService {
    * @param {number} contestantId - Contestant ID
    * @param {number} startEpisodeId - Starting episode ID (foreign key to episodes table)
    * @param {number|null} endEpisodeId - Ending episode ID (foreign key to episodes table, null means current)
+   * @param {boolean} isReplacement - Whether this is a replacement pick (starts scoring episode after start_episode)
    * @returns {Promise<number>} Total score for the episode range
    */
-  async calculateContestantScoreForEpisodeRange(contestantId, startEpisodeId, endEpisodeId) {
+  async calculateContestantScoreForEpisodeRange(contestantId, startEpisodeId, endEpisodeId, isReplacement = false) {
     // First, get the episode numbers for the start and end episode IDs
     const { data: startEpisode, error: startError } = await supabase
       .from('episodes')
@@ -67,12 +68,18 @@ class ScoreCalculationService {
       endEpisodeNumber = endEpisode.episode_number;
     }
 
+    // For replacement picks, start scoring from the episode AFTER the start_episode
+    // (start_episode is when the original contestant was eliminated)
+    const actualStartEpisodeNumber = isReplacement
+      ? startEpisode.episode_number + 1
+      : startEpisode.episode_number;
+
     // Build episode filter based on episode numbers
     let episodeQuery = supabase
       .from('episode_scores')
       .select('score, episodes!inner(episode_number)')
       .eq('contestant_id', contestantId)
-      .gte('episodes.episode_number', startEpisode.episode_number);
+      .gte('episodes.episode_number', actualStartEpisodeNumber);
 
     // Add end episode filter if specified
     if (endEpisodeNumber !== null) {
@@ -211,6 +218,39 @@ class ScoreCalculationService {
       currentEpisodeNumber = currentEpisode.episode_number;
     }
 
+    // Check if there's actually a sole survivor (only one contestant remaining)
+    const { data: remainingContestants, error: remainingError } = await supabase
+      .from('contestants')
+      .select('id')
+      .eq('is_eliminated', false);
+
+    if (remainingError) {
+      throw new Error(`Failed to fetch remaining contestants: ${remainingError.message}`);
+    }
+
+    // Only award bonus if there's exactly one contestant remaining (the sole survivor)
+    if (!remainingContestants || remainingContestants.length !== 1) {
+      return {
+        episodeBonus: 0,
+        winnerBonus: 0,
+        totalBonus: 0,
+        episodeCount: 0,
+        reason: `Game still ongoing - ${remainingContestants?.length || 0} contestants remaining`
+      };
+    }
+
+    // Check if the remaining contestant is the one this player selected
+    const soleSurvivorId = remainingContestants[0].id;
+    if (soleSurvivorId !== currentSelection.contestant_id) {
+      return {
+        episodeBonus: 0,
+        winnerBonus: 0,
+        totalBonus: 0,
+        episodeCount: 0,
+        reason: 'Player selected wrong sole survivor'
+      };
+    }
+
     // Calculate episodes in contiguous period (current_episode - start_episode + 1)
     const episodeCount = currentEpisodeNumber - currentSelection.start_episode + 1;
     const episodeBonus = episodeCount * 1; // +1 point per episode
@@ -236,7 +276,8 @@ class ScoreCalculationService {
       episodeBonus,
       winnerBonus,
       totalBonus: episodeBonus + winnerBonus,
-      episodeCount
+      episodeCount,
+      reason: 'Sole survivor bonus awarded'
     };
   }
 
@@ -246,10 +287,10 @@ class ScoreCalculationService {
    * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, total: number}>}
    */
   async calculatePlayerScore(playerId) {
-    // Get draft picks with episode ranges
+    // Get draft picks with episode ranges and replacement info
     const { data: draftPicks, error: draftError } = await supabase
       .from('draft_picks')
-      .select('contestant_id, start_episode, end_episode')
+      .select('contestant_id, start_episode, end_episode, replaced_contestant_id')
       .eq('player_id', playerId);
 
     if (draftError) {
@@ -260,10 +301,14 @@ class ScoreCalculationService {
     let draftScore = 0;
     if (draftPicks && draftPicks.length > 0) {
       for (const pick of draftPicks) {
+        // A pick is a replacement if it has a replaced_contestant_id
+        const isReplacement = pick.replaced_contestant_id !== null;
+
         const contestantScore = await this.calculateContestantScoreForEpisodeRange(
           pick.contestant_id,
           pick.start_episode,
-          pick.end_episode
+          pick.end_episode,
+          isReplacement
         );
         draftScore += contestantScore;
       }
