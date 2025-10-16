@@ -13,7 +13,8 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
     episodes_participated = 0,
     rank,
     profession,
-    age
+    age,
+    is_eliminated = false
   } = contestant;
 
   // State for image loading
@@ -160,9 +161,16 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
           </div>
           </div>
           <div className="entity-row__info">
-            <h4 className="entity-row__name" id={`contestant-${contestant.id}-name`}>
-              {getFirstName(name)}
-            </h4>
+            <div className="u-flex u-items-center u-gap-2">
+              <h4 className="entity-row__name" id={`contestant-${contestant.id}-name`}>
+                {getFirstName(name)}
+              </h4>
+              {is_eliminated && (
+                <span className="badge badge--sm badge--danger" aria-label="This contestant has been eliminated">
+                  ☠️
+                </span>
+              )}
+            </div>
             {(profession || age) && (
               <div className="u-flex u-items-center u-gap-1 u-mt-1">
                 {profession && (

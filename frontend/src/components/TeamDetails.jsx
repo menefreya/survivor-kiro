@@ -163,7 +163,7 @@ const TeamDetails = () => {
     return (
       <div className="team-details-container">
         <div className="team-details-header">
-          <h1>{selectedPlayerName ? `${selectedPlayerName}'s Team Audit` : 'My Team Audit'}</h1>
+          <h1>{selectedPlayerName ? `${selectedPlayerName}'s Score Breakdown` : 'Score Breakdown'}</h1>
           <p>Complete scoring breakdown for {selectedPlayerName ? `${selectedPlayerName}'s` : 'your'} team across all episodes</p>
           
           <div className="admin-player-selector">
@@ -187,18 +187,12 @@ const TeamDetails = () => {
         {/* Overall Totals Summary */}
         {auditData.length > 0 && (
           <div className="overall-totals-card">
-            <h2>Overall Totals (Matches Leaderboard)</h2>
+            <h2>Overall Totals</h2>
             <div className="overall-totals-grid">
               <div className="overall-total-item">
                 <span className="overall-total-label">Episode Scores Total</span>
                 <span className="overall-total-value">
                   {auditData.reduce((sum, ep) => sum + ep.scores.total_episode_score, 0)} pts
-                </span>
-              </div>
-              <div className="overall-total-item overall-total-item--highlight">
-                <span className="overall-total-label">Leaderboard Total</span>
-                <span className="overall-total-value">
-                  {overallTotals ? overallTotals.total : '--'} pts
                 </span>
               </div>
               {overallTotals && (

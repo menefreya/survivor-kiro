@@ -124,12 +124,12 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
               >
                 See Draft
               </Link>
-              <Link 
+              <Link
                 to="/team-details"
                 className="team-action-link team-action-link--primary"
                 aria-label="View detailed team performance by episode"
               >
-                Team Details
+                Score Details
               </Link>
             </div>
           </>
