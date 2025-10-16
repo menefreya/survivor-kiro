@@ -623,15 +623,13 @@ async function getTeamAuditData(req, res) {
           description: event.event_types?.display_name || event.event_types?.name || 'Event'
         }));
 
-        // Determine contestant status
+        // Determine contestant status based on actual elimination, not draft pick end_episode
+        // end_episode can be set for other reasons (like being replaced in draft)
         let status = 'active';
 
-        // Check if this contestant was eliminated this episode
-        if (pick.end_episode) {
-          const endEpisode = episodes.find(ep => ep.id === pick.end_episode);
-          if (endEpisode && endEpisode.episode_number === episode.episode_number) {
-            status = 'eliminated';
-          }
+        // Use the contestant's actual is_eliminated status from the contestants table
+        if (contestant.is_eliminated) {
+          status = 'eliminated';
         }
 
         return {

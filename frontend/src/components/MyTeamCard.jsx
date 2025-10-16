@@ -62,7 +62,7 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
           </div>
         ) : (
           <>
-            {/* Combined Team List - Sole Survivor at top, then draft picks */}
+            {/* Combined Team List - Sole Survivor at top, then active draft picks */}
             <div className="team-contestants-list" role="list" aria-labelledby="my-team-title">
               {/* Sole Survivor at the top with crown */}
               {soleSurvivor && (
@@ -74,7 +74,7 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
                 />
               )}
               
-              {/* Draft Picks */}
+              {/* Active Draft Picks Only */}
               {draftPicks && draftPicks.map((contestant) => (
                 <ContestantRow
                   key={`draft-${contestant.id}`}
@@ -83,6 +83,16 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
                   isSoleSurvivor={false}
                 />
               ))}
+              
+              {/* Show message if only sole survivor remains (all draft picks eliminated) */}
+              {soleSurvivor && (!draftPicks || draftPicks.length === 0) && (
+                <div className="team-status-message" role="status">
+                  <p className="status-text">
+                    <span className="status-icon">⚡</span>
+                    All your draft picks have been eliminated. Your sole survivor is still in the game!
+                  </p>
+                </div>
+              )}
               
               {/* Show empty state if no contestants at all */}
               {!soleSurvivor && (!draftPicks || draftPicks.length === 0) && (

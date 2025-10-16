@@ -60,14 +60,24 @@ const Home = () => {
         setWeeklyChange(currentPlayerData.weekly_change || 0);
       }
       
-      // Transform team data with initials
+      // Transform team data with initials and filter out eliminated draft picks
       if (currentPlayerData) {
+        // Debug: Log the draft picks data to see elimination status
+        console.log('Draft picks data:', currentPlayerData.drafted_contestants);
+        
         const transformedTeam = {
           ...currentPlayerData,
-          drafted_contestants: currentPlayerData.drafted_contestants.map(contestant => ({
-            ...contestant,
-            initials: getInitials(contestant.name)
-          })),
+          // Filter out eliminated contestants from draft picks (keep only active ones)
+          drafted_contestants: currentPlayerData.drafted_contestants
+            .filter(contestant => {
+              console.log(`Contestant ${contestant.name}: is_eliminated = ${contestant.is_eliminated}`);
+              return !contestant.is_eliminated;
+            })
+            .map(contestant => ({
+              ...contestant,
+              initials: getInitials(contestant.name)
+            })),
+          // Keep sole survivor regardless of elimination status (it's a special pick)
           sole_survivor: currentPlayerData.sole_survivor ? {
             ...currentPlayerData.sole_survivor,
             initials: getInitials(currentPlayerData.sole_survivor.name)
