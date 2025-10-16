@@ -38,12 +38,10 @@ async function getDraftPickScoreBreakdown(req, res) {
     }
 
     // Calculate score for the episode range
-    const isReplacement = draftPick.replaced_contestant_id !== null;
     const rangeScore = await ScoreCalculationService.calculateContestantScoreForEpisodeRange(
       draftPick.contestant_id,
       draftPick.start_episode,
-      draftPick.end_episode,
-      isReplacement
+      draftPick.end_episode
     );
 
     // Get episode scores within the range for detailed breakdown
@@ -148,12 +146,10 @@ async function getPlayerDraftPicksBreakdown(req, res) {
       draftPicks.map(async (pick) => {
         try {
           // Calculate score for the episode range
-          const isReplacement = pick.replaced_contestant_id !== null;
           const rangeScore = await ScoreCalculationService.calculateContestantScoreForEpisodeRange(
             pick.contestant_id,
             pick.start_episode,
-            pick.end_episode,
-            isReplacement
+            pick.end_episode
           );
 
           // Get episode scores within the range

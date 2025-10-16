@@ -39,10 +39,9 @@ class ScoreCalculationService {
    * @param {number} contestantId - Contestant ID
    * @param {number} startEpisodeId - Starting episode ID (foreign key to episodes table)
    * @param {number|null} endEpisodeId - Ending episode ID (foreign key to episodes table, null means current)
-   * @param {boolean} isReplacement - Whether this is a replacement pick (starts scoring episode after start_episode)
    * @returns {Promise<number>} Total score for the episode range
    */
-  async calculateContestantScoreForEpisodeRange(contestantId, startEpisodeId, endEpisodeId, isReplacement = false) {
+  async calculateContestantScoreForEpisodeRange(contestantId, startEpisodeId, endEpisodeId) {
     // First, get the episode numbers for the start and end episode IDs
     const { data: startEpisode, error: startError } = await supabase
       .from('episodes')
@@ -68,18 +67,12 @@ class ScoreCalculationService {
       endEpisodeNumber = endEpisode.episode_number;
     }
 
-    // For replacement picks, start scoring from the episode AFTER the start_episode
-    // (start_episode is when the original contestant was eliminated)
-    const actualStartEpisodeNumber = isReplacement
-      ? startEpisode.episode_number + 1
-      : startEpisode.episode_number;
-
     // Build episode filter based on episode numbers
     let episodeQuery = supabase
       .from('episode_scores')
       .select('score, episodes!inner(episode_number)')
       .eq('contestant_id', contestantId)
-      .gte('episodes.episode_number', actualStartEpisodeNumber);
+      .gte('episodes.episode_number', startEpisode.episode_number);
 
     // Add end episode filter if specified
     if (endEpisodeNumber !== null) {
@@ -287,10 +280,10 @@ class ScoreCalculationService {
    * @returns {Promise<{draft_score: number, sole_survivor_score: number, sole_survivor_bonus: number, prediction_bonus: number, total: number}>}
    */
   async calculatePlayerScore(playerId) {
-    // Get draft picks with episode ranges and replacement info
+    // Get draft picks with episode ranges
     const { data: draftPicks, error: draftError } = await supabase
       .from('draft_picks')
-      .select('contestant_id, start_episode, end_episode, replaced_contestant_id')
+      .select('contestant_id, start_episode, end_episode')
       .eq('player_id', playerId);
 
     if (draftError) {
@@ -301,14 +294,10 @@ class ScoreCalculationService {
     let draftScore = 0;
     if (draftPicks && draftPicks.length > 0) {
       for (const pick of draftPicks) {
-        // A pick is a replacement if it has a replaced_contestant_id
-        const isReplacement = pick.replaced_contestant_id !== null;
-
         const contestantScore = await this.calculateContestantScoreForEpisodeRange(
           pick.contestant_id,
           pick.start_episode,
-          pick.end_episode,
-          isReplacement
+          pick.end_episode
         );
         draftScore += contestantScore;
       }

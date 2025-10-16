@@ -568,13 +568,8 @@ async function getTeamAuditData(req, res) {
           endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
         }
 
-        // For replacement picks, they should only appear starting from episode AFTER the elimination
-        let effectiveStartEpisode = startEpisodeNumber;
-        if (pick.replaced_contestant_id) {
-          effectiveStartEpisode = startEpisodeNumber + 1;
-        }
-
-        return effectiveStartEpisode <= episode.episode_number &&
+        // Replacements appear starting from their start_episode (which is already set correctly in the DB)
+        return startEpisodeNumber <= episode.episode_number &&
                (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
       });
 
