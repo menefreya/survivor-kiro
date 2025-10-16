@@ -132,8 +132,8 @@ const Navigation = () => {
         </li>
 
         <li className="navigation__item">
-          <Link 
-            to="/contestants" 
+          <Link
+            to="/contestants"
             className={`navigation__link ${isActive('/contestants') ? 'navigation__link--active' : ''}`}
             aria-current={isActive('/contestants') ? 'page' : undefined}
             onClick={closeMobileMenu}
@@ -143,8 +143,8 @@ const Navigation = () => {
         </li>
 
         <li className="navigation__item">
-          <Link 
-            to="/scoring-rules" 
+          <Link
+            to="/scoring-rules"
             className={`navigation__link ${isActive('/scoring-rules') ? 'navigation__link--active' : ''}`}
             aria-current={isActive('/scoring-rules') ? 'page' : undefined}
             onClick={closeMobileMenu}

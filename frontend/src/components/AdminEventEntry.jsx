@@ -182,7 +182,10 @@ const AdminEventEntry = () => {
               <option key={episode.id} value={episode.id}>
                 Episode {episode.episode_number}
                 {episode.is_current ? ' (Current)' : ''}
-                {episode.aired_date ? ` - ${new Date(episode.aired_date).toLocaleDateString()}` : ''}
+                {episode.aired_date ? ` - ${(() => {
+                  const [year, month, day] = episode.aired_date.split('-').map(Number);
+                  return new Date(year, month - 1, day).toLocaleDateString();
+                })()}` : ''}
               </option>
             ))}
             <option value="new" className="new-episode-option">

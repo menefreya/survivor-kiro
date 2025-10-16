@@ -211,6 +211,39 @@ class ScoreCalculationService {
       currentEpisodeNumber = currentEpisode.episode_number;
     }
 
+    // Check if there's actually a sole survivor (only one contestant remaining)
+    const { data: remainingContestants, error: remainingError } = await supabase
+      .from('contestants')
+      .select('id')
+      .eq('is_eliminated', false);
+
+    if (remainingError) {
+      throw new Error(`Failed to fetch remaining contestants: ${remainingError.message}`);
+    }
+
+    // Only award bonus if there's exactly one contestant remaining (the sole survivor)
+    if (!remainingContestants || remainingContestants.length !== 1) {
+      return {
+        episodeBonus: 0,
+        winnerBonus: 0,
+        totalBonus: 0,
+        episodeCount: 0,
+        reason: `Game still ongoing - ${remainingContestants?.length || 0} contestants remaining`
+      };
+    }
+
+    // Check if the remaining contestant is the one this player selected
+    const soleSurvivorId = remainingContestants[0].id;
+    if (soleSurvivorId !== currentSelection.contestant_id) {
+      return {
+        episodeBonus: 0,
+        winnerBonus: 0,
+        totalBonus: 0,
+        episodeCount: 0,
+        reason: 'Player selected wrong sole survivor'
+      };
+    }
+
     // Calculate episodes in contiguous period (current_episode - start_episode + 1)
     const episodeCount = currentEpisodeNumber - currentSelection.start_episode + 1;
     const episodeBonus = episodeCount * 1; // +1 point per episode
@@ -236,7 +269,8 @@ class ScoreCalculationService {
       episodeBonus,
       winnerBonus,
       totalBonus: episodeBonus + winnerBonus,
-      episodeCount
+      episodeCount,
+      reason: 'Sole survivor bonus awarded'
     };
   }
 

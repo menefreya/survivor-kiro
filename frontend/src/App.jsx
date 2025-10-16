@@ -12,6 +12,7 @@ import PredictionInterface from './components/PredictionInterface';
 import PredictionHistory from './components/PredictionHistory';
 import ContestantPerformance from './components/ContestantPerformance';
 import ScoringRules from './components/ScoringRules';
+import TeamDetails from './components/TeamDetails';
 import './App.css';
 
 function App() {
@@ -85,6 +86,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ScoringRules />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/team-details" 
+                element={
+                  <ProtectedRoute>
+                    <TeamDetails />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/team-details/:episodeId" 
+                element={
+                  <ProtectedRoute>
+                    <TeamDetails />
                   </ProtectedRoute>
                 } 
               />

@@ -144,7 +144,10 @@ const AdminPredictionManager = () => {
               .map(episode => (
                 <option key={episode.id} value={episode.id}>
                   Episode {episode.episode_number}
-                  {episode.aired_date ? ` - ${new Date(episode.aired_date).toLocaleDateString()}` : ''}
+                  {episode.aired_date ? ` - ${(() => {
+                    const [year, month, day] = episode.aired_date.split('-').map(Number);
+                    return new Date(year, month - 1, day).toLocaleDateString();
+                  })()}` : ''}
                 </option>
               ))}
           </select>
