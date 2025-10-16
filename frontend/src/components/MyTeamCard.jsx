@@ -1,27 +1,16 @@
-import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ContestantRow from './ContestantRow';
-import ChangeSoleSurvivorModal from './ChangeSoleSurvivorModal';
 import '../styles/07-pages/dashboard.css';
 
 const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, playerId }) => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChangeSoleSurvivor = () => {
-    setIsModalOpen(true);
+    // Navigate to ranking page with sole survivor edit mode
+    navigate('/ranking?edit=sole-survivor');
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
 
-  const handleSoleSurvivorUpdated = () => {
-    // Refresh the data by calling the retry function
-    if (onRetry) {
-      onRetry();
-    }
-  };
 
   return (
     <div className="dashboard-card my-team-card" role="region" aria-label="My Team">
@@ -137,14 +126,7 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
         )}
       </div>
 
-      {/* Change Sole Survivor Modal */}
-      <ChangeSoleSurvivorModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        currentSoleSurvivor={soleSurvivor}
-        playerId={playerId}
-        onSuccess={handleSoleSurvivorUpdated}
-      />
+
     </div>
   );
 };

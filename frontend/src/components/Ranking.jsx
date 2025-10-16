@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
@@ -6,6 +7,8 @@ import { RankBadge, StatusBadge } from './badges';
 
 const Ranking = () => {
   const { user } = useContext(AuthContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [contestants, setContestants] = useState([]);
   const [rankedContestants, setRankedContestants] = useState([]);
   const [soleSurvivorId, setSoleSurvivorId] = useState('');
@@ -15,12 +18,20 @@ const Ranking = () => {
   const [success, setSuccess] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [isSoleSurvivorEditMode, setIsSoleSurvivorEditMode] = useState(false);
+  const [originalSoleSurvivor, setOriginalSoleSurvivor] = useState(null);
 
   useEffect(() => {
     if (user) {
       fetchContestants();
     }
   }, [user]);
+
+  useEffect(() => {
+    // Check if we're in sole survivor edit mode
+    const editMode = searchParams.get('edit');
+    setIsSoleSurvivorEditMode(editMode === 'sole-survivor');
+  }, [searchParams]);
 
   const fetchContestants = async () => {
     try {
@@ -64,9 +75,16 @@ const Ranking = () => {
           // Set sole survivor from the response
           if (rankingsData.sole_survivor) {
             setSoleSurvivorId(rankingsData.sole_survivor.id?.toString() || '');
+            setOriginalSoleSurvivor(rankingsData.sole_survivor);
           }
           
-          setIsLocked(true);
+          // Check if we're in edit mode - if so, don't lock the sole survivor selection
+          const editMode = searchParams.get('edit');
+          if (editMode === 'sole-survivor') {
+            setIsLocked(false); // Allow editing sole survivor
+          } else {
+            setIsLocked(true);
+          }
         } catch (rankingError) {
           console.error('Error fetching rankings:', rankingError);
           console.error('User ID:', user.id);
@@ -89,19 +107,19 @@ const Ranking = () => {
   };
 
   const handleDragStart = (e, index) => {
-    if (isLocked) return;
+    if (isLocked || isSoleSurvivorEditMode) return;
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleDragOver = (e, index) => {
-    if (isLocked) return;
+    if (isLocked || isSoleSurvivorEditMode) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDrop = (e, dropIndex) => {
-    if (isLocked) return;
+    if (isLocked || isSoleSurvivorEditMode) return;
     e.preventDefault();
     
     if (draggedIndex === null || draggedIndex === dropIndex) {
@@ -126,7 +144,7 @@ const Ranking = () => {
   };
 
   const handleRankChange = (currentIndex, newRank) => {
-    if (isLocked) return;
+    if (isLocked || isSoleSurvivorEditMode) return;
     
     // Validate input
     const rank = parseInt(newRank);
@@ -153,12 +171,60 @@ const Ranking = () => {
   };
 
   const handleSoleSurvivorChange = (e) => {
-    if (isLocked) return;
+    if (isLocked && !isSoleSurvivorEditMode) return;
     setSoleSurvivorId(e.target.value);
+  };
+
+  const handleSoleSurvivorUpdate = async (e) => {
+    e.preventDefault();
+    
+    if (!soleSurvivorId || soleSurvivorId === '') {
+      setError('Please select a sole survivor pick.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      // Parse sole survivor ID to integer
+      const survivorId = parseInt(soleSurvivorId, 10);
+
+      // Update sole survivor only
+      const response = await api.put(`/sole-survivor/${user.id}`, {
+        contestant_id: survivorId
+      });
+
+      setSuccess(true);
+      
+      // Show success message with draft replacement info if applicable
+      if (response.data.draft_replacement) {
+        const replacement = response.data.draft_replacement;
+        setError(null);
+        setSuccess(`Sole survivor updated successfully! Your draft pick ${replacement.replaced_contestant.name} has been automatically replaced with ${replacement.new_draft_pick.name}.`);
+      } else {
+        setSuccess('Sole survivor updated successfully!');
+      }
+      
+      // Navigate back to home after a short delay
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000);
+    } catch (err) {
+      console.error('Error updating sole survivor:', err);
+      setError(err.response?.data?.error || 'Failed to update sole survivor. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // If in sole survivor edit mode, handle differently
+    if (isSoleSurvivorEditMode) {
+      return handleSoleSurvivorUpdate(e);
+    }
     
     if (!soleSurvivorId || soleSurvivorId === '') {
       setError('Please select a sole survivor pick.');
@@ -216,13 +282,43 @@ const Ranking = () => {
   return (
     <div className="content-container">
       <div className="layout-header">
-        <h1 className="layout-header__title">Rank Contestants</h1>
+        <h1 className="layout-header__title">
+          {isSoleSurvivorEditMode ? 'Change Sole Survivor' : 'Rank Contestants'}
+        </h1>
+        {isSoleSurvivorEditMode && (
+          <button 
+            className="btn btn--secondary"
+            onClick={() => navigate('/home')}
+            aria-label="Cancel and return to home"
+          >
+            Cancel
+          </button>
+        )}
       </div>
       
       {error && <div className="form-message form-error" role="alert">{error}</div>}
       {success && <div className="form-message form-success" role="status">Rankings submitted successfully!</div>}
       
-      {isLocked && (
+      {isSoleSurvivorEditMode && originalSoleSurvivor && (
+        <div className="card card-warning u-mb-6" role="status" aria-live="polite">
+          <div className="card-body">
+            <h3 className="card-title">Replace Eliminated Sole Survivor</h3>
+            <p className="card-text">
+              Your current sole survivor <strong>{originalSoleSurvivor.name}</strong> has been eliminated. 
+              Select a new contestant from the available options below.
+            </p>
+            {originalSoleSurvivor.is_eliminated && (
+              <div className="u-mt-3">
+                <span className="status-badge status-badge--eliminated">
+                  {originalSoleSurvivor.name} - Eliminated
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {isLocked && !isSoleSurvivorEditMode && (
         <div className="card card-warning u-mb-6" role="status" aria-live="polite">
           <div className="card-body u-text-center">
             <p className="card-text">
@@ -233,7 +329,7 @@ const Ranking = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        {isLocked ? (
+        {(isLocked && !isSoleSurvivorEditMode) ? (
           <div className="card u-mb-8">
             <div className="card-header">
               <h2 className="card-header-title">Your Sole Survivor Pick</h2>
@@ -266,20 +362,25 @@ const Ranking = () => {
             <div className="card-body">
               <div className="form-group">
                 <label htmlFor="sole-survivor" className="form-label">
-                  <strong>Sole Survivor Pick:</strong> Who do you think will win?
+                  <strong>
+                    {isSoleSurvivorEditMode ? 'New Sole Survivor Pick:' : 'Sole Survivor Pick:'} 
+                  </strong> 
+                  {isSoleSurvivorEditMode ? 'Select from active contestants' : 'Who do you think will win?'}
                 </label>
                 <select
                   id="sole-survivor"
                   className="form-select"
                   value={soleSurvivorId}
                   onChange={handleSoleSurvivorChange}
-                  disabled={isLocked}
+                  disabled={isLocked && !isSoleSurvivorEditMode}
                   required
                 >
                   <option value="">-- Select Sole Survivor --</option>
-                  {contestants.map((contestant) => (
+                  {contestants
+                    .filter(contestant => isSoleSurvivorEditMode ? !contestant.is_eliminated : true)
+                    .map((contestant) => (
                     <option key={contestant.id} value={contestant.id}>
-                      {contestant.name}
+                      {contestant.name} {contestant.is_eliminated ? '(Eliminated)' : ''}
                     </option>
                   ))}
                 </select>
@@ -296,11 +397,16 @@ const Ranking = () => {
         <div className="card">
           <div className="card-header">
             <h2 className="card-header-title">
-              {isLocked ? 'Your Rankings' : 'Rank Contestants'}
+              {isSoleSurvivorEditMode ? 'Your Current Rankings' : (isLocked ? 'Your Rankings' : 'Rank Contestants')}
             </h2>
-            {!isLocked && (
+            {!isLocked && !isSoleSurvivorEditMode && (
               <p className="card-text u-text-sm u-text-secondary u-mt-2">
                 Drag and drop contestants or type a rank number to reorder them (1st = highest preference).
+              </p>
+            )}
+            {isSoleSurvivorEditMode && (
+              <p className="card-text u-text-sm u-text-secondary u-mt-2">
+                Your current contestant rankings (read-only while changing sole survivor).
               </p>
             )}
           </div>
@@ -309,25 +415,25 @@ const Ranking = () => {
               {rankedContestants.map((contestant, index) => (
                 <div
                   key={contestant.id}
-                  className={`card card-interactive u-p-4 u-transition-all ${draggedIndex === index ? 'u-opacity-50 u-scale-98' : ''} ${isLocked ? 'u-cursor-default u-bg-secondary' : 'u-cursor-move'}`}
-                  draggable={!isLocked}
+                  className={`card card-interactive u-p-4 u-transition-all ${draggedIndex === index ? 'u-opacity-50 u-scale-98' : ''} ${(isLocked || isSoleSurvivorEditMode) ? 'u-cursor-default u-bg-secondary' : 'u-cursor-move'}`}
+                  draggable={!isLocked && !isSoleSurvivorEditMode}
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
                   role="listitem"
                   aria-label={`${contestant.name}, rank ${index + 1} of ${rankedContestants.length}${contestant.is_eliminated ? ', eliminated' : ''}`}
-                  tabIndex={isLocked ? -1 : 0}
+                  tabIndex={(isLocked || isSoleSurvivorEditMode) ? -1 : 0}
                 >
                   <div className="u-flex u-items-center u-w-full">
-                    {isLocked ? (
+                    {(isLocked || isSoleSurvivorEditMode) ? (
                       <div className="u-mr-4">
                         <RankBadge rank={index + 1} size="lg" />
                       </div>
                     ) : (
                       <input
                         type="number"
-                        className="form-input u-w-16 u-text-center u-text-lg u-font-bold u-text-success u-mr-4"
+                        className="form-input u-w-24 u-text-center u-text-lg u-font-bold u-text-success u-mr-4"
                         value={index + 1}
                         min="1"
                         max={rankedContestants.length}
@@ -360,7 +466,7 @@ const Ranking = () => {
                       </div>
                     </div>
                     
-                    {!isLocked && (
+                    {!isLocked && !isSoleSurvivorEditMode && (
                       <div className="u-text-2xl u-text-muted u-cursor-grab u-px-2" aria-hidden="true">
                         ⋮⋮
                       </div>
@@ -372,7 +478,7 @@ const Ranking = () => {
           </div>
         </div>
 
-        {!isLocked && (
+        {(!isLocked || isSoleSurvivorEditMode) && (
           <div className="u-flex u-justify-center u-mt-8">
             <button 
               type="submit" 
@@ -380,7 +486,10 @@ const Ranking = () => {
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Rankings'}
+              {isSubmitting ? 
+                (isSoleSurvivorEditMode ? 'Updating...' : 'Submitting...') : 
+                (isSoleSurvivorEditMode ? 'Update Sole Survivor' : 'Submit Rankings')
+              }
             </button>
           </div>
         )}

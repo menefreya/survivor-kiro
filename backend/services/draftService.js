@@ -277,6 +277,158 @@ async function checkDraftStatus() {
 }
 
 /**
+ * Replace a draft pick when player selects that contestant as sole survivor
+ * @param {number} playerId - ID of the player
+ * @param {number} contestantId - ID of the contestant being selected as sole survivor
+ * @returns {Promise<Object|null>} Replacement action performed or null if no replacement needed
+ */
+async function replaceDraftPickForSoleSurvivor(playerId, contestantId) {
+  try {
+    // Check if this contestant is currently one of the player's active draft picks
+    const { data: existingPick, error: pickError } = await supabase
+      .from('draft_picks')
+      .select('id, pick_number')
+      .eq('player_id', playerId)
+      .eq('contestant_id', contestantId)
+      .is('end_episode', null) // Only active picks
+      .single();
+
+    if (pickError && pickError.code !== 'PGRST116') { // PGRST116 = no rows returned
+      throw new Error(`Failed to check existing draft pick: ${pickError.message}`);
+    }
+
+    // If contestant is not a current draft pick, no replacement needed
+    if (!existingPick) {
+      return null;
+    }
+
+    // Get current episode for timing the replacement
+    const { data: currentEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('id, episode_number')
+      .eq('is_current', true)
+      .single();
+
+    const currentEpisodeId = currentEpisode?.id || 1;
+    const currentEpisodeNumber = currentEpisode?.episode_number || 1;
+
+    // Get player's rankings to find replacement
+    const { data: rankings, error: rankingsError } = await supabase
+      .from('rankings')
+      .select('contestant_id, rank')
+      .eq('player_id', playerId)
+      .order('rank', { ascending: true });
+
+    if (rankingsError) {
+      throw new Error(`Failed to fetch player rankings: ${rankingsError.message}`);
+    }
+
+    // Get all currently assigned contestants (from all players)
+    const { data: allDraftPicks, error: allPicksError } = await supabase
+      .from('draft_picks')
+      .select('contestant_id')
+      .is('end_episode', null); // Only active picks
+
+    if (allPicksError) {
+      throw new Error(`Failed to fetch all draft picks: ${allPicksError.message}`);
+    }
+
+    // Build set of assigned contestants (excluding the one being moved to sole survivor)
+    const assignedContestants = new Set(
+      allDraftPicks
+        .map(p => p.contestant_id)
+        .filter(id => id !== contestantId)
+    );
+
+    // The contestant being selected as sole survivor will be excluded from draft picks
+    assignedContestants.add(contestantId);
+
+    // Also exclude eliminated contestants
+    const { data: eliminatedContestants, error: eliminatedError } = await supabase
+      .from('contestants')
+      .select('id')
+      .eq('is_eliminated', true);
+
+    if (!eliminatedError && eliminatedContestants) {
+      eliminatedContestants.forEach(contestant => {
+        assignedContestants.add(contestant.id);
+      });
+    }
+
+    // Find highest-ranked available replacement
+    let replacementContestant = null;
+    for (const ranking of rankings) {
+      if (!assignedContestants.has(ranking.contestant_id)) {
+        replacementContestant = ranking.contestant_id;
+        break;
+      }
+    }
+
+    if (!replacementContestant) {
+      throw new Error(`No available replacement contestant found for player ${playerId}`);
+    }
+
+    // End the current draft pick
+    const { error: endError } = await supabase
+      .from('draft_picks')
+      .update({ end_episode: currentEpisodeId })
+      .eq('id', existingPick.id);
+
+    if (endError) {
+      throw new Error(`Failed to end draft pick: ${endError.message}`);
+    }
+
+    // Create new draft pick for replacement contestant
+    const { data: newPick, error: insertError } = await supabase
+      .from('draft_picks')
+      .insert({
+        player_id: playerId,
+        contestant_id: replacementContestant,
+        pick_number: existingPick.pick_number,
+        start_episode: currentEpisodeId,
+        end_episode: null,
+        is_replacement: true,
+        replaced_contestant_id: contestantId
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      throw new Error(`Failed to create replacement draft pick: ${insertError.message}`);
+    }
+
+    // Get contestant names for logging
+    const { data: contestants, error: contestantError } = await supabase
+      .from('contestants')
+      .select('id, name')
+      .in('id', [contestantId, replacementContestant]);
+
+    const originalContestant = contestants?.find(c => c.id === contestantId);
+    const newContestant = contestants?.find(c => c.id === replacementContestant);
+
+    const replacementInfo = {
+      playerId,
+      originalContestantId: contestantId,
+      originalContestantName: originalContestant?.name,
+      replacementContestantId: replacementContestant,
+      replacementContestantName: newContestant?.name,
+      oldPickId: existingPick.id,
+      newPickId: newPick.id,
+      episodeId: currentEpisodeId,
+      episodeNumber: currentEpisodeNumber,
+      reason: 'sole_survivor_selection'
+    };
+
+    console.log('Draft pick replaced for sole survivor selection:', replacementInfo);
+    return replacementInfo;
+
+  } catch (error) {
+    console.error('Error in replaceDraftPickForSoleSurvivor:', error);
+    throw error;
+  }
+}
+
+/**
  * Replace eliminated draft picks with next highest-ranked available contestants
  * @param {number} eliminatedContestantId - ID of the eliminated contestant
  * @returns {Promise<Array>} Array of replacement actions performed
@@ -545,5 +697,6 @@ module.exports = {
   getPlayerRankingStatus,
   executeDraft,
   checkDraftStatus,
+  replaceDraftPickForSoleSurvivor,
   replaceEliminatedDraftPicks
 };

@@ -1,4 +1,5 @@
 const supabase = require('../db/supabase');
+const { replaceDraftPickForSoleSurvivor } = require('../services/draftService');
 
 /**
  * Update sole survivor pick for a player
@@ -81,6 +82,17 @@ async function updateSoleSurvivor(req, res) {
       }
     }
 
+    // Check if the new sole survivor is currently a draft pick and replace if needed
+    let draftReplacement = null;
+    try {
+      draftReplacement = await replaceDraftPickForSoleSurvivor(playerId, contestant_id);
+    } catch (replacementError) {
+      console.error('Error replacing draft pick for sole survivor:', replacementError);
+      return res.status(500).json({ 
+        error: 'Failed to replace draft pick. Please try again.' 
+      });
+    }
+
     // Create new selection record
     const { error: historyError } = await supabase
       .from('sole_survivor_history')
@@ -113,7 +125,8 @@ async function updateSoleSurvivor(req, res) {
       return res.status(404).json({ error: 'Player not found' });
     }
 
-    res.json({
+    // Prepare response with replacement info if applicable
+    const response = {
       message: 'Sole survivor pick updated successfully',
       player: updatedPlayer,
       contestant: {
@@ -121,7 +134,25 @@ async function updateSoleSurvivor(req, res) {
         name: contestant.name,
         is_eliminated: contestant.is_eliminated
       }
-    });
+    };
+
+    // Include draft replacement info if a replacement occurred
+    if (draftReplacement) {
+      response.draft_replacement = {
+        replaced_contestant: {
+          id: draftReplacement.originalContestantId,
+          name: draftReplacement.originalContestantName
+        },
+        new_draft_pick: {
+          id: draftReplacement.replacementContestantId,
+          name: draftReplacement.replacementContestantName
+        },
+        episode: draftReplacement.episodeNumber
+      };
+      response.message += ` Your draft pick has been automatically replaced with ${draftReplacement.replacementContestantName}.`;
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Update sole survivor error:', error);
     res.status(500).json({ error: 'Internal server error' });
