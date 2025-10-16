@@ -1,6 +1,7 @@
 const supabase = require('../db/supabase');
 const scoreCalculationService = require('../services/scoreCalculationService');
 const predictionScoringService = require('../services/predictionScoringService');
+const { clearLeaderboardCache } = require('./leaderboardController');
 
 /**
  * Get all events for an episode grouped by contestant
@@ -294,6 +295,9 @@ async function addEvents(req, res) {
         total_score: totalScore
       });
     }
+
+    // Clear leaderboard cache since scores were updated
+    clearLeaderboardCache();
 
     res.status(201).json({
       message: 'Events added successfully',

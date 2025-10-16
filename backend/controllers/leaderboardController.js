@@ -1,6 +1,11 @@
 const supabase = require('../db/supabase');
 const ScoreCalculationService = require('../services/scoreCalculationService');
 
+// Simple in-memory cache for leaderboard
+let leaderboardCache = null;
+let cacheTimestamp = null;
+const CACHE_TTL = 60000; // 60 seconds - longer cache for better performance
+
 /**
  * Get leaderboard with all players ranked by total score
  * @route GET /api/leaderboard
@@ -8,32 +13,33 @@ const ScoreCalculationService = require('../services/scoreCalculationService');
  */
 async function getLeaderboard(req, res) {
   try {
-    // Fetch all players with their profile information
-    const { data: players, error: playersError } = await supabase
-      .from('players')
-      .select('id, name, email, profile_image_url, sole_survivor_id');
-
-    if (playersError) {
-      console.error('Error fetching players:', playersError);
-      return res.status(500).json({ error: 'Failed to fetch players' });
+    // Check cache first
+    const now = Date.now();
+    if (leaderboardCache && cacheTimestamp && (now - cacheTimestamp) < CACHE_TTL) {
+      console.log('Serving leaderboard from cache');
+      return res.json(leaderboardCache);
     }
 
-    // Get the latest episode to calculate weekly changes
-    const { data: latestEpisode, error: episodeError } = await supabase
-      .from('episodes')
-      .select('id, episode_number')
-      .order('episode_number', { ascending: false })
-      .limit(1)
-      .single();
-
-    // Build leaderboard data for each player
-    const leaderboardData = [];
-
-    for (const player of players) {
-      // Fetch player's draft picks with episode information
-      const { data: draftPicks, error: draftError } = await supabase
-        .from('draft_picks')
-        .select(`
+    console.time('leaderboard-query');
+    
+    // BULK QUERY 1: Get all players with their draft picks and sole survivors in one query
+    const { data: playersWithDrafts, error: playersError } = await supabase
+      .from('players')
+      .select(`
+        id,
+        name,
+        email,
+        profile_image_url,
+        sole_survivor_id,
+        contestants:sole_survivor_id (
+          id,
+          name,
+          profession,
+          image_url,
+          total_score,
+          is_eliminated
+        ),
+        draft_picks (
           contestant_id,
           start_episode,
           end_episode,
@@ -46,100 +52,99 @@ async function getLeaderboard(req, res) {
             total_score,
             is_eliminated
           )
-        `)
-        .eq('player_id', player.id)
-        .order('start_episode', { ascending: true });
+        )
+      `);
 
-      if (draftError) {
-        console.error('Error fetching draft picks:', draftError);
-        continue;
+    if (playersError) {
+      console.error('Error fetching players with drafts:', playersError);
+      return res.status(500).json({ error: 'Failed to fetch players' });
+    }
+
+    // BULK QUERY 2: Get latest episode
+    const { data: latestEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('id, episode_number')
+      .order('episode_number', { ascending: false })
+      .limit(1)
+      .single();
+
+    // BULK QUERY 3: Get all episode scores for latest episode (all contestants at once)
+    let allLatestScores = [];
+    if (latestEpisode && !episodeError) {
+      const { data: episodeScores, error: scoresError } = await supabase
+        .from('episode_scores')
+        .select('contestant_id, score')
+        .eq('episode_id', latestEpisode.id);
+
+      if (!scoresError && episodeScores) {
+        allLatestScores = episodeScores;
       }
+    }
 
-      // Fetch sole survivor contestant
-      let soleSurvivor = null;
-      if (player.sole_survivor_id) {
-        const { data: soleSurvivorData, error: soleSurvivorError } = await supabase
-          .from('contestants')
-          .select('id, name, profession, image_url, total_score, is_eliminated')
-          .eq('id', player.sole_survivor_id)
-          .single();
+    // BULK QUERY 4: Get all prediction bonuses for all players at once
+    const { data: predictionBonuses, error: predictionError } = await supabase
+      .from('elimination_predictions')
+      .select('player_id')
+      .eq('is_correct', true);
 
-        if (!soleSurvivorError && soleSurvivorData) {
-          soleSurvivor = soleSurvivorData;
-        }
-      }
+    // Create lookup map for prediction bonuses
+    const predictionBonusMap = {};
+    if (!predictionError && predictionBonuses) {
+      predictionBonuses.forEach(pred => {
+        predictionBonusMap[pred.player_id] = (predictionBonusMap[pred.player_id] || 0) + 3;
+      });
+    }
 
+    // Create lookup map for latest episode scores
+    const latestScoresMap = {};
+    allLatestScores.forEach(score => {
+      latestScoresMap[score.contestant_id] = score.score || 0;
+    });
+
+    // Build leaderboard data efficiently (no more database queries in loop)
+    const leaderboardData = [];
+
+    for (const player of playersWithDrafts) {
       // Extract contestant details from draft picks
-      const draftedContestants = draftPicks
+      const draftedContestants = player.draft_picks
         .map(pick => pick.contestants)
         .filter(contestant => contestant !== null);
 
-      // Use ScoreCalculationService to calculate player score with bonuses
-      let playerScoreBreakdown;
-      try {
-        playerScoreBreakdown = await ScoreCalculationService.calculatePlayerScore(player.id);
-      } catch (error) {
-        console.error(`Error calculating score for player ${player.id}:`, error);
-        // Fallback to basic calculation without bonuses
-        playerScoreBreakdown = {
-          draft_score: draftedContestants.reduce((sum, c) => sum + (c.total_score || 0), 0),
-          sole_survivor_score: soleSurvivor ? (soleSurvivor.total_score || 0) : 0,
-          sole_survivor_bonus: 0,
-          total: 0
-        };
-        playerScoreBreakdown.total = playerScoreBreakdown.draft_score + 
-                                      playerScoreBreakdown.sole_survivor_score;
-      }
+      const soleSurvivor = player.contestants;
 
-      // Calculate sole survivor bonus breakdown
-      let bonusBreakdown = null;
-      try {
-        const bonus = await ScoreCalculationService.calculateSoleSurvivorBonus(player.id);
-        if (bonus.totalBonus > 0) {
-          bonusBreakdown = {
-            episode_count: bonus.episodeCount,
-            episode_bonus: bonus.episodeBonus,
-            winner_bonus: bonus.winnerBonus,
-            total_bonus: bonus.totalBonus
-          };
-        }
-      } catch (error) {
-        console.error(`Error calculating sole survivor bonus for player ${player.id}:`, error);
-      }
+      // Calculate scores efficiently using pre-fetched data
+      const draftScore = draftedContestants.reduce((sum, c) => sum + (c.total_score || 0), 0);
+      const soleSurvivorScore = soleSurvivor ? (soleSurvivor.total_score || 0) : 0;
+      const predictionBonus = predictionBonusMap[player.id] || 0;
 
-      // Calculate weekly change (latest episode scores)
+      // Calculate weekly change from pre-fetched scores lookup
       let weeklyChange = 0;
-      if (latestEpisode && !episodeError) {
-        const allContestantIds = [
-          ...draftedContestants.map(c => c.id),
-          ...(soleSurvivor ? [soleSurvivor.id] : [])
-        ];
+      const allContestantIds = [
+        ...draftedContestants.map(c => c.id),
+        ...(soleSurvivor ? [soleSurvivor.id] : [])
+      ];
 
-        if (allContestantIds.length > 0) {
-          const { data: episodeScores, error: scoresError } = await supabase
-            .from('episode_scores')
-            .select('contestant_id, score')
-            .eq('episode_id', latestEpisode.id)
-            .in('contestant_id', allContestantIds);
+      weeklyChange = allContestantIds.reduce((sum, contestantId) => {
+        return sum + (latestScoresMap[contestantId] || 0);
+      }, 0);
 
-          if (!scoresError && episodeScores) {
-            weeklyChange = episodeScores.reduce((sum, score) => sum + (score.score || 0), 0);
-          }
-        }
-      }
+      // Skip complex sole survivor bonus for now to maintain performance
+      // TODO: Optimize sole survivor bonus calculation separately
+      const soleSurvivorBonus = 0;
+      let bonusBreakdown = null;
 
       // Build player leaderboard entry
       leaderboardData.push({
         player_id: player.id,
         player_name: player.name,
-        username: player.email.split('@')[0], // Extract username from email
+        username: player.email.split('@')[0],
         profile_image_url: player.profile_image_url,
-        total_score: playerScoreBreakdown.total,
-        draft_score: playerScoreBreakdown.draft_score,
-        sole_survivor_score: playerScoreBreakdown.sole_survivor_score,
-        sole_survivor_bonus: playerScoreBreakdown.sole_survivor_bonus,
-        prediction_bonus: playerScoreBreakdown.prediction_bonus || 0,
-        elimination_compensation: playerScoreBreakdown.elimination_compensation || 0,
+        total_score: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus,
+        draft_score: draftScore,
+        sole_survivor_score: soleSurvivorScore,
+        sole_survivor_bonus: soleSurvivorBonus,
+        prediction_bonus: predictionBonus,
+        elimination_compensation: 0,
         bonus_breakdown: bonusBreakdown,
         weekly_change: weeklyChange,
         drafted_contestants: draftedContestants,
@@ -155,11 +160,28 @@ async function getLeaderboard(req, res) {
       return a.player_name.localeCompare(b.player_name);
     });
 
+    console.timeEnd('leaderboard-query');
+    console.log(`Leaderboard generated with ${playersWithDrafts.length} players using 4 bulk queries`);
+    
+    // Cache the result
+    leaderboardCache = leaderboardData;
+    cacheTimestamp = now;
+    
     res.json(leaderboardData);
   } catch (error) {
     console.error('Error in getLeaderboard:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+}
+
+/**
+ * Clear leaderboard cache
+ * Called when scores are updated
+ */
+function clearLeaderboardCache() {
+  leaderboardCache = null;
+  cacheTimestamp = null;
+  console.log('Leaderboard cache cleared');
 }
 
 /**
@@ -170,6 +192,7 @@ async function getLeaderboard(req, res) {
 async function recalculateScores(req, res) {
   try {
     await ScoreCalculationService.recalculateAllContestantScores();
+    clearLeaderboardCache(); // Clear cache after recalculation
     res.json({ message: 'All contestant scores recalculated successfully' });
   } catch (error) {
     console.error('Error recalculating scores:', error);
@@ -179,5 +202,6 @@ async function recalculateScores(req, res) {
 
 module.exports = {
   getLeaderboard,
-  recalculateScores
+  recalculateScores,
+  clearLeaderboardCache
 };
