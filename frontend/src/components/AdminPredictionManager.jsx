@@ -29,11 +29,18 @@ const AdminPredictionManager = () => {
     try {
       const response = await api.get('/episodes');
       setEpisodes(response.data || []);
-      
-      // Auto-select the most recent episode
+
+      // Auto-select the current episode if available, otherwise most recent
       if (response.data && response.data.length > 0) {
-        const sortedEpisodes = [...response.data].sort((a, b) => b.episode_number - a.episode_number);
-        setSelectedEpisodeId(sortedEpisodes[0].id.toString());
+        const currentEpisode = response.data.find(ep => ep.is_current);
+        if (currentEpisode) {
+          console.log('[AdminPredictionManager] Setting current episode:', currentEpisode.id, 'Episode #', currentEpisode.episode_number);
+          setSelectedEpisodeId(currentEpisode.id.toString());
+        } else {
+          const sortedEpisodes = [...response.data].sort((a, b) => b.episode_number - a.episode_number);
+          console.log('[AdminPredictionManager] No current episode, using most recent:', sortedEpisodes[0].id);
+          setSelectedEpisodeId(sortedEpisodes[0].id.toString());
+        }
       }
     } catch (error) {
       console.error('Error fetching episodes:', error);
@@ -141,15 +148,23 @@ const AdminPredictionManager = () => {
             <option value="">-- Select an episode --</option>
             {episodes
               .sort((a, b) => b.episode_number - a.episode_number)
-              .map(episode => (
-                <option key={episode.id} value={episode.id}>
-                  Episode {episode.episode_number}
-                  {episode.aired_date ? ` - ${(() => {
-                    const [year, month, day] = episode.aired_date.split('-').map(Number);
-                    return new Date(year, month - 1, day).toLocaleDateString();
-                  })()}` : ''}
-                </option>
-              ))}
+              .map(episode => {
+                const optionValue = episode.id.toString();
+                const isSelected = optionValue === selectedEpisodeId;
+                if (isSelected) {
+                  console.log('[AdminPredictionManager] Rendering selected option:', episode.episode_number, 'value:', optionValue, 'selectedEpisodeId:', selectedEpisodeId);
+                }
+                return (
+                  <option key={episode.id} value={optionValue}>
+                    Episode {episode.episode_number}
+                    {episode.is_current ? ' (Current)' : ''}
+                    {episode.aired_date ? ` - ${(() => {
+                      const [year, month, day] = episode.aired_date.split('-').map(Number);
+                      return new Date(year, month - 1, day).toLocaleDateString();
+                    })()}` : ''}
+                  </option>
+                );
+              })}
           </select>
         </div>
 

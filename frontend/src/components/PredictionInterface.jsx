@@ -27,25 +27,25 @@ const PredictionInterface = () => {
   const fetchPredictionData = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
-      // Fetch current episode and check if predictions are locked
-      const episodeResponse = await api.get('/episodes/current');
-      const episode = episodeResponse.data;
-      
-      if (!episode) {
+      // Fetch current episode and existing predictions for current user in one call
+      const predictionsResponse = await api.get('/predictions/current');
+      const predictionData = predictionsResponse.data;
+
+      // Check if there's a current episode
+      if (!predictionData.episode) {
         setError('No current episode available for predictions');
         setIsLoading(false);
         return;
       }
 
+      const episode = predictionData.episode;
       setCurrentEpisode(episode);
       setIsLocked(episode.predictions_locked || false);
 
-      // Fetch existing predictions for current user
+      // Check if user has already submitted predictions
       try {
-        const predictionsResponse = await api.get('/predictions/current');
-        const predictionData = predictionsResponse.data;
         
         if (predictionData.has_submitted) {
           setHasSubmitted(true);
@@ -405,13 +405,13 @@ const PredictionInterface = () => {
         )].sort();
 
         return (
-          <div id="compare" className="card">
+          <div id="compare" className="card u-w-fit u-mx-auto">
             <div className="card-header">
               <h2 className="card-header-title">All Players' Predictions</h2>
             </div>
             <div className="card-body">
               <div className="u-overflow-x-auto">
-                <table className="u-w-full u-border-collapse">
+                <table className="u-w-auto u-border-collapse">
                   <thead>
                     <tr className="u-bg-tertiary">
                       <th className="u-p-3 u-text-left u-border-b u-border-subtle">Player</th>

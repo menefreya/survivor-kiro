@@ -18,14 +18,17 @@ const PredictionReminder = () => {
     try {
       setIsLoading(true);
 
-      // Get current episode
-      const episodeResponse = await api.get('/episodes/current');
-      const currentEpisode = episodeResponse.data;
+      // Get current episode and user's predictions in one call
+      const predictionsResponse = await api.get('/predictions/current');
+      const data = predictionsResponse.data;
 
-      if (!currentEpisode) {
+      // Check if there's a current episode
+      if (!data.episode) {
         setShowBanner(false);
         return;
       }
+
+      const currentEpisode = data.episode;
 
       // Check if predictions are locked
       if (currentEpisode.predictions_locked) {
@@ -34,10 +37,7 @@ const PredictionReminder = () => {
       }
 
       // Check if user has already submitted predictions
-      const predictionsResponse = await api.get('/predictions/current');
-      const userPredictions = predictionsResponse.data;
-
-      if (userPredictions && userPredictions.has_submitted) {
+      if (data.has_submitted) {
         setShowBanner(false);
         return;
       }

@@ -22,29 +22,45 @@ exports.getAllEpisodes = async (req, res) => {
 };
 
 /**
- * Get the current episode (most recent episode)
+ * Get the current episode (the one marked as current, not just the latest)
+ * @route GET /api/episodes/current
+ * @access Protected
  */
 exports.getCurrentEpisode = async (req, res) => {
   try {
+    // First try to get the episode marked as current
     const { data: episode, error } = await supabase
       .from('episodes')
       .select('*')
-      .order('episode_number', { ascending: false })
-      .limit(1)
-      .single();
+      .eq('is_current', true)
+      .maybeSingle();
 
     if (error) {
-      // If no episodes exist yet, return null
-      if (error.code === 'PGRST116') {
-        return res.json(null);
+      console.error('Error fetching current episode:', error);
+      return res.status(500).json({ error: 'Failed to fetch current episode' });
+    }
+
+    // If no current episode is set, fall back to most recent as a convenience
+    if (!episode) {
+      const { data: latestEpisode, error: latestError } = await supabase
+        .from('episodes')
+        .select('*')
+        .order('episode_number', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (latestError) {
+        console.error('Error fetching latest episode:', latestError);
+        return res.status(500).json({ error: 'Failed to fetch episode' });
       }
-      throw error;
+
+      return res.json(latestEpisode);
     }
 
     res.json(episode);
   } catch (error) {
-    console.error('Error fetching current episode:', error);
-    res.status(500).json({ error: 'Failed to fetch current episode' });
+    console.error('Error in getCurrentEpisode:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 

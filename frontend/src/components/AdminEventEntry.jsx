@@ -38,10 +38,11 @@ const AdminEventEntry = () => {
       const contestantsResponse = await api.get('/contestants');
       setContestants(contestantsResponse.data);
 
-      // Auto-select the most recent episode if available
+      // Auto-select the current episode if available, otherwise most recent
       if (episodesResponse.data.length > 0) {
-        const latestEpisode = episodesResponse.data[episodesResponse.data.length - 1];
-        setSelectedEpisodeId(latestEpisode.id);
+        const currentEpisode = episodesResponse.data.find(ep => ep.is_current);
+        const episodeToSelect = currentEpisode || episodesResponse.data[episodesResponse.data.length - 1];
+        setSelectedEpisodeId(episodeToSelect.id);
       }
     } catch (err) {
       console.error('Error fetching initial data:', err);
