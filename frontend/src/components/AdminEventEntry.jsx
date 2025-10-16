@@ -17,6 +17,7 @@ const AdminEventEntry = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [creatingEpisode, setCreatingEpisode] = useState(false);
+  const [settingCurrentEpisode, setSettingCurrentEpisode] = useState(false);
 
 
   // Fetch episodes and contestants on mount
@@ -74,12 +75,12 @@ const AdminEventEntry = () => {
 
     try {
       // Calculate next episode number
-      const nextEpisodeNumber = episodes.length > 0 
-        ? Math.max(...episodes.map(ep => ep.episode_number)) + 1 
+      const nextEpisodeNumber = episodes.length > 0
+        ? Math.max(...episodes.map(ep => ep.episode_number)) + 1
         : 1;
 
       // Create new episode
-      await api.post('/scores/episodes', {
+      const response = await api.post('/scores/episodes', {
         episode_number: nextEpisodeNumber,
         aired_date: new Date().toISOString().split('T')[0] // Today's date
       });
@@ -129,7 +130,34 @@ const AdminEventEntry = () => {
     }
   };
 
+  // Handle setting current episode
+  const handleSetCurrentEpisode = async (episodeId) => {
+    setSettingCurrentEpisode(true);
+    setError('');
+    setSuccessMessage('');
 
+    try {
+      const response = await api.put(`/episodes/${episodeId}/set-current`);
+
+      // Update episodes list to reflect the change
+      setEpisodes(episodes.map(ep => ({
+        ...ep,
+        is_current: ep.id === episodeId
+      })));
+
+      setSuccessMessage(response.data.message || 'Current episode updated successfully!');
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (err) {
+      console.error('Error setting current episode:', err);
+      setError(err.response?.data?.error || 'Failed to set current episode');
+    } finally {
+      setSettingCurrentEpisode(false);
+    }
+  };
 
   // Get selected episode details
   const selectedEpisode = episodes.find(ep => ep.id === selectedEpisodeId);
@@ -210,6 +238,16 @@ const AdminEventEntry = () => {
                   <span className="current-episode-badge">Current Episode</span>
                 )}
               </div>
+              {!selectedEpisode.is_current && (
+                <button
+                  onClick={() => handleSetCurrentEpisode(selectedEpisode.id)}
+                  className="btn btn--secondary btn--small"
+                  disabled={settingCurrentEpisode}
+                  aria-label="Set as current episode"
+                >
+                  {settingCurrentEpisode ? 'Setting...' : 'Set as Current'}
+                </button>
+              )}
             </div>
           </div>
         )}

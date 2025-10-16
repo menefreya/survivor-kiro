@@ -10,12 +10,11 @@ async function getPredictionStatus(req, res) {
   try {
     const playerId = req.user.id;
 
-    // Get current episode
+    // Get current episode (the one marked as current, not just the latest)
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
       .select('id, episode_number, predictions_locked')
-      .order('episode_number', { ascending: false })
-      .limit(1)
+      .eq('is_current', true)
       .maybeSingle();
 
     if (episodeError) {
@@ -234,12 +233,11 @@ async function getCurrentPredictions(req, res) {
   try {
     const playerId = req.user.id;
 
-    // Get current episode (most recent)
+    // Get current episode (the one marked as current, not just the latest)
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
       .select('id, episode_number, predictions_locked')
-      .order('episode_number', { ascending: false })
-      .limit(1)
+      .eq('is_current', true)
       .maybeSingle();
 
     if (episodeError) {
@@ -432,6 +430,8 @@ async function getEpisodePredictions(req, res) {
   try {
     const { episodeId } = req.params;
 
+    console.log(`[getEpisodePredictions] Fetching predictions for episode ID: ${episodeId}`);
+
     // Validate episode exists
     const { data: episode, error: episodeError } = await supabase
       .from('episodes')
@@ -478,6 +478,11 @@ async function getEpisodePredictions(req, res) {
     if (predictionsError) {
       console.error('Error fetching predictions:', predictionsError);
       return res.status(500).json({ error: 'Failed to fetch predictions' });
+    }
+
+    console.log(`[getEpisodePredictions] Found ${predictions?.length || 0} predictions for episode ${episode.episode_number}`);
+    if (predictions && predictions.length > 0) {
+      console.log(`[getEpisodePredictions] Sample prediction:`, predictions[0]);
     }
 
     // Group predictions by tribe
@@ -691,12 +696,11 @@ async function getPredictionStatistics(req, res) {
  */
 async function getAllCurrentPredictions(req, res) {
   try {
-    // Get current episode (most recent)
+    // Get current episode (the one marked as current, not just the latest)
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
       .select('id, episode_number, predictions_locked')
-      .order('episode_number', { ascending: false })
-      .limit(1)
+      .eq('is_current', true)
       .maybeSingle();
 
     if (episodeError) {
