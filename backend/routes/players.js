@@ -6,7 +6,8 @@ const {
   getPlayerById,
   updatePlayerProfile,
   getSoleSurvivorHistory,
-  updateSoleSurvivor
+  updateSoleSurvivor,
+  getSoleSurvivorBonus
 } = require('../controllers/playerController');
 const { getPlayerDraftPicksBreakdown } = require('../controllers/draftPickController');
 
@@ -17,6 +18,7 @@ router.put('/:id', authenticateToken, updatePlayerProfile);
 
 // Sole survivor routes
 router.get('/:playerId/sole-survivor-history', authenticateToken, getSoleSurvivorHistory);
+router.get('/:playerId/sole-survivor-bonus', authenticateToken, getSoleSurvivorBonus);
 router.post('/:playerId/sole-survivor', authenticateToken, updateSoleSurvivor);
 
 // Draft picks routes

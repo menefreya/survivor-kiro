@@ -185,9 +185,10 @@ class ScoreCalculationService {
   /**
    * Calculate sole survivor bonus for a player
    * Awards +1 point per episode in current contiguous period
-   * Awards +25 bonus if contestant wins and was selected by episode 2
+   * Awards +50 bonus if contestant wins and was selected by episode 2
+   * Awards +10 bonus if contestant makes final 3 and was selected before episode 2
    * @param {number} playerId - Player ID
-   * @returns {Promise<{episodeBonus: number, winnerBonus: number, totalBonus: number, episodeCount: number}>}
+   * @returns {Promise<{episodeBonus: number, winnerBonus: number, finalThreeBonus: number, totalBonus: number, episodeCount: number}>}
    */
   async calculateSoleSurvivorBonus(playerId) {
     // Get all sole survivor selections from history
@@ -206,6 +207,7 @@ class ScoreCalculationService {
       return {
         episodeBonus: 0,
         winnerBonus: 0,
+        finalThreeBonus: 0,
         totalBonus: 0,
         episodeCount: 0
       };
@@ -256,6 +258,7 @@ class ScoreCalculationService {
       return {
         episodeBonus: 0,
         winnerBonus: 0,
+        finalThreeBonus: 0,
         totalBonus: 0,
         episodeCount: 0,
         reason: `Game still ongoing - ${remainingContestants?.length || 0} contestants remaining`
@@ -266,23 +269,43 @@ class ScoreCalculationService {
     let totalEpisodeBonus = 0;
     let totalEpisodeCount = 0;
     let winnerBonus = 0;
+    let finalThreeBonus = 0;
+
+    // Check if the sole survivor made final 3
+    const { data: finalThreeEvent, error: finalThreeError } = await supabase
+      .from('contestant_events')
+      .select('id, event_types!inner(event_name)')
+      .eq('contestant_id', actualSoleSurvivor.id)
+      .eq('event_types.event_name', 'made_final_three')
+      .maybeSingle();
+
+    if (finalThreeError) {
+      throw new Error(`Failed to check final three status: ${finalThreeError.message}`);
+    }
+
+    const madeFinalThree = !!finalThreeEvent;
 
     // Calculate bonus for each selection period where player had the correct sole survivor
     for (const selection of allSelections) {
       if (selection.contestant_id === actualSoleSurvivor.id) {
         // Calculate end episode for this selection
         const endEpisode = selection.end_episode || currentEpisodeNumber;
-        
+
         // Calculate episodes in this period
         const episodeCount = endEpisode - selection.start_episode + 1;
         const episodeBonus = episodeCount * 1; // +1 point per episode
-        
+
         totalEpisodeBonus += episodeBonus;
         totalEpisodeCount += episodeCount;
 
         // Check for winner bonus (only awarded once, for earliest qualifying selection)
         if (winnerBonus === 0 && actualSoleSurvivor.is_winner && selection.start_episode <= 2) {
-          winnerBonus = 25;
+          winnerBonus = 50;
+        }
+
+        // Check for final three bonus (only awarded once, for earliest qualifying selection)
+        if (finalThreeBonus === 0 && madeFinalThree && selection.start_episode < 2) {
+          finalThreeBonus = 10;
         }
       }
     }
@@ -290,7 +313,8 @@ class ScoreCalculationService {
     return {
       episodeBonus: totalEpisodeBonus,
       winnerBonus,
-      totalBonus: totalEpisodeBonus + winnerBonus,
+      finalThreeBonus,
+      totalBonus: totalEpisodeBonus + winnerBonus + finalThreeBonus,
       episodeCount: totalEpisodeCount,
       reason: totalEpisodeBonus > 0 ? 'Sole survivor bonus awarded' : 'Player did not select correct sole survivor'
     };

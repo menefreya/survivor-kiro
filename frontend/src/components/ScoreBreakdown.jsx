@@ -53,40 +53,20 @@ function ScoreBreakdown({ playerId, onClose }) {
       // Fetch score breakdown for sole survivor if exists
       if (player.sole_survivor_id) {
         const ssBreakdownResponse = await api.get(`/api/contestants/${player.sole_survivor_id}/score-breakdown`);
-        
-        // Fetch sole survivor history for bonus calculation
-        const historyResponse = await api.get(`/api/players/${playerId}/sole-survivor-history`);
-        const currentHistory = historyResponse.data.find(h => h.end_episode === null);
-        
-        // Calculate bonus
-        let bonus = {
-          episode_count: 0,
-          episode_bonus: 0,
-          winner_bonus: 0,
-          total_bonus: 0
-        };
 
-        if (currentHistory && currentEp) {
-          const episodeCount = currentEp.episode_number - currentHistory.start_episode + 1;
-          const episodeBonus = episodeCount * 1;
-          
-          // Check for winner bonus
-          const contestant = player.draft_picks.find(p => p.contestant_id === player.sole_survivor_id)?.contestant ||
-                           ssBreakdownResponse.data.contestant;
-          const winnerBonus = (contestant?.is_winner && currentHistory.start_episode <= 2) ? 25 : 0;
-          
-          bonus = {
-            episode_count: episodeCount,
-            episode_bonus: episodeBonus,
-            winner_bonus: winnerBonus,
-            total_bonus: episodeBonus + winnerBonus
-          };
-        }
+        // Fetch sole survivor bonus from the backend
+        const bonusResponse = await api.get(`/api/players/${playerId}/sole-survivor-bonus`);
 
         setSoleSurvivorData({
           ...ssBreakdownResponse.data,
-          bonus,
-          history: currentHistory
+          bonus: bonusResponse.data.bonus || {
+            episode_count: 0,
+            episode_bonus: 0,
+            winner_bonus: 0,
+            final_three_bonus: 0,
+            total_bonus: 0
+          },
+          history: bonusResponse.data.history
         });
       }
 

@@ -19,15 +19,15 @@ const ScoringRulesCard = () => {
             </div>
             <div className="scoring-breakdown__item">
               <span className="scoring-breakdown__label">Sole Survivor Pick</span>
-              <span className="scoring-breakdown__description">Your chosen contestant's total score</span>
+              <span className="scoring-breakdown__description">Your chosen contestant's score</span>
             </div>
             <div className="scoring-breakdown__item">
               <span className="scoring-breakdown__label">Sole Survivor Episode Bonus</span>
-              <span className="scoring-breakdown__description">+1 point per episode for current pick</span>
+              <span className="scoring-breakdown__description">+1 point per episode or +50 if pick selected by episode 2</span>
             </div>
-            <div className="scoring-breakdown__item">
-              <span className="scoring-breakdown__label">Sole Survivor Winner Bonus</span>
-              <span className="scoring-breakdown__description">+25 points if pick wins AND selected by episode 2</span>
+           <div className="scoring-breakdown__item">
+              <span className="scoring-breakdown__label">Final 3 Bonus</span>
+              <span className="scoring-breakdown__description">+10 points if pick selected by episode 2</span>
             </div>
             <div className="scoring-breakdown__item">
               <span className="scoring-breakdown__label">Weekly Prediction Bonus</span>
@@ -39,10 +39,6 @@ const ScoringRulesCard = () => {
         <div className="scoring-rules-section">
           <h3 className="scoring-rules-section__title">Episode Scoring Events</h3>
           <div className="scoring-events">
-            <div className="scoring-event">
-              <span className="scoring-event__name">Made Final 3</span>
-              <span className="scoring-event__points scoring-event__points--bonus">+10</span>
-            </div>
             <div className="scoring-event">
               <span className="scoring-event__name">Got Immunity from Shot in the Dark</span>
               <span className="scoring-event__points scoring-event__points--positive">+4</span>

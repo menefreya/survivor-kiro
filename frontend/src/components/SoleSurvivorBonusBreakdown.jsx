@@ -21,16 +21,26 @@ function SoleSurvivorBonusBreakdown({ bonus, history, currentEpisode }) {
           </span>
         </div>
         
+        {bonus.final_three_bonus > 0 && (
+          <div className="bonus-item final-three-bonus">
+            <span className="bonus-label">Final Three Bonus:</span>
+            <span className="bonus-value">+{bonus.final_three_bonus} pts</span>
+            <p className="bonus-explanation">
+              Selected before episode 2 and contestant made final 3!
+            </p>
+          </div>
+        )}
+
         {bonus.winner_bonus > 0 && (
           <div className="bonus-item winner-bonus">
             <span className="bonus-label">Winner Bonus:</span>
             <span className="bonus-value">+{bonus.winner_bonus} pts</span>
             <p className="bonus-explanation">
-              Selected in episode {history?.start_episode || 1} or earlier and contestant won!
+              Selected in episode 2 or earlier and contestant won!
             </p>
           </div>
         )}
-        
+
         <div className="bonus-total">
           <span className="bonus-label">Total Bonus:</span>
           <span className="bonus-value">+{bonus.total_bonus} pts</span>

@@ -1,5 +1,6 @@
 const supabase = require('../db/supabase');
 const { replaceDraftPickForSoleSurvivor } = require('../services/draftService');
+const ScoreCalculationService = require('../services/scoreCalculationService');
 
 /**
  * Get all players
@@ -316,10 +317,56 @@ async function updateSoleSurvivor(req, res) {
   }
 }
 
+/**
+ * Get sole survivor bonus breakdown for a player
+ * GET /api/players/:playerId/sole-survivor-bonus
+ */
+async function getSoleSurvivorBonus(req, res) {
+  try {
+    const { playerId } = req.params;
+
+    // Validate player exists
+    const { data: player, error: playerError } = await supabase
+      .from('players')
+      .select('id')
+      .eq('id', playerId)
+      .single();
+
+    if (playerError || !player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    // Calculate bonus using the service
+    const bonusBreakdown = await ScoreCalculationService.calculateSoleSurvivorBonus(parseInt(playerId));
+
+    // Get the current sole survivor history
+    const { data: history, error: historyError } = await supabase
+      .from('sole_survivor_history')
+      .select('start_episode, end_episode')
+      .eq('player_id', playerId)
+      .order('start_episode', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (historyError) {
+      console.error('Error fetching sole survivor history:', historyError);
+    }
+
+    res.json({
+      bonus: bonusBreakdown,
+      history: history || null
+    });
+  } catch (error) {
+    console.error('Get sole survivor bonus error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getAllPlayers,
   getPlayerById,
   updatePlayerProfile,
   getSoleSurvivorHistory,
-  updateSoleSurvivor
+  updateSoleSurvivor,
+  getSoleSurvivorBonus
 };

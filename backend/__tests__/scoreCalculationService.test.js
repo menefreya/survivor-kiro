@@ -142,8 +142,9 @@ describe('Score Calculation Service', () => {
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
-            expect(bonus.winnerBonus).toBe(25);
-            expect(bonus.totalBonus).toBe(34); // 9 episodes + 25 winner bonus
+            expect(bonus.winnerBonus).toBe(50);
+            expect(bonus.finalThreeBonus).toBe(0);
+            expect(bonus.totalBonus).toBe(59); // 9 episodes + 50 winner bonus
         });
 
         it('should not award winner bonus if selected after episode 2', async () => {
@@ -156,6 +157,50 @@ describe('Score Calculation Service', () => {
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
             expect(bonus.winnerBonus).toBe(0);
+            expect(bonus.finalThreeBonus).toBe(0);
+        });
+
+        it('should award final three bonus if selected before episode 2', async () => {
+            const mockSelections = [{ contestant_id: 1, start_episode: 1, end_episode: null }];
+            const mockCurrentEpisode = { episode_number: 10 };
+            const mockRemainingContestants = [{ id: 1, is_winner: false }];
+            const mockFinalThreeEvent = { id: 1, event_types: { event_name: 'made_final_three' } };
+
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants, mockFinalThreeEvent);
+
+            const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
+
+            expect(bonus.finalThreeBonus).toBe(10);
+            expect(bonus.winnerBonus).toBe(0);
+            expect(bonus.totalBonus).toBe(20); // 10 episodes + 10 final three bonus
+        });
+
+        it('should not award final three bonus if selected at episode 2 or later', async () => {
+            const mockSelections = [{ contestant_id: 1, start_episode: 2, end_episode: null }];
+            const mockCurrentEpisode = { episode_number: 10 };
+            const mockRemainingContestants = [{ id: 1, is_winner: false }];
+            const mockFinalThreeEvent = { id: 1, event_types: { event_name: 'made_final_three' } };
+
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants, mockFinalThreeEvent);
+
+            const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
+
+            expect(bonus.finalThreeBonus).toBe(0);
+        });
+
+        it('should award both winner and final three bonuses if selected before episode 2', async () => {
+            const mockSelections = [{ contestant_id: 1, start_episode: 1, end_episode: null }];
+            const mockCurrentEpisode = { episode_number: 10 };
+            const mockRemainingContestants = [{ id: 1, is_winner: true }];
+            const mockFinalThreeEvent = { id: 1, event_types: { event_name: 'made_final_three' } };
+
+            setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants, mockFinalThreeEvent);
+
+            const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
+
+            expect(bonus.finalThreeBonus).toBe(10);
+            expect(bonus.winnerBonus).toBe(50);
+            expect(bonus.totalBonus).toBe(70); // 10 episodes + 10 final three + 50 winner bonus
         });
 
         it('should return 0 when no sole survivor selected', async () => {
@@ -270,7 +315,7 @@ describe('Score Calculation Service', () => {
     });
 });
 
-function setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants) {
+function setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainingContestants, mockFinalThreeEvent = null) {
     // Mock sole_survivor_history query (returns array of selections)
     const orderMock1 = jest.fn().mockResolvedValue({ data: mockSelections, error: null });
     const eqMock1 = jest.fn().mockReturnValue({ order: orderMock1 });
@@ -285,12 +330,19 @@ function setupSoleSurvivorMocks(mockSelections, mockCurrentEpisode, mockRemainin
     const eqMock3 = jest.fn().mockResolvedValue({ data: mockRemainingContestants, error: null });
     const selectMock3 = jest.fn().mockReturnValue({ eq: eqMock3 });
 
+    // Mock final three event query (contestant_events)
+    const maybeSingleMock4 = jest.fn().mockResolvedValue({ data: mockFinalThreeEvent, error: null });
+    const eqMock4_2 = jest.fn().mockReturnValue({ maybeSingle: maybeSingleMock4 });
+    const eqMock4_1 = jest.fn().mockReturnValue({ eq: eqMock4_2 });
+    const selectMock4 = jest.fn().mockReturnValue({ eq: eqMock4_1 });
+
     let callCount = 0;
     supabase.from.mockImplementation((table) => {
         callCount++;
         if (table === 'sole_survivor_history') return { select: selectMock1 };
         if (table === 'episodes') return { select: selectMock2 };
         if (table === 'contestants') return { select: selectMock3 };
+        if (table === 'contestant_events') return { select: selectMock4 };
         return { select: selectMock1 }; // fallback
     });
 }
