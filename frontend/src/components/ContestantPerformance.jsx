@@ -244,14 +244,13 @@ const ContestantPerformance = () => {
       <div className="card">
         <div className="card-body u-p-0">
           <div className="u-overflow-x-auto">
-            <table className="u-w-full u-border-collapse">
+            <table className="u-border-collapse u-mx-auto" style={{ width: 'auto', maxWidth: '800px' }}>
               <thead className="u-bg-tertiary">
                 <tr>
-                  <th className="u-p-4"><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
-                  <th className="u-p-4"><div className="u-bg-quaternary u-rounded u-h-4 u-w-20 u-animate-pulse"></div></th>
-                  <th className="u-p-4"><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
-                  <th className="u-p-4"><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
-                  <th className="u-p-4"><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
+                  <th className="u-p-4" style={{ width: '80px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
+                  <th className="u-p-4" style={{ width: 'auto' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-20 u-animate-pulse"></div></th>
+                  <th className="u-p-4" style={{ width: '120px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
+                  <th className="u-p-4" style={{ width: '100px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
                 </tr>
               </thead>
               <tbody>
@@ -274,9 +273,6 @@ const ContestantPerformance = () => {
                     </td>
                     <td className="u-p-4 u-text-center">
                       <div className="u-bg-tertiary u-rounded u-h-4 u-w-8 u-mx-auto u-animate-pulse"></div>
-                    </td>
-                    <td className="u-p-4 u-text-center">
-                      <div className="u-bg-tertiary u-rounded u-h-4 u-w-12 u-mx-auto u-animate-pulse"></div>
                     </td>
                   </tr>
                 ))}
@@ -419,60 +415,57 @@ const ContestantPerformance = () => {
       <div className="card">
         <div className="card-body u-p-0">
           <div className="u-overflow-x-auto">
-            <table 
-              className="u-w-full u-border-collapse" 
-              role="table" 
+            <table
+              className="u-border-collapse u-mx-auto"
+              style={{ width: 'auto', maxWidth: '800px' }}
+              role="table"
               aria-label="Contestant performance rankings sorted by total score"
               aria-describedby="table-description"
             >
               <caption id="table-description" className="u-sr-only">
-                Table showing all contestants ranked by their total season performance, 
-                including rank, name, total score, average points per episode, and performance trend.
+                Table showing all contestants ranked by their total season performance,
+                including rank, name, total score with trend indicator, and average points per episode.
                 Data is sorted by total score in descending order.
               </caption>
               
               {/* Desktop Table Header */}
               <thead className="u-bg-tertiary">
                 <tr role="row">
-                  <th 
-                    className="u-p-4 u-text-left u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary" 
+                  <th
+                    className="u-p-4 u-text-left u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary"
                     scope="col"
                     aria-sort="descending"
                     aria-label="Rank - sorted by total score descending"
+                    style={{ width: '80px' }}
                   >
                     Rank
                   </th>
-                  <th 
-                    className="u-p-4 u-text-left u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary" 
+                  <th
+                    className="u-p-4 u-text-left u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary"
                     scope="col"
                     aria-sort="none"
                     aria-label="Contestant name and details"
+                    style={{ width: 'auto' }}
                   >
                     Contestant
                   </th>
-                  <th 
-                    className="u-p-4 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary" 
+                  <th
+                    className="u-p-4 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary"
                     scope="col"
                     aria-sort="none"
-                    aria-label="Total points scored this season"
+                    aria-label="Total points scored this season with trend indicator"
+                    style={{ width: '120px' }}
                   >
                     Total
                   </th>
-                  <th 
-                    className="u-p-4 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary" 
+                  <th
+                    className="u-p-4 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary"
                     scope="col"
                     aria-sort="none"
                     aria-label="Average points per episode"
+                    style={{ width: '100px' }}
                   >
                     Avg/Ep
-                  </th>
-                  <th 
-                    className="u-p-4 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary" 
-                    scope="col"
-                    aria-sort="none"
-                    aria-label="Performance trend indicator"
-                  >
-                    Trend
                   </th>
                 </tr>
               </thead>
@@ -495,7 +488,7 @@ const ContestantPerformance = () => {
       {/* Footer Info */}
       <div className="u-text-center u-mt-6">
         <p className="u-text-sm u-text-secondary">
-          Performance trends compare recent episodes to earlier performance. 
+          Trend indicators (↗ ↘ →) show performance direction compared to earlier episodes.
           Data updates automatically every 30 seconds.
         </p>
       </div>

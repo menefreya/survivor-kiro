@@ -101,7 +101,7 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
       className="u-border-b u-border-subtle u-transition-colors hover:u-bg-tertiary"
       role="row"
       tabIndex="0"
-      aria-label={`Rank ${rank}: ${getFirstName(name)}${profession ? `, ${profession}` : ''}${age ? `, age ${age}` : ''}, ${formatTotalScore(total_score)} total points, ${formatAverage(average_per_episode)} average per episode, performance trending ${trend}`}
+      aria-label={`Rank ${rank}: ${getFirstName(name)}${profession ? `, ${profession}` : ''}${age ? `, age ${age}` : ''}, ${formatTotalScore(total_score)} total points trending ${trend === 'n/a' ? 'not available' : trend === 'same' ? 'steady' : trend}, ${formatAverage(average_per_episode)} average per episode`}
       onKeyDown={(e) => {
         // Allow Enter and Space to activate row (for future interactions)
         if (e.key === 'Enter' || e.key === ' ') {
@@ -122,16 +122,19 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
       {/* Contestant Info */}
       <td className="u-p-4" role="cell">
         <div className="entity-row entity-row--compact">
-          <div className="avatar avatar--lg">
+          <div className="avatar avatar--lg u-relative">
             {image_url && !imageError ? (
               <>
-              <img 
-                src={image_url} 
+              <img
+                src={image_url}
                 alt={`Profile photo of ${getFirstName(name)}`}
                 className="avatar__image"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
-                style={{ display: imageLoading ? 'none' : 'block' }}
+                style={{
+                  display: imageLoading ? 'none' : 'block',
+                  filter: is_eliminated ? 'grayscale(100%) opacity(0.5)' : 'none'
+                }}
               />
               {imageLoading && (
                 <div className="u-animate-pulse u-bg-tertiary u-w-full u-h-full u-rounded-full" aria-label="Loading profile image">
@@ -139,14 +142,17 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
               )}
             </>
           ) : null}
-          
-          <div 
+
+          <div
             className={`avatar__initials ${image_url && !imageError && !imageLoading ? 'u-hidden' : 'u-flex'}`}
             aria-label={`${getFirstName(name)} profile avatar${imageError ? ' (image failed to load)' : ''} showing initials ${getInitials(name)}`}
             role="img"
+            style={{
+              filter: is_eliminated ? 'grayscale(100%) opacity(0.5)' : 'none'
+            }}
           >
             {getInitials(name)}
-            
+
             {/* Retry button for failed images */}
             {imageError && image_url && (
               <button
@@ -159,17 +165,47 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
               </button>
             )}
           </div>
+
+          {/* X overlay for eliminated contestants */}
+          {is_eliminated && (
+            <div
+              className="u-absolute u-inset-0 u-flex u-items-center u-justify-center u-pointer-events-none"
+              aria-hidden="true"
+            >
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 100 100"
+                className="u-text-danger"
+                style={{ opacity: 0.5 }}
+              >
+                <line
+                  x1="15"
+                  y1="15"
+                  x2="85"
+                  y2="85"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="85"
+                  y1="15"
+                  x2="15"
+                  y2="85"
+                  stroke="currentColor"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          )}
           </div>
           <div className="entity-row__info">
             <div className="u-flex u-items-center u-gap-2">
               <h4 className="entity-row__name" id={`contestant-${contestant.id}-name`}>
                 {getFirstName(name)}
               </h4>
-              {is_eliminated && (
-                <span className="badge badge--sm badge--danger" aria-label="This contestant has been eliminated">
-                  ☠️
-                </span>
-              )}
             </div>
             {(profession || age) && (
               <div className="u-flex u-items-center u-gap-1 u-mt-1">
@@ -189,20 +225,23 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
       </td>
 
       {/* Total Score */}
-      <td 
-        className="u-p-4 u-text-center" 
+      <td
+        className="u-p-4 u-text-center"
         role="cell"
-        aria-label={`Total score: ${formatTotalScore(total_score)} points`}
+        aria-label={`Total score: ${formatTotalScore(total_score)} points, trending ${trend === 'n/a' ? 'not available' : trend === 'same' ? 'steady' : trend}`}
         aria-describedby={`contestant-${contestant.id}-name`}
       >
-        <span className="u-text-lg u-font-semibold u-text-primary" aria-hidden="true">
-          {formatTotalScore(total_score)}
-        </span>
+        <div className="u-flex u-items-center u-justify-center u-gap-2">
+          <span className="u-text-lg u-font-semibold u-text-primary" aria-hidden="true">
+            {formatTotalScore(total_score)}
+          </span>
+          <TrendIndicator trend={trend} contestantName={getFirstName(name)} />
+        </div>
       </td>
 
       {/* Average Per Episode */}
-      <td 
-        className="u-p-4 u-text-center" 
+      <td
+        className="u-p-4 u-text-center"
         role="cell"
         aria-label={`Average per episode: ${formatAverage(average_per_episode)}${formatAverage(average_per_episode) !== 'N/A' ? ' points' : ''}`}
         aria-describedby={`contestant-${contestant.id}-name`}
@@ -210,16 +249,6 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
         <span className="u-text-base u-text-secondary" aria-hidden="true">
           {formatAverage(average_per_episode)}
         </span>
-      </td>
-
-      {/* Trend Indicator */}
-      <td 
-        className="u-p-4 u-text-center" 
-        role="cell"
-        aria-label={`Performance trend: ${trend === 'n/a' ? 'not available' : trend === 'same' ? 'staying the same' : `trending ${trend}`}`}
-        aria-describedby={`contestant-${contestant.id}-name`}
-      >
-        <TrendIndicator trend={trend} contestantName={getFirstName(name)} />
       </td>
     </tr>
   );

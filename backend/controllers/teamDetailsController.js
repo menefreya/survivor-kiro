@@ -468,16 +468,25 @@ async function getTeamAuditData(req, res) {
       playerId = parseInt(targetPlayerId);
     }
 
-    // Get all episodes
-    const { data: episodes, error: episodesError } = await supabase
+    // Get all episodes up to and including the current episode
+    const { data: allEpisodes, error: episodesError } = await supabase
       .from('episodes')
-      .select('id, episode_number, aired_date')
+      .select('id, episode_number, aired_date, is_current')
       .order('episode_number', { ascending: true });
 
     if (episodesError) {
       console.error('Error fetching episodes:', episodesError);
       return res.status(500).json({ error: 'Failed to fetch episodes' });
     }
+
+    // Find the current episode
+    const currentEpisode = allEpisodes?.find(ep => ep.is_current);
+    const currentEpisodeNumber = currentEpisode ? currentEpisode.episode_number : null;
+
+    // Filter episodes up to current and reverse for descending order
+    const episodes = currentEpisodeNumber
+      ? allEpisodes.filter(ep => ep.episode_number <= currentEpisodeNumber).reverse()
+      : allEpisodes.reverse();
 
     // Get player's draft picks with episode ranges
     const { data: draftPicks, error: draftError } = await supabase
@@ -559,8 +568,9 @@ async function getTeamAuditData(req, res) {
         .from('contestant_events')
         .select(`
           episode_id,
-          contestant_id, 
+          contestant_id,
           point_value,
+          event_type_id,
           event_types:event_type_id (
             name,
             display_name,
@@ -573,6 +583,22 @@ async function getTeamAuditData(req, res) {
         console.error('Error fetching all episode events:', eventsError);
       } else {
         allEpisodeEvents = events || [];
+      }
+    }
+
+    // Build a map of contestant_id -> elimination_episode_number
+    const eliminationEpisodeMap = new Map();
+    if (allEpisodeEvents.length > 0) {
+      // Event type IDs for elimination: 10 = eliminated, 29 = eliminated_medical
+      const eliminationEvents = allEpisodeEvents.filter(e =>
+        e.event_type_id === 10 || e.event_type_id === 29
+      );
+
+      for (const event of eliminationEvents) {
+        const episode = allEpisodes?.find(ep => ep.id === event.episode_id);
+        if (episode) {
+          eliminationEpisodeMap.set(event.contestant_id, episode.episode_number);
+        }
       }
     }
 
@@ -626,9 +652,10 @@ async function getTeamAuditData(req, res) {
         // Determine contestant status based on actual elimination, not draft pick end_episode
         // end_episode can be set for other reasons (like being replaced in draft)
         let status = 'active';
+        const eliminationEpisodeNumber = eliminationEpisodeMap.get(contestant.id);
 
-        // Use the contestant's actual is_eliminated status from the contestants table
-        if (contestant.is_eliminated) {
+        // Only show as eliminated if they were eliminated in this episode or earlier
+        if (eliminationEpisodeNumber && episode.episode_number >= eliminationEpisodeNumber) {
           status = 'eliminated';
         }
 
@@ -639,7 +666,8 @@ async function getTeamAuditData(req, res) {
           pick_type: 'draft',
           is_replacement: pick.replaced_contestant_id ? true : false,
           is_active_for_scoring: true, // All contestants in this list are active for scoring
-          status: status
+          status: status,
+          elimination_episode: eliminationEpisodeNumber
         };
       }).filter(Boolean);
 
@@ -659,12 +687,23 @@ async function getTeamAuditData(req, res) {
           points: event.point_value || 0,
           description: event.event_types?.display_name || event.event_types?.name || 'Event'
         }));
-        
+
+        // Determine status for sole survivor
+        let ssStatus = 'active';
+        const ssEliminationEpisodeNumber = eliminationEpisodeMap.get(activeSoleSurvivorForEpisode.contestants.id);
+
+        // Only show as eliminated if they were eliminated in this episode or earlier
+        if (ssEliminationEpisodeNumber && episode.episode_number >= ssEliminationEpisodeNumber) {
+          ssStatus = 'eliminated';
+        }
+
         soleSurvivor = {
           ...activeSoleSurvivorForEpisode.contestants,
           episode_score: scoreData?.score || 0,
           events: transformedEvents,
           pick_type: 'sole_survivor',
+          status: ssStatus,
+          elimination_episode: ssEliminationEpisodeNumber,
           // Add history info to show when this contestant was active
           active_period: {
             start_episode: activeSoleSurvivorForEpisode.start_episode,

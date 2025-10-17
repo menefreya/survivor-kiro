@@ -25,6 +25,13 @@ const AdminEventEntry = () => {
     fetchInitialData();
   }, []);
 
+  // Fetch contestants when episode changes
+  useEffect(() => {
+    if (selectedEpisodeId) {
+      fetchContestantsForEpisode(selectedEpisodeId);
+    }
+  }, [selectedEpisodeId]);
+
   const fetchInitialData = async () => {
     setLoading(true);
     setError('');
@@ -33,10 +40,6 @@ const AdminEventEntry = () => {
       // Fetch episodes
       const episodesResponse = await api.get('/scores/episodes');
       setEpisodes(episodesResponse.data);
-
-      // Fetch contestants
-      const contestantsResponse = await api.get('/contestants');
-      setContestants(contestantsResponse.data);
 
       // Auto-select the current episode if available, otherwise most recent
       if (episodesResponse.data.length > 0) {
@@ -49,6 +52,17 @@ const AdminEventEntry = () => {
       setError(err.response?.data?.error || 'Failed to load data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchContestantsForEpisode = async (episodeId) => {
+    try {
+      // Fetch contestants filtered by episode (excludes those eliminated before this episode)
+      const contestantsResponse = await api.get(`/contestants?episodeId=${episodeId}`);
+      setContestants(contestantsResponse.data);
+    } catch (err) {
+      console.error('Error fetching contestants for episode:', err);
+      setError(err.response?.data?.error || 'Failed to load contestants');
     }
   };
 
@@ -124,8 +138,10 @@ const AdminEventEntry = () => {
 
   const fetchContestants = async () => {
     try {
-      const response = await api.get('/contestants');
-      setContestants(response.data);
+      // Fetch contestants filtered by the current episode
+      if (selectedEpisodeId) {
+        await fetchContestantsForEpisode(selectedEpisodeId);
+      }
     } catch (err) {
       console.error('Error fetching contestants:', err);
     }

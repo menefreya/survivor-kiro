@@ -5,21 +5,87 @@ const { calculateMultipleContestantTrends } = require('../services/contestantPer
 /**
  * Get all contestants
  * @route GET /api/contestants
+ * @query episodeId - Optional: Filter to only show contestants active in this episode
  * @access Protected
  */
 async function getAllContestants(req, res) {
   try {
-    const { data, error } = await supabase
+    const { episodeId } = req.query;
+
+    // If no episodeId provided, return all contestants
+    if (!episodeId) {
+      const { data, error } = await supabase
+        .from('contestants')
+        .select('*')
+        .order('name', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching contestants:', error);
+        return res.status(500).json({ error: 'Failed to fetch contestants' });
+      }
+
+      return res.json(data);
+    }
+
+    // Get the episode number for the requested episodeId
+    const { data: episode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('episode_number')
+      .eq('id', episodeId)
+      .single();
+
+    if (episodeError || !episode) {
+      return res.status(404).json({ error: 'Episode not found' });
+    }
+
+    const targetEpisodeNumber = episode.episode_number;
+
+    // Get all contestants
+    const { data: contestants, error: contestantsError } = await supabase
       .from('contestants')
       .select('*')
       .order('name', { ascending: true });
 
-    if (error) {
-      console.error('Error fetching contestants:', error);
+    if (contestantsError) {
+      console.error('Error fetching contestants:', contestantsError);
       return res.status(500).json({ error: 'Failed to fetch contestants' });
     }
 
-    res.json(data);
+    // For each contestant, find their elimination episode (if any)
+    const { data: eliminationEvents, error: eventsError } = await supabase
+      .from('contestant_events')
+      .select(`
+        contestant_id,
+        episodes!inner(episode_number),
+        event_types!inner(name)
+      `)
+      .in('event_types.name', ['eliminated', 'eliminated_medical']);
+
+    if (eventsError) {
+      console.error('Error fetching elimination events:', eventsError);
+      return res.status(500).json({ error: 'Failed to fetch elimination events' });
+    }
+
+    // Build a map of contestant_id -> elimination_episode_number
+    const eliminationMap = {};
+    eliminationEvents.forEach(event => {
+      eliminationMap[event.contestant_id] = event.episodes.episode_number;
+    });
+
+    // Filter contestants: include only those who were NOT eliminated or were eliminated AFTER the target episode
+    const filteredContestants = contestants.filter(contestant => {
+      const eliminationEpisode = eliminationMap[contestant.id];
+
+      // If no elimination event, include the contestant
+      if (!eliminationEpisode) {
+        return true;
+      }
+
+      // Include if they were eliminated in the current episode or after
+      return eliminationEpisode >= targetEpisodeNumber;
+    });
+
+    res.json(filteredContestants);
   } catch (error) {
     console.error('Error in getAllContestants:', error);
     res.status(500).json({ error: 'Internal server error' });
