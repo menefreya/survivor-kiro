@@ -188,7 +188,7 @@ describe('Score Calculation Service', () => {
             expect(bonus.finalThreeBonus).toBe(0);
         });
 
-        it('should award both winner and final three bonuses if selected before episode 2', async () => {
+        it('should award winner bonus only (not final three) if contestant wins', async () => {
             const mockSelections = [{ contestant_id: 1, start_episode: 1, end_episode: null }];
             const mockCurrentEpisode = { episode_number: 10 };
             const mockRemainingContestants = [{ id: 1, is_winner: true }];
@@ -198,9 +198,10 @@ describe('Score Calculation Service', () => {
 
             const bonus = await scoreCalculationService.calculateSoleSurvivorBonus(1);
 
-            expect(bonus.finalThreeBonus).toBe(10);
+            // Winner bonus takes priority over final three bonus
             expect(bonus.winnerBonus).toBe(50);
-            expect(bonus.totalBonus).toBe(70); // 10 episodes + 10 final three + 50 winner bonus
+            expect(bonus.finalThreeBonus).toBe(0);
+            expect(bonus.totalBonus).toBe(60); // 10 episodes + 50 winner bonus (no final three bonus)
         });
 
         it('should return 0 when no sole survivor selected', async () => {

@@ -185,8 +185,9 @@ class ScoreCalculationService {
   /**
    * Calculate sole survivor bonus for a player
    * Awards +1 point per episode in current contiguous period
-   * Awards +50 bonus if contestant wins and was selected by episode 2
-   * Awards +10 bonus if contestant makes final 3 and was selected before episode 2
+   * Awards +50 bonus if contestant wins and was selected by episode 2 (MUTUALLY EXCLUSIVE with final 3 bonus)
+   * Awards +10 bonus if contestant makes final 3 and was selected before episode 2 (MUTUALLY EXCLUSIVE with winner bonus)
+   * Note: Winner bonus takes priority - you get either winner OR final three bonus, not both
    * @param {number} playerId - Player ID
    * @returns {Promise<{episodeBonus: number, winnerBonus: number, finalThreeBonus: number, totalBonus: number, episodeCount: number}>}
    */
@@ -298,13 +299,12 @@ class ScoreCalculationService {
         totalEpisodeBonus += episodeBonus;
         totalEpisodeCount += episodeCount;
 
-        // Check for winner bonus (only awarded once, for earliest qualifying selection)
+        // Award winner bonus OR final three bonus (mutually exclusive)
+        // Winner bonus takes priority if contestant won
         if (winnerBonus === 0 && actualSoleSurvivor.is_winner && selection.start_episode <= 2) {
           winnerBonus = 50;
-        }
-
-        // Check for final three bonus (only awarded once, for earliest qualifying selection)
-        if (finalThreeBonus === 0 && madeFinalThree && selection.start_episode < 2) {
+        } else if (finalThreeBonus === 0 && winnerBonus === 0 && madeFinalThree && selection.start_episode < 2) {
+          // Only award final three bonus if not a winner
           finalThreeBonus = 10;
         }
       }
