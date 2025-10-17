@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import AdminEventEntry from './AdminEventEntry';
-import ContestantEventHistory from './ContestantEventHistory';
 import AdminPredictionManager from './AdminPredictionManager';
 import AdminPredictionStatistics from './AdminPredictionStatistics';
 import '../styles/07-pages/admin.css';
@@ -27,9 +26,7 @@ const Admin = () => {
   const [draftError, setDraftError] = useState('');
   const [draftSuccess, setDraftSuccess] = useState('');
 
-  // Event History State
-  const [selectedContestantId, setSelectedContestantId] = useState(null);
-  const [showEventHistory, setShowEventHistory] = useState(false);
+
 
   // Fetch contestants on mount
   useEffect(() => {
@@ -55,32 +52,7 @@ const Admin = () => {
     }
   };
 
-  // Contestant Management Handlers
-  const handleToggleEliminated = async (contestantId, currentStatus) => {
-    try {
-      await api.put(`/contestants/${contestantId}`, {
-        is_eliminated: !currentStatus
-      });
-      fetchContestants();
-    } catch (error) {
-      setContestantError(error.response?.data?.error || 'Failed to update contestant');
-    }
-  };
 
-  const handleViewEventHistory = (contestantId) => {
-    setSelectedContestantId(contestantId);
-    setShowEventHistory(true);
-  };
-
-  const handleCloseEventHistory = () => {
-    setShowEventHistory(false);
-    setSelectedContestantId(null);
-  };
-
-  const handleEventDeleted = () => {
-    // Refresh contestants to update scores
-    fetchContestants();
-  };
 
   // Tribe Management Handlers
   const handleEditTribe = (contestantId, currentTribe) => {
@@ -279,7 +251,6 @@ const Admin = () => {
                         <th scope="col">Tribe</th>
                         <th scope="col">Total Score</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -342,27 +313,10 @@ const Admin = () => {
                           </td>
                           <td>{contestant.total_score || 0}</td>
                           <td>
-                            <span role="status">
-                              {contestant.is_eliminated ? 'Eliminated' : 'Active'}
-                            </span>
-                          </td>
-                          <td>
-                            <div className="action-buttons">
-                              <button
-                                onClick={() => handleViewEventHistory(contestant.id)}
-                                className="btn btn--secondary btn--sm"
-                                aria-label={`View event history for ${contestant.name}`}
-                                title="View Event History"
-                              >
-                                📋 Events
-                              </button>
-                              <button
-                                onClick={() => handleToggleEliminated(contestant.id, contestant.is_eliminated)}
-                                className="btn btn--secondary btn--sm"
-                                aria-label={`${contestant.is_eliminated ? 'Reactivate' : 'Eliminate'} ${contestant.name}`}
-                              >
-                                {contestant.is_eliminated ? 'Reactivate' : 'Eliminate'}
-                              </button>
+                            <div className="contestant-status">
+                              <span className={`status-badge ${contestant.is_eliminated ? 'status-eliminated' : 'status-active'} ${contestant.is_winner ? 'status-winner' : ''}`}>
+                                {contestant.is_winner ? '🏆 Winner' : contestant.is_eliminated ? '❌ Eliminated' : '✅ Active'}
+                              </span>
                             </div>
                           </td>
                         </tr>
@@ -469,14 +423,7 @@ const Admin = () => {
         )}
       </div>
 
-      {/* Event History Modal */}
-      {showEventHistory && selectedContestantId && (
-        <ContestantEventHistory
-          contestantId={selectedContestantId}
-          onClose={handleCloseEventHistory}
-          onEventDeleted={handleEventDeleted}
-        />
-      )}
+
     </div>
   );
 };

@@ -4,6 +4,116 @@ const predictionScoringService = require('../services/predictionScoringService')
 const { clearLeaderboardCache } = require('./leaderboardController');
 
 /**
+ * Helper function to update contestant elimination status
+ * Sets is_eliminated to true for elimination events (event_type_id 10 or 29)
+ */
+async function updateContestantEliminationStatus(contestantId, eventTypeId) {
+  // Check if this is an elimination event (10 = eliminated, 29 = eliminated_medical)
+  if (eventTypeId === 10 || eventTypeId === 29) {
+    const { error } = await supabase
+      .from('contestants')
+      .update({ is_eliminated: true })
+      .eq('id', contestantId);
+
+    if (error) {
+      console.error('Error updating contestant elimination status:', error);
+      throw error;
+    }
+
+    console.log(`Contestant ${contestantId} marked as eliminated due to event type ${eventTypeId}`);
+  }
+}
+
+/**
+ * Helper function to update contestant winner status
+ * Sets is_winner to true for winner events (event_type_id 33)
+ */
+async function updateContestantWinnerStatus(contestantId, eventTypeId) {
+  // Check if this is a winner event (33 = winner)
+  if (eventTypeId === 33) {
+    const { error } = await supabase
+      .from('contestants')
+      .update({ is_winner: true })
+      .eq('id', contestantId);
+
+    if (error) {
+      console.error('Error updating contestant winner status:', error);
+      throw error;
+    }
+
+    console.log(`Contestant ${contestantId} marked as winner due to event type ${eventTypeId}`);
+  }
+}
+
+/**
+ * Helper function to check and update elimination status after event deletion
+ * Sets is_eliminated to false if no elimination events remain for the contestant
+ */
+async function checkAndUpdateEliminationStatusAfterDeletion(contestantId) {
+  // Check if the contestant still has any elimination events
+  const { data: remainingEliminations, error } = await supabase
+    .from('contestant_events')
+    .select('id')
+    .eq('contestant_id', contestantId)
+    .in('event_type_id', [10, 29])
+    .limit(1);
+
+  if (error) {
+    console.error('Error checking remaining elimination events:', error);
+    throw error;
+  }
+
+  // If no elimination events remain, mark contestant as not eliminated
+  if (!remainingEliminations || remainingEliminations.length === 0) {
+    const { error: updateError } = await supabase
+      .from('contestants')
+      .update({ is_eliminated: false })
+      .eq('id', contestantId);
+
+    if (updateError) {
+      console.error('Error updating contestant elimination status to false:', updateError);
+      throw updateError;
+    }
+
+    console.log(`Contestant ${contestantId} marked as not eliminated (no elimination events remain)`);
+  }
+}
+
+/**
+ * Helper function to check and update winner status after event deletion
+ * Sets is_winner to false if no winner events remain for the contestant
+ */
+async function checkAndUpdateWinnerStatusAfterDeletion(contestantId) {
+  // Check if the contestant still has any winner events
+  const { data: remainingWinnerEvents, error } = await supabase
+    .from('contestant_events')
+    .select('id')
+    .eq('contestant_id', contestantId)
+    .eq('event_type_id', 33) // 33 = winner
+    .limit(1);
+
+  if (error) {
+    console.error('Error checking remaining winner events:', error);
+    throw error;
+  }
+
+  // If no winner events remain, mark contestant as not winner
+  if (!remainingWinnerEvents || remainingWinnerEvents.length === 0) {
+    const { error: updateError } = await supabase
+      .from('contestants')
+      .update({ is_winner: false })
+      .eq('id', contestantId);
+
+    if (updateError) {
+      console.error('Error updating contestant winner status to false:', updateError);
+      throw updateError;
+    }
+
+    console.log(`Contestant ${contestantId} marked as not winner (no winner events remain)`);
+  }
+}
+
+/**
  * Get all events for an episode grouped by contestant
  * @route GET /api/episodes/:episodeId/events
  * @access Protected
@@ -188,6 +298,17 @@ async function addEvents(req, res) {
       return res.status(500).json({ error: 'Failed to insert events' });
     }
 
+    // Update elimination status for any elimination events
+    for (const event of insertedEvents) {
+      try {
+        await updateContestantEliminationStatus(event.contestant_id, event.event_type_id);
+        await updateContestantWinnerStatus(event.contestant_id, event.event_type_id);
+      } catch (error) {
+        console.error('Error updating contestant status:', error);
+        // Continue processing other events even if status update fails
+      }
+    }
+
     // Check for elimination events and trigger prediction scoring
     const predictionScoringResults = [];
     for (const event of insertedEvents) {
@@ -323,7 +444,7 @@ async function deleteEvent(req, res) {
     // Validate event exists and belongs to episode
     const { data: event, error: fetchError } = await supabase
       .from('contestant_events')
-      .select('id, episode_id, contestant_id')
+      .select('id, episode_id, contestant_id, event_type_id')
       .eq('id', eventId)
       .maybeSingle();
 
@@ -341,6 +462,7 @@ async function deleteEvent(req, res) {
     }
 
     const contestantId = event.contestant_id;
+    const eventTypeId = event.event_type_id;
 
     // Delete event from contestant_events
     const { error: deleteError } = await supabase
@@ -351,6 +473,26 @@ async function deleteEvent(req, res) {
     if (deleteError) {
       console.error('Error deleting event:', deleteError);
       return res.status(500).json({ error: 'Failed to delete event' });
+    }
+
+    // Check if we need to update elimination status after deletion
+    if (eventTypeId === 10 || eventTypeId === 29) {
+      try {
+        await checkAndUpdateEliminationStatusAfterDeletion(contestantId);
+      } catch (error) {
+        console.error('Error updating elimination status after deletion:', error);
+        // Continue processing even if elimination status update fails
+      }
+    }
+
+    // Check if we need to update winner status after deletion
+    if (eventTypeId === 33) {
+      try {
+        await checkAndUpdateWinnerStatusAfterDeletion(contestantId);
+      } catch (error) {
+        console.error('Error updating winner status after deletion:', error);
+        // Continue processing even if winner status update fails
+      }
     }
 
     // Recalculate episode score
@@ -418,10 +560,10 @@ async function bulkUpdateEvents(req, res) {
     // Process deletions
     if (remove.length > 0) {
       for (const eventId of remove) {
-        // Fetch event to get contestant_id
+        // Fetch event to get contestant_id and event_type_id
         const { data: event, error: fetchError } = await supabase
           .from('contestant_events')
-          .select('contestant_id, episode_id')
+          .select('contestant_id, episode_id, event_type_id')
           .eq('id', eventId)
           .maybeSingle();
 
@@ -450,6 +592,27 @@ async function bulkUpdateEvents(req, res) {
 
         if (deleteError) {
           console.error('Error deleting event:', deleteError);
+          continue;
+        }
+
+        // Check if we need to update elimination status after deletion
+        if (event.event_type_id === 10 || event.event_type_id === 29) {
+          try {
+            await checkAndUpdateEliminationStatusAfterDeletion(event.contestant_id);
+          } catch (error) {
+            console.error('Error updating elimination status after deletion:', error);
+            // Continue processing other events even if elimination status update fails
+          }
+        }
+
+        // Check if we need to update winner status after deletion
+        if (event.event_type_id === 33) {
+          try {
+            await checkAndUpdateWinnerStatusAfterDeletion(event.contestant_id);
+          } catch (error) {
+            console.error('Error updating winner status after deletion:', error);
+            // Continue processing other events even if winner status update fails
+          }
         }
       }
     }
@@ -526,6 +689,17 @@ async function bulkUpdateEvents(req, res) {
         }
         
         insertedEvents = data || [];
+
+        // Update elimination and winner status for any relevant events
+        for (const event of insertedEvents) {
+          try {
+            await updateContestantEliminationStatus(event.contestant_id, event.event_type_id);
+            await updateContestantWinnerStatus(event.contestant_id, event.event_type_id);
+          } catch (error) {
+            console.error('Error updating contestant status:', error);
+            // Continue processing other events even if status update fails
+          }
+        }
       }
     }
 

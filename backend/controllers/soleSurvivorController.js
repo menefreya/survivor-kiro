@@ -13,15 +13,15 @@ async function updateSoleSurvivor(req, res) {
 
     // Ensure user can only update their own sole survivor pick (unless admin)
     if (parseInt(playerId) !== userId && !req.user.isAdmin) {
-      return res.status(403).json({ 
-        error: 'You can only update your own sole survivor pick' 
+      return res.status(403).json({
+        error: 'You can only update your own sole survivor pick'
       });
     }
 
     // Validate contestant_id is provided
     if (!contestant_id) {
-      return res.status(400).json({ 
-        error: 'contestant_id is required' 
+      return res.status(400).json({
+        error: 'contestant_id is required'
       });
     }
 
@@ -88,8 +88,8 @@ async function updateSoleSurvivor(req, res) {
       draftReplacement = await replaceDraftPickForSoleSurvivor(playerId, contestant_id);
     } catch (replacementError) {
       console.error('Error replacing draft pick for sole survivor:', replacementError);
-      return res.status(500).json({ 
-        error: 'Failed to replace draft pick. Please try again.' 
+      return res.status(500).json({
+        error: 'Failed to replace draft pick. Please try again.'
       });
     }
 

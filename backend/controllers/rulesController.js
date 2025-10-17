@@ -14,7 +14,7 @@ async function getScoringRules(req, res) {
       description: "Each player picks one contestant to win the season",
       scoring: "Contestant's total score + episode bonus + winner bonus",
       episode_bonus: "+1 point per episode while contestant remains in current selection period",
-      winner_bonus: "+25 points if contestant wins and was selected by episode 2"
+      winner_bonus: "+50 points if contestant wins and was selected by episode 2"
     },
     elimination_predictions: {
       description: "Predict which contestant will be eliminated from each tribe per episode",

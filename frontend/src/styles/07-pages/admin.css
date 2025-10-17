@@ -528,6 +528,42 @@
   border: 1px solid var(--color-warning);
 }
 
+/* Contestant Status Badges */
+.contestant-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-active {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.status-eliminated {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.status-winner {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #b45309;
+  border: 1px solid #d97706;
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+/* Winner status takes precedence over other statuses */
+.status-badge.status-winner {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #b45309;
+  border: 1px solid #d97706;
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
 /* Status icons */
 .status-badge::before {
   content: '';
