@@ -249,6 +249,11 @@
 
   .navigation__logo-image {
     height: 56px;
+  position: fixed;    /* Anchored to viewport */
+  left: 1rem;         /* Distance from top */
+  right: 1rem;       /* Distance from right */
+  z-index: 1000;     /* Above other content */
+
   }
 
   /* Show hamburger menu on mobile - fixed to viewport */
