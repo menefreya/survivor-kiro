@@ -235,20 +235,29 @@
     position: sticky;
     top: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     z-index: var(--z-sticky);
     padding: var(--spacing-3) var(--spacing-4);
+    padding-right: calc(var(--spacing-4) + 3rem); /* Space for fixed hamburger menu */
     background: var(--color-bg-primary);
+    /* Ensure no properties interfere with fixed positioning */
+    transform: none;
+    perspective: none;
+    overflow: visible;
   }
 
   .navigation__logo-image {
     height: 56px;
   }
 
-  /* Show hamburger menu on mobile */
+  /* Show hamburger menu on mobile - fixed to viewport */
   .mobile-menu-toggle {
     display: block;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
   }
 
   /* Hide menu by default on mobile */
@@ -256,20 +265,20 @@
     display: none;
     flex-direction: column;
     gap: 0;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: calc(1rem + 48px + 0.5rem); /* Position below fixed hamburger menu */
     left: 0;
     right: 0;
     background: var(--color-bg-overlay);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--color-border-subtle);
-    border-top: none;
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     padding: var(--spacing-2) 0;
-    z-index: var(--z-fixed);
-    max-height: 80vh;
+    z-index: 999; /* Just below hamburger menu */
+    max-height: calc(100vh - 1rem - 48px - 0.5rem - 1rem);
     overflow-y: auto;
+    margin: 0 var(--spacing-4); /* Add side margins */
   }
 
   /* Fallback for mobile menu without backdrop-filter */
@@ -283,7 +292,7 @@
   .navigation__list--mobile-open {
     display: flex;
     animation: slideDown var(--transition-base) ease-out;
-    z-index: var(--z-modal);
+    z-index: 999; /* Just below hamburger menu */
   }
 
   @keyframes slideDown {
