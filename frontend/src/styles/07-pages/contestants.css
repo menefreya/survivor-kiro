@@ -82,11 +82,11 @@
 }
 
 .contestant-performance-table {
-  width: 500px;
+  width: 700px;
   border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;
-  min-width: 500px;
+  min-width: 700px;
 }
 
 /* Screen reader only caption */
@@ -153,6 +153,21 @@
 }
 
 .header-trend {
+  width: 80px;
+  text-align: center;
+}
+
+.header-idols-found {
+  width: 80px;
+  text-align: center;
+}
+
+.header-reward-wins {
+  width: 80px;
+  text-align: center;
+}
+
+.header-immunity-wins {
   width: 80px;
   text-align: center;
 }
@@ -356,6 +371,24 @@
    Trend Indicator Styling
    =========================== */
 .contestant-trend {
+  width: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.contestant-idols-found {
+  width: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.contestant-reward-wins {
+  width: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.contestant-immunity-wins {
   width: 80px;
   text-align: center;
   vertical-align: middle;
@@ -583,6 +616,39 @@
    Responsive Design - Mobile
    =========================== */
 @media (max-width: 767px) {
+
+  /* Abbreviated column headers for mobile */
+  .header-idols-found::after {
+    content: "Idols";
+  }
+
+  .header-reward-wins::after {
+    content: "Reward";
+  }
+
+  .header-immunity-wins::after {
+    content: "Immunity";
+  }
+
+  .header-idols-found,
+  .header-reward-wins,
+  .header-immunity-wins {
+    font-size: var(--font-size-xs) !important;
+    text-indent: -9999px;
+    position: relative;
+  }
+
+  .header-idols-found::after,
+  .header-reward-wins::after,
+  .header-immunity-wins::after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-indent: 0;
+    white-space: nowrap;
+  }
+
   .contestant-performance-container {
     padding: var(--spacing-2);
   }
@@ -617,22 +683,45 @@
   .contestant-performance-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 
   .contestant-performance-table {
-    min-width: 500px;
+    min-width: 640px;
     table-layout: fixed;
   }
 
-  /* Hide rank column on mobile to save space */
+  /* Ensure first column (rank) stays visible during horizontal scroll */
+  .contestant-performance-table th:first-child,
+  .contestant-performance-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--color-bg-tertiary);
+    z-index: 2;
+    border-right: 1px solid var(--color-border-medium);
+  }
+
+  /* Make contestant info column also sticky for better mobile UX */
+  .contestant-performance-table th:nth-child(2),
+  .contestant-performance-table td:nth-child(2) {
+    position: sticky;
+    left: 50px;
+    /* Width of rank column */
+    background: var(--color-bg-secondary);
+    z-index: 1;
+    border-right: 1px solid var(--color-border-medium);
+  }
+
+  /* Keep rank column visible on mobile but make it smaller and sticky */
   .header-rank,
   .contestant-rank {
-    display: none !important;
+    width: 50px !important;
+    padding: var(--spacing-1) !important;
   }
 
   .header-contestant,
   .contestant-info {
-    width: 160px !important;
+    width: 140px !important;
     padding-left: var(--spacing-2) !important;
     padding-right: 0 !important;
     overflow: hidden !important;
@@ -662,17 +751,32 @@
 
   .header-total-score,
   .contestant-total-score {
-    width: 120px !important;
+    width: 90px !important;
   }
 
   .header-average,
   .contestant-average {
-    width: 100px !important;
+    width: 80px !important;
   }
 
   .header-trend,
   .contestant-trend {
-    width: 80px !important;
+    width: 70px !important;
+  }
+
+  .header-idols-found,
+  .contestant-idols-found {
+    width: 70px !important;
+  }
+
+  .header-reward-wins,
+  .contestant-reward-wins {
+    width: 70px !important;
+  }
+
+  .header-immunity-wins,
+  .contestant-immunity-wins {
+    width: 70px !important;
   }
 
   .contestant-avatar {
@@ -919,7 +1023,7 @@
    =========================== */
 .network-status-indicator {
   position: fixed;
-  top: var(--spacing-4);
+  top: calc(1rem + 48px + 0.5rem); /* Position below hamburger menu */
   right: var(--spacing-4);
   padding: var(--spacing-2) var(--spacing-3);
   background: var(--color-warning);
@@ -927,7 +1031,7 @@
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  z-index: var(--z-toast);
+  z-index: 999; /* Below hamburger menu */
   animation: slideInRight 0.3s ease-out;
 }
 

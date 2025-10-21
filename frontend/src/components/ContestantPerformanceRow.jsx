@@ -4,6 +4,7 @@ import { RankBadge } from './badges';
 
 const ContestantPerformanceRow = memo(({ contestant }) => {
   // Extract contestant data with defaults
+  // Enhanced error handling for missing event data fields
   const {
     name,
     image_url,
@@ -14,8 +15,12 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
     rank,
     profession,
     age,
-    is_eliminated = false
-  } = contestant;
+    is_eliminated = false,
+    // Event count fields with graceful fallbacks
+    idols_found = null,
+    reward_wins = null,
+    immunity_wins = null
+  } = contestant || {}; // Protect against undefined contestant object
 
   // State for image loading
   const [imageError, setImageError] = useState(false);
@@ -47,6 +52,25 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
   // Format total score to ensure it shows 0 for unscored contestants
   const formatTotalScore = (score) => {
     return score || 0;
+  };
+
+  // Format event counts - returns "-" for zero/null values and number string for positive values
+  // Enhanced error handling for missing event data
+  const formatEventCount = (count) => {
+    // Handle all falsy values and non-numeric values gracefully
+    if (count === null || count === undefined || count === 0 || count === '' || isNaN(count)) {
+      return '-';
+    }
+    
+    // Ensure we return a string representation of a valid number
+    const numericCount = Number(count);
+    if (numericCount < 0) {
+      // Log warning for negative values but display as 0
+      console.warn('Negative event count detected:', count);
+      return '-';
+    }
+    
+    return Math.floor(numericCount).toString();
   };
 
   // Handle image loading success
@@ -248,6 +272,42 @@ const ContestantPerformanceRow = memo(({ contestant }) => {
       >
         <span className="u-text-base u-text-secondary" aria-hidden="true">
           {formatAverage(average_per_episode)}
+        </span>
+      </td>
+
+      {/* Idols Found */}
+      <td
+        className="u-p-3 u-text-center contestant-idols-found"
+        role="cell"
+        aria-label={`Idols found: ${formatEventCount(idols_found) === '-' ? 'none' : formatEventCount(idols_found)}`}
+        aria-describedby={`contestant-${contestant?.id}-name`}
+      >
+        <span className="u-text-base u-text-secondary" aria-hidden="true">
+          {formatEventCount(idols_found)}
+        </span>
+      </td>
+
+      {/* Reward Wins */}
+      <td
+        className="u-p-3 u-text-center contestant-reward-wins"
+        role="cell"
+        aria-label={`Team reward challenges won: ${formatEventCount(reward_wins) === '-' ? 'none' : formatEventCount(reward_wins)}`}
+        aria-describedby={`contestant-${contestant?.id}-name`}
+      >
+        <span className="u-text-base u-text-secondary" aria-hidden="true">
+          {formatEventCount(reward_wins)}
+        </span>
+      </td>
+
+      {/* Immunity Wins */}
+      <td
+        className="u-p-3 u-text-center contestant-immunity-wins"
+        role="cell"
+        aria-label={`Team immunity challenges won: ${formatEventCount(immunity_wins) === '-' ? 'none' : formatEventCount(immunity_wins)}`}
+        aria-describedby={`contestant-${contestant?.id}-name`}
+      >
+        <span className="u-text-base u-text-secondary" aria-hidden="true">
+          {formatEventCount(immunity_wins)}
         </span>
       </td>
     </tr>

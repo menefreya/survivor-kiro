@@ -254,10 +254,10 @@
   /* Show hamburger menu on mobile - fixed to viewport */
   .mobile-menu-toggle {
     display: block;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1000;
+    position: fixed !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    z-index: 1000 !important;
   }
 
   /* Hide menu by default on mobile */

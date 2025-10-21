@@ -382,15 +382,25 @@ async function getContestantEvents(req, res) {
 async function getContestantPerformance(req, res) {
   try {
     // Fetch all contestants with basic info
-    const { data: contestants, error: contestantsError } = await supabase
+    const { data: rawContestants, error: contestantsError } = await supabase
       .from('contestants')
-      .select('id, name, image_url, total_score, profession, is_eliminated')
-      .order('total_score', { ascending: false });
+      .select('id, name, image_url, total_score, profession, is_eliminated');
 
     if (contestantsError) {
       console.error('Error fetching contestants:', contestantsError);
       return res.status(500).json({ error: 'Failed to fetch contestants' });
     }
+
+    // Sort contestants by total_score descending, with null values last
+    const contestants = rawContestants.sort((a, b) => {
+      // Handle null values - put them at the end
+      if (a.total_score === null && b.total_score === null) return 0;
+      if (a.total_score === null) return 1;
+      if (b.total_score === null) return -1;
+      
+      // Normal descending sort for non-null values
+      return b.total_score - a.total_score;
+    });
 
     // Fetch all episode scores for all contestants to calculate episodes participated
     const { data: episodeScores, error: scoresError } = await supabase
@@ -408,6 +418,93 @@ async function getContestantPerformance(req, res) {
     if (scoresError) {
       console.error('Error fetching episode scores:', scoresError);
       return res.status(500).json({ error: 'Failed to fetch episode scores' });
+    }
+
+    // Fetch event counts for all contestants with enhanced error handling
+    let eventCounts = {};
+    
+    // Helper function to safely fetch event counts by type
+    const fetchEventCountsByType = async (eventTypeName, countKey) => {
+      try {
+        const { data: events, error } = await supabase
+          .from('contestant_events')
+          .select(`
+            contestant_id,
+            event_types!inner(name)
+          `)
+          .eq('event_types.name', eventTypeName);
+
+        if (error) {
+          console.warn(`Error fetching ${eventTypeName} events:`, error);
+          return false; // Indicate failure
+        }
+
+        // Process events if query succeeded
+        if (events && Array.isArray(events)) {
+          events.forEach(event => {
+            if (event.contestant_id) {
+              if (!eventCounts[event.contestant_id]) {
+                eventCounts[event.contestant_id] = { idols_found: 0, reward_wins: 0, immunity_wins: 0 };
+              }
+              eventCounts[event.contestant_id][countKey]++;
+            }
+          });
+          return true; // Indicate success
+        }
+        
+        return false;
+      } catch (error) {
+        console.warn(`Exception while fetching ${eventTypeName} events:`, error);
+        return false;
+      }
+    };
+
+    // Attempt to fetch each event type with individual error handling
+    try {
+      // Check if event_types table exists and has the required event types
+      const { data: eventTypes, error: eventTypesError } = await supabase
+        .from('event_types')
+        .select('name')
+        .in('name', ['found_hidden_idol', 'team_reward_win', 'team_immunity_win']);
+
+      if (eventTypesError) {
+        console.warn('Error checking event types:', eventTypesError);
+        console.warn('Event counts will be set to zero for all contestants');
+      } else {
+        const availableEventTypes = eventTypes?.map(et => et.name) || [];
+        
+        // Only fetch event counts for event types that exist
+        if (availableEventTypes.includes('found_hidden_idol')) {
+          const success = await fetchEventCountsByType('found_hidden_idol', 'idols_found');
+          if (!success) {
+            console.warn('Failed to fetch idol events, continuing with zero counts');
+          }
+        } else {
+          console.warn('Event type "found_hidden_idol" not found in database');
+        }
+
+        if (availableEventTypes.includes('team_reward_win')) {
+          const success = await fetchEventCountsByType('team_reward_win', 'reward_wins');
+          if (!success) {
+            console.warn('Failed to fetch reward events, continuing with zero counts');
+          }
+        } else {
+          console.warn('Event type "team_reward_win" not found in database');
+        }
+
+        if (availableEventTypes.includes('team_immunity_win')) {
+          const success = await fetchEventCountsByType('team_immunity_win', 'immunity_wins');
+          if (!success) {
+            console.warn('Failed to fetch immunity events, continuing with zero counts');
+          }
+        } else {
+          console.warn('Event type "team_immunity_win" not found in database');
+        }
+      }
+    } catch (eventError) {
+      console.warn('Error in event count aggregation:', eventError);
+      console.warn('Continuing with empty event counts');
+      // eventCounts remains empty object, which will result in zero counts for all contestants
     }
 
     // Group episode scores by contestant to count episodes participated
@@ -437,6 +534,19 @@ async function getContestantPerformance(req, res) {
         averagePerEpisode = parseFloat((contestant.total_score / episodesParticipated).toFixed(1));
       }
 
+      // Get event counts for this contestant with enhanced error handling
+      const contestantEvents = eventCounts[contestant.id] || { idols_found: 0, reward_wins: 0, immunity_wins: 0 };
+      
+      // Ensure all event count fields are valid numbers (handle any data corruption)
+      const safeEventCounts = {
+        idols_found: Number.isInteger(contestantEvents.idols_found) && contestantEvents.idols_found >= 0 
+          ? contestantEvents.idols_found : 0,
+        reward_wins: Number.isInteger(contestantEvents.reward_wins) && contestantEvents.reward_wins >= 0 
+          ? contestantEvents.reward_wins : 0,
+        immunity_wins: Number.isInteger(contestantEvents.immunity_wins) && contestantEvents.immunity_wins >= 0 
+          ? contestantEvents.immunity_wins : 0
+      };
+
       return {
         id: contestant.id,
         name: contestant.name,
@@ -447,14 +557,39 @@ async function getContestantPerformance(req, res) {
         episodes_participated: episodesParticipated,
         is_eliminated: contestant.is_eliminated,
         profession: contestant.profession,
-        rank: index + 1
+        rank: index + 1,
+        idols_found: safeEventCounts.idols_found,
+        reward_wins: safeEventCounts.reward_wins,
+        immunity_wins: safeEventCounts.immunity_wins
       };
     });
 
     res.json({ data: performanceData });
   } catch (error) {
     console.error('Error in getContestantPerformance:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    
+    // Provide more specific error messages based on the error type
+    let errorMessage = 'Internal server error';
+    
+    if (error.message && error.message.includes('relation') && error.message.includes('does not exist')) {
+      errorMessage = 'Database schema error: Required tables not found';
+      console.error('Database schema issue detected:', error.message);
+    } else if (error.code === 'PGRST301') {
+      errorMessage = 'Database connection error';
+      console.error('Database connection issue:', error);
+    } else if (error.code && error.code.startsWith('PGRST')) {
+      errorMessage = 'Database query error';
+      console.error('Database query issue:', error);
+    }
+    
+    res.status(500).json({ 
+      error: errorMessage,
+      // Include additional context in development
+      ...(process.env.NODE_ENV === 'development' && { 
+        details: error.message,
+        code: error.code 
+      })
+    });
   }
 }
 

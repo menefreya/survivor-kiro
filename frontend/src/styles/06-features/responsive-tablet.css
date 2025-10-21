@@ -543,6 +543,46 @@
 }
 
 /* ============================================
+   TABLET TABLE OPTIMIZATIONS
+   ============================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Enhanced table layout for tablet with new columns */
+  .contestant-performance-table {
+    width: auto;
+    max-width: 900px;
+    min-width: 750px;
+  }
+  
+  /* Optimized column spacing for tablet */
+  .contestant-performance-table th,
+  .contestant-performance-table td {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+  
+  /* Tablet column widths */
+  .header-contestant,
+  .contestant-info {
+    width: 180px;
+  }
+  
+  .header-total-score,
+  .contestant-total-score,
+  .header-average,
+  .contestant-average,
+  .header-trend,
+  .contestant-trend,
+  .header-idols-found,
+  .contestant-idols-found,
+  .header-reward-wins,
+  .contestant-reward-wins,
+  .header-immunity-wins,
+  .contestant-immunity-wins {
+    width: 85px;
+  }
+}
+
+/* ============================================
    TABLET PERFORMANCE OPTIMIZATIONS
    ============================================ */
 

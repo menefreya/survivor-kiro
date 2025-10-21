@@ -23,29 +23,48 @@ const ContestantPerformance = () => {
 
       const response = await api.get('/contestants/performance');
       const contestantData = response.data.data || response.data;
-      
+
       // Validate response data
       if (!Array.isArray(contestantData)) {
         throw new Error('Invalid data format received from server');
       }
-      
+
       // Add rank to each contestant based on their position in the sorted array
-      const rankedContestants = contestantData.map((contestant, index) => ({
-        ...contestant,
-        rank: index + 1
-      }));
-      
+      // Enhanced error handling: ensure event count fields exist with proper defaults
+      const rankedContestants = contestantData.map((contestant, index) => {
+        // Validate and sanitize contestant data
+        const sanitizedContestant = {
+          ...contestant,
+          rank: index + 1,
+          // Ensure event count fields exist with proper defaults
+          idols_found: contestant.idols_found !== undefined ? contestant.idols_found : null,
+          reward_wins: contestant.reward_wins !== undefined ? contestant.reward_wins : null,
+          immunity_wins: contestant.immunity_wins !== undefined ? contestant.immunity_wins : null
+        };
+
+        // Log warning if event data is missing (for debugging)
+        if (contestant.idols_found === undefined || contestant.reward_wins === undefined || contestant.immunity_wins === undefined) {
+          console.warn('Missing event data for contestant:', contestant.name, {
+            idols_found: contestant.idols_found,
+            reward_wins: contestant.reward_wins,
+            immunity_wins: contestant.immunity_wins
+          });
+        }
+
+        return sanitizedContestant;
+      });
+
       setContestants(rankedContestants);
       setError(null);
       setRetryCount(0); // Reset retry count on success
       setLastUpdated(new Date());
     } catch (err) {
       console.error('Error fetching contestant performance:', err);
-      
+
       // Determine error type and create appropriate user-friendly message
       let errorMessage = 'Failed to load contestant performance data.';
       let errorType = 'generic';
-      
+
       if (err.code === 'NETWORK_ERROR' || !navigator.onLine) {
         errorMessage = 'Network connection lost. Please check your internet connection and try again.';
         errorType = 'network';
@@ -68,9 +87,9 @@ const ContestantPerformance = () => {
         errorMessage = 'Received invalid data from server. Please try refreshing the page.';
         errorType = 'data';
       }
-      
+
       setError({ message: errorMessage, type: errorType, canRetry: errorType !== 'auth' && errorType !== 'permission' });
-      
+
       // Increment retry count for automatic retry logic
       if (isRetryAttempt) {
         setRetryCount(prev => prev + 1);
@@ -84,7 +103,7 @@ const ContestantPerformance = () => {
   // Set document title
   useEffect(() => {
     document.title = 'Contestants - Survivor Fantasy League';
-    
+
     // Cleanup function to reset title when component unmounts
     return () => {
       document.title = 'Survivor Fantasy League';
@@ -120,7 +139,7 @@ const ContestantPerformance = () => {
   // Handle retry with exponential backoff for automatic retries
   const handleRetry = useCallback(() => {
     if (isRetrying) return; // Prevent multiple simultaneous retries
-    
+
     setError(null);
     setIsLoading(true);
     fetchContestantPerformance(true);
@@ -142,7 +161,7 @@ const ContestantPerformance = () => {
   // Memoized calculations for performance optimization
   const memoizedContestantData = useMemo(() => {
     if (!contestants || contestants.length === 0) return [];
-    
+
     // Sort contestants by total score (descending) and add performance metrics
     return contestants
       .sort((a, b) => (b.total_score || 0) - (a.total_score || 0))
@@ -167,7 +186,7 @@ const ContestantPerformance = () => {
   // Memoized error state calculations
   const errorState = useMemo(() => {
     if (!error) return null;
-    
+
     const getErrorIcon = (errorType) => {
       switch (errorType) {
         case 'network': return '🌐';
@@ -217,10 +236,10 @@ const ContestantPerformance = () => {
 
     const handleOffline = () => {
       if (!error) {
-        setError({ 
-          message: 'Network connection lost. Data may be outdated.', 
-          type: 'network', 
-          canRetry: true 
+        setError({
+          message: 'Network connection lost. Data may be outdated.',
+          type: 'network',
+          canRetry: true
         });
       }
     };
@@ -244,13 +263,16 @@ const ContestantPerformance = () => {
       <div className="card">
         <div className="card-body u-p-0">
           <div className="u-overflow-x-auto">
-            <table className="u-border-collapse u-mx-auto" style={{ width: 'auto', maxWidth: '800px' }}>
+            <table className="u-border-collapse u-mx-auto" style={{ width: 'auto', minWidth: '1000px' }}>
               <thead className="u-bg-tertiary">
                 <tr>
                   <th className="u-p-4" style={{ width: '80px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
-                  <th className="u-p-4" style={{ width: 'auto' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-20 u-animate-pulse"></div></th>
+                  <th className="u-p-4" style={{ width: '120px', minWidth: '120px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-20 u-animate-pulse"></div></th>
                   <th className="u-p-4" style={{ width: '120px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-12 u-animate-pulse"></div></th>
                   <th className="u-p-4" style={{ width: '100px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
+                  <th className="u-p-3" style={{ width: '110px', minWidth: '110px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
+                  <th className="u-p-3" style={{ width: '110px', minWidth: '110px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
+                  <th className="u-p-3" style={{ width: '120px', minWidth: '120px' }}><div className="u-bg-quaternary u-rounded u-h-4 u-w-16 u-animate-pulse"></div></th>
                 </tr>
               </thead>
               <tbody>
@@ -269,6 +291,15 @@ const ContestantPerformance = () => {
                       </div>
                     </td>
                     <td className="u-p-4 u-text-center">
+                      <div className="u-bg-tertiary u-rounded u-h-4 u-w-8 u-mx-auto u-animate-pulse"></div>
+                    </td>
+                    <td className="u-p-3 u-text-center">
+                      <div className="u-bg-tertiary u-rounded u-h-4 u-w-8 u-mx-auto u-animate-pulse"></div>
+                    </td>
+                    <td className="u-p-3 u-text-center">
+                      <div className="u-bg-tertiary u-rounded u-h-4 u-w-8 u-mx-auto u-animate-pulse"></div>
+                    </td>
+                    <td className="u-p-3 u-text-center">
                       <div className="u-bg-tertiary u-rounded u-h-4 u-w-8 u-mx-auto u-animate-pulse"></div>
                     </td>
                     <td className="u-p-4 u-text-center">
@@ -300,18 +331,18 @@ const ContestantPerformance = () => {
             </div>
             <h2 className="card-title u-mb-4">{errorState.title}</h2>
             <p className="card-text u-mb-4">{error.message}</p>
-            
+
             {/* Show retry count for network errors */}
             {error.type === 'network' && retryCount > 0 && (
               <p className="u-text-sm u-text-secondary u-mb-4">
                 Retry attempt {retryCount} of 3
               </p>
             )}
-            
+
             {/* Action buttons */}
             <div className="u-flex u-gap-3 u-justify-center u-flex-wrap">
               {error.canRetry && (
-                <button 
+                <button
                   className={`btn btn--primary ${isRetrying ? 'btn-loading' : ''}`}
                   onClick={error.type === 'auth' ? () => window.location.href = '/login' : handleRetry}
                   disabled={isRetrying}
@@ -321,10 +352,10 @@ const ContestantPerformance = () => {
                   {errorState.actionText}
                 </button>
               )}
-              
+
               {/* Secondary action for non-auth errors */}
               {error.canRetry && error.type !== 'auth' && (
-                <button 
+                <button
                   className="btn btn--secondary"
                   onClick={() => window.location.reload()}
                   type="button"
@@ -333,7 +364,7 @@ const ContestantPerformance = () => {
                 </button>
               )}
             </div>
-            
+
             {/* Additional help text */}
             <div className="u-mt-6 u-text-sm u-text-tertiary">
               {error.type === 'network' && (
@@ -365,24 +396,24 @@ const ContestantPerformance = () => {
             onClick: handleRefresh
           }}
         />
-        
+
         {/* Additional help for empty state */}
         <div className="card u-mt-6">
           <div className="card-body u-text-center">
             <h3 className="card-title u-mb-4">What's Next?</h3>
             <p className="card-text u-mb-6">
-              Once contestants are added to the system, you'll be able to see their performance rankings, 
+              Once contestants are added to the system, you'll be able to see their performance rankings,
               scores, and trends here. This page will automatically update as new data becomes available.
             </p>
             <div className="u-flex u-gap-3 u-justify-center u-flex-wrap">
-              <button 
+              <button
                 className="btn btn--secondary"
                 onClick={() => window.location.href = '/'}
                 type="button"
               >
                 Go to Dashboard
               </button>
-              <button 
+              <button
                 className="btn btn--secondary"
                 onClick={() => window.location.href = '/ranking'}
                 type="button"
@@ -417,7 +448,7 @@ const ContestantPerformance = () => {
           <div className="u-overflow-x-auto">
             <table
               className="u-border-collapse u-mx-auto"
-              style={{ width: 'auto', maxWidth: '800px' }}
+              style={{ width: 'auto', minWidth: '1000px' }}
               role="table"
               aria-label="Contestant performance rankings sorted by total score"
               aria-describedby="table-description"
@@ -427,7 +458,7 @@ const ContestantPerformance = () => {
                 including rank, name, total score with trend indicator, and average points per episode.
                 Data is sorted by total score in descending order.
               </caption>
-              
+
               {/* Desktop Table Header */}
               <thead className="u-bg-tertiary">
                 <tr role="row">
@@ -445,7 +476,7 @@ const ContestantPerformance = () => {
                     scope="col"
                     aria-sort="none"
                     aria-label="Contestant name and details"
-                    style={{ width: 'auto' }}
+                    style={{ width: '120px', minWidth: '120px' }}
                   >
                     Contestant
                   </th>
@@ -454,7 +485,7 @@ const ContestantPerformance = () => {
                     scope="col"
                     aria-sort="none"
                     aria-label="Total points scored this season with trend indicator"
-                    style={{ width: '120px' }}
+                    style={{ width: '75px' }}
                   >
                     Total
                   </th>
@@ -466,6 +497,33 @@ const ContestantPerformance = () => {
                     style={{ width: '100px' }}
                   >
                     Avg/Ep
+                  </th>
+                  <th
+                    className="u-p-3 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary header-idols-found"
+                    scope="col"
+                    aria-sort="none"
+                    aria-label="Number of hidden immunity idols found by contestant"
+                    style={{ width: '110px', minWidth: '110px' }}
+                  >
+                    Idols Found
+                  </th>
+                  <th
+                    className="u-p-3 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary header-reward-wins"
+                    scope="col"
+                    aria-sort="none"
+                    aria-label="Number of team reward challenges won by contestant"
+                    style={{ width: '110px', minWidth: '110px' }}
+                  >
+                    Reward Wins
+                  </th>
+                  <th
+                    className="u-p-3 u-text-center u-border-b u-border-subtle u-text-sm u-font-semibold u-text-secondary header-immunity-wins"
+                    scope="col"
+                    aria-sort="none"
+                    aria-label="Number of team immunity challenges won by contestant"
+                    style={{ width: '120px', minWidth: '120px' }}
+                  >
+                    Immunity Wins
                   </th>
                 </tr>
               </thead>

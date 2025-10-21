@@ -81,6 +81,11 @@
     border: 1px solid var(--color-border-subtle);
     transition: all var(--transition-base);
     -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
+    /* Ensure fixed positioning is maintained */
+    position: fixed !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    z-index: 1000 !important;
   }
   
   .mobile-menu-toggle:hover {
