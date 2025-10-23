@@ -43,6 +43,7 @@ const LeaderboardCard = ({ players, userPosition, pointsBehindLeader, currentUse
                 draftedContestants={player.drafted_contestants || []}
                 soleSurvivor={player.sole_survivor}
                 predictionBonus={player.prediction_bonus || 0}
+                currentEpisodePredictionBonus={player.current_episode_prediction_bonus || 0}
               />
             ))}
           </div>

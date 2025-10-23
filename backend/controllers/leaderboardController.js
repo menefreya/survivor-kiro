@@ -68,10 +68,10 @@ async function getLeaderboard(req, res) {
       return res.status(500).json({ error: 'Failed to fetch players' });
     }
 
-    // BULK QUERY 2: Get all episodes with their numbers for range calculation
+    // BULK QUERY 2: Get all episodes with their numbers and aired dates for range calculation
     const { data: allEpisodes, error: episodesError } = await supabase
       .from('episodes')
-      .select('id, episode_number')
+      .select('id, episode_number, aired_date')
       .order('episode_number', { ascending: true });
 
     if (episodesError) {
@@ -79,10 +79,16 @@ async function getLeaderboard(req, res) {
       return res.status(500).json({ error: 'Failed to fetch episodes' });
     }
 
-    // Find latest episode for weekly change calculation
+    // Find latest aired episode (most recent by aired_date)
     const latestEpisode = allEpisodes && allEpisodes.length > 0
-      ? allEpisodes[allEpisodes.length - 1]
+      ? allEpisodes
+          .filter(ep => ep.aired_date !== null && new Date(ep.aired_date) <= new Date())
+          .sort((a, b) => new Date(b.aired_date) - new Date(a.aired_date))[0]
       : null;
+
+    if (!latestEpisode) {
+      console.log('No aired episodes found for leaderboard calculation');
+    }
 
     // BULK QUERY 3: Get ALL episode scores for all contestants (we'll filter by range later)
     const { data: allEpisodeScores, error: allScoresError } = await supabase
@@ -115,6 +121,22 @@ async function getLeaderboard(req, res) {
       predictionBonuses.forEach(pred => {
         predictionBonusMap[pred.player_id] = (predictionBonusMap[pred.player_id] || 0) + 3;
       });
+    }
+
+    // BULK QUERY 5: Get correct predictions for ONLY the latest episode (for bullseye display)
+    const latestEpisodeCorrectPredictions = {};
+    if (latestEpisode) {
+      const { data: latestEpisodePredictions, error: latestPredictionError } = await supabase
+        .from('elimination_predictions')
+        .select('player_id')
+        .eq('episode_id', latestEpisode.id)
+        .eq('is_correct', true);
+
+      if (!latestPredictionError && latestEpisodePredictions) {
+        latestEpisodePredictions.forEach(pred => {
+          latestEpisodeCorrectPredictions[pred.player_id] = true;
+        });
+      }
     }
 
     // Helper function to calculate score for a contestant in an episode range using episode IDs
@@ -252,9 +274,11 @@ async function getLeaderboard(req, res) {
       }
 
       const predictionBonus = predictionBonusMap[player.id] || 0;
+      const currentEpisodePredictionBonus = latestEpisodeCorrectPredictions[player.id] ? 3 : 0;
 
       if (player.id === 3) {
         console.log(`TOTALS: draft=${draftScore}, soleSurvivor=${soleSurvivorScore}, prediction=${predictionBonus}`);
+        console.log(`Current episode prediction bonus: ${currentEpisodePredictionBonus}`);
         console.log(`FINAL TOTAL: ${draftScore + soleSurvivorScore + predictionBonus}`);
         console.log('=================================');
       }
@@ -292,6 +316,9 @@ async function getLeaderboard(req, res) {
             }
           }
         }
+
+        // Add current episode prediction bonus to weekly change if applicable
+        weeklyChange += currentEpisodePredictionBonus;
       }
 
       // Skip complex sole survivor bonus for now to maintain performance
@@ -310,6 +337,7 @@ async function getLeaderboard(req, res) {
         sole_survivor_score: soleSurvivorScore,
         sole_survivor_bonus: soleSurvivorBonus,
         prediction_bonus: predictionBonus,
+        current_episode_prediction_bonus: currentEpisodePredictionBonus,
         elimination_compensation: 0,
         bonus_breakdown: bonusBreakdown,
         weekly_change: weeklyChange,

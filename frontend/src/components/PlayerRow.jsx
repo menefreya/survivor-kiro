@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import '../styles/07-pages/dashboard.css';
 
-const PlayerRow = ({ 
-  rank, 
-  playerName, 
-  username, 
+const PlayerRow = ({
+  rank,
+  playerName,
+  username,
   profileImageUrl,
-  totalScore, 
-  weeklyChange, 
+  totalScore,
+  weeklyChange,
   isCurrentUser,
   draftedContestants,
   soleSurvivor,
-  predictionBonus
+  predictionBonus,
+  currentEpisodePredictionBonus
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -123,19 +124,19 @@ const PlayerRow = ({
           )}
         </div>
 
-        {/* Prediction Bonus Indicator */}
-        {predictionBonus > 0 && (
-          <div 
+        {/* Prediction Bonus Indicator - Only show bullseye if correct prediction in current episode */}
+        {currentEpisodePredictionBonus > 0 && (
+          <div
             className="prediction-bonus-indicator"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
-            aria-label={`Prediction bonus: ${predictionBonus} points`}
+            aria-label={`Prediction bonus: ${currentEpisodePredictionBonus} points`}
           >
             <span className="bonus-icon" role="img" aria-hidden="true">🎯</span>
-            <span className="bonus-value">+{predictionBonus}</span>
+            <span className="bonus-value">+{currentEpisodePredictionBonus}</span>
             {showTooltip && (
               <div className="bonus-tooltip" role="tooltip">
-                Prediction Bonus: +{predictionBonus} pts
+                Prediction Bonus: +{currentEpisodePredictionBonus} pts (this episode)
               </div>
             )}
           </div>
