@@ -2,10 +2,12 @@ const supabase = require('../db/supabase');
 const scoreCalculationService = require('../services/scoreCalculationService');
 const predictionScoringService = require('../services/predictionScoringService');
 const { clearLeaderboardCache } = require('./leaderboardController');
+const { replaceEliminatedDraftPicks } = require('../services/draftService');
 
 /**
  * Helper function to update contestant elimination status
  * Sets is_eliminated to true for elimination events (event_type_id 10 or 29)
+ * Also triggers draft pick replacement for eliminated contestants
  */
 async function updateContestantEliminationStatus(contestantId, eventTypeId) {
   // Check if this is an elimination event (10 = eliminated, 29 = eliminated_medical)
@@ -21,6 +23,17 @@ async function updateContestantEliminationStatus(contestantId, eventTypeId) {
     }
 
     console.log(`Contestant ${contestantId} marked as eliminated due to event type ${eventTypeId}`);
+
+    // Trigger draft pick replacement for eliminated contestant
+    try {
+      const replacements = await replaceEliminatedDraftPicks(contestantId);
+      if (replacements.length > 0) {
+        console.log(`Replaced ${replacements.length} draft pick(s) for eliminated contestant ${contestantId}:`, replacements);
+      }
+    } catch (replacementError) {
+      console.error('Error replacing draft picks for eliminated contestant:', replacementError);
+      // Don't throw - elimination status was still updated successfully
+    }
   }
 }
 
@@ -48,6 +61,7 @@ async function updateContestantWinnerStatus(contestantId, eventTypeId) {
 /**
  * Helper function to check and update elimination status after event deletion
  * Sets is_eliminated to false if no elimination events remain for the contestant
+ * Note: Draft pick restoration after un-elimination is complex and not automatically handled
  */
 async function checkAndUpdateEliminationStatusAfterDeletion(contestantId) {
   // Check if the contestant still has any elimination events
@@ -76,6 +90,12 @@ async function checkAndUpdateEliminationStatusAfterDeletion(contestantId) {
     }
 
     console.log(`Contestant ${contestantId} marked as not eliminated (no elimination events remain)`);
+    
+    // Note: We don't automatically restore draft picks here because:
+    // 1. The replacement contestant may already be scoring points for other players
+    // 2. The logic for "undoing" a draft pick replacement is complex
+    // 3. Manual admin intervention may be needed to decide the best course of action
+    console.log(`Manual review may be needed for draft pick restoration for contestant ${contestantId}`);
   }
 }
 
