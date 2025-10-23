@@ -284,16 +284,19 @@ async function getAllEpisodesWithTeamSummary(req, res) {
       playerId = parseInt(targetPlayerId);
     }
 
-    // Get all episodes
-    const { data: episodes, error: episodesError } = await supabase
+    // Get all episodes excluding the current episode
+    const { data: allEpisodes, error: episodesError } = await supabase
       .from('episodes')
-      .select('id, episode_number, aired_date')
+      .select('id, episode_number, aired_date, is_current')
       .order('episode_number', { ascending: true });
 
     if (episodesError) {
       console.error('Error fetching episodes:', episodesError);
       return res.status(500).json({ error: 'Failed to fetch episodes' });
     }
+
+    // Filter out the current episode (is_current = true)
+    const episodes = (allEpisodes || []).filter(ep => !ep.is_current);
 
     // Get player's draft picks with episode ranges
     const { data: draftPicks, error: draftError } = await supabase
@@ -483,9 +486,9 @@ async function getTeamAuditData(req, res) {
     const currentEpisode = allEpisodes?.find(ep => ep.is_current);
     const currentEpisodeNumber = currentEpisode ? currentEpisode.episode_number : null;
 
-    // Filter episodes up to current and reverse for descending order
+    // Filter episodes up to but not including current episode and reverse for descending order
     const episodes = currentEpisodeNumber
-      ? allEpisodes.filter(ep => ep.episode_number <= currentEpisodeNumber).reverse()
+      ? allEpisodes.filter(ep => ep.episode_number < currentEpisodeNumber).reverse()
       : allEpisodes.reverse();
 
     // Get player's draft picks with episode ranges
