@@ -28,8 +28,19 @@ async function getTeamDetailsForEpisode(req, res) {
       return res.status(404).json({ error: 'Episode not found' });
     }
 
-    // Get player's draft picks that were active during this episode
-    const { data: draftPicks, error: draftError } = await supabase
+    // Get all episodes to map IDs to numbers
+    const { data: allEpisodes, error: allEpisodesError } = await supabase
+      .from('episodes')
+      .select('id, episode_number')
+      .order('episode_number');
+
+    if (allEpisodesError) {
+      console.error('Error fetching all episodes:', allEpisodesError);
+      return res.status(500).json({ error: 'Failed to fetch episodes' });
+    }
+
+    // Get all draft picks for this player
+    const { data: allDraftPicks, error: draftError } = await supabase
       .from('draft_picks')
       .select(`
         contestant_id,
@@ -45,17 +56,39 @@ async function getTeamDetailsForEpisode(req, res) {
           is_eliminated
         )
       `)
-      .eq('player_id', playerId)
-      .lte('start_episode', episode.episode_number)
-      .or(`end_episode.is.null,end_episode.gte.${episode.episode_number}`);
+      .eq('player_id', playerId);
 
     if (draftError) {
       console.error('Error fetching draft picks:', draftError);
       return res.status(500).json({ error: 'Failed to fetch team data' });
     }
 
-    // Get player's sole survivor pick for this specific episode
-    const { data: soleSurvivorHistory, error: historyError } = await supabase
+    // Filter draft picks that were active during this episode
+    const draftPicks = (allDraftPicks || []).filter(pick => {
+      const startEpisode = allEpisodes.find(ep => ep.id === pick.start_episode);
+      if (!startEpisode) {
+        console.error(`Draft pick start episode not found: pick ID ${pick.id}, start_episode ${pick.start_episode}`);
+        console.error(`Available episodes:`, allEpisodes.map(ep => `ID ${ep.id} = Episode ${ep.episode_number}`));
+        return false; // Skip this pick as we can't determine when it's active
+      }
+      const startEpisodeNumber = startEpisode.episode_number;
+
+      let endEpisodeNumber = null;
+      if (pick.end_episode !== null) {
+        const endEpisode = allEpisodes.find(ep => ep.id === pick.end_episode);
+        if (!endEpisode) {
+          console.error(`Draft pick end episode not found: pick ID ${pick.id}, end_episode ${pick.end_episode}`);
+          return false; // Skip this pick as we can't determine when it ends
+        }
+        endEpisodeNumber = endEpisode.episode_number;
+      }
+
+      return startEpisodeNumber <= episode.episode_number &&
+             (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+    });
+
+    // Get all sole survivor history for this player
+    const { data: allSoleSurvivorHistory, error: historyError } = await supabase
       .from('sole_survivor_history')
       .select(`
         contestant_id,
@@ -71,10 +104,36 @@ async function getTeamDetailsForEpisode(req, res) {
         )
       `)
       .eq('player_id', playerId)
-      .lte('start_episode', episode.episode_number)
-      .or(`end_episode.is.null,end_episode.gte.${episode.episode_number}`)
-      .order('start_episode', { ascending: false })
-      .limit(1);
+      .order('start_episode', { ascending: false });
+
+    if (historyError) {
+      console.error('Error fetching sole survivor history:', historyError);
+      return res.status(500).json({ error: 'Failed to fetch sole survivor history' });
+    }
+
+    // Find sole survivor active during this episode
+    const soleSurvivorHistory = (allSoleSurvivorHistory || []).filter(h => {
+      const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
+      if (!startEpisode) {
+        console.error(`Sole survivor start episode not found: history ID ${h.id}, start_episode ${h.start_episode}`);
+        console.error(`Available episodes:`, allEpisodes.map(ep => `ID ${ep.id} = Episode ${ep.episode_number}`));
+        return false; // Skip this history as we can't determine when it's active
+      }
+      const startEpisodeNumber = startEpisode.episode_number;
+
+      let endEpisodeNumber = null;
+      if (h.end_episode !== null) {
+        const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
+        if (!endEpisode) {
+          console.error(`Sole survivor end episode not found: history ID ${h.id}, end_episode ${h.end_episode}`);
+          return false; // Skip this history as we can't determine when it ends
+        }
+        endEpisodeNumber = endEpisode.episode_number;
+      }
+
+      return startEpisodeNumber <= episode.episode_number &&
+             (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+    });
 
     if (historyError) {
       console.error('Error fetching sole survivor history:', historyError);
@@ -375,16 +434,34 @@ async function getAllEpisodesWithTeamSummary(req, res) {
     // Build episode summaries
     const episodeSummaries = (episodes || []).map(episode => {
       // Find active contestants for this episode
-      const activeContestants = (draftPicks || []).filter(pick => 
-        pick.start_episode <= episode.episode_number &&
-        (pick.end_episode === null || pick.end_episode >= episode.episode_number)
-      );
+      const activeContestants = (draftPicks || []).filter(pick => {
+        const startEpisode = allEpisodes.find(ep => ep.id === pick.start_episode);
+        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
+
+        let endEpisodeNumber = null;
+        if (pick.end_episode !== null) {
+          const endEpisode = allEpisodes.find(ep => ep.id === pick.end_episode);
+          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
+        }
+
+        return startEpisodeNumber <= episode.episode_number &&
+               (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+      });
 
       // Find active sole survivor for this episode
-      const activeSoleSurvivorForEpisode = (allSoleSurvivorHistory || []).find(h => 
-        h.start_episode <= episode.episode_number &&
-        (h.end_episode === null || h.end_episode >= episode.episode_number)
-      );
+      const activeSoleSurvivorForEpisode = (allSoleSurvivorHistory || []).find(h => {
+        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
+        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
+
+        let endEpisodeNumber = null;
+        if (h.end_episode !== null) {
+          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
+          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
+        }
+
+        return startEpisodeNumber <= episode.episode_number &&
+               (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+      });
 
       // Calculate scores for this episode
       const episodeScoreData = allEpisodeScores.filter(s => s.episode_id === episode.id);
@@ -470,6 +547,8 @@ async function getTeamAuditData(req, res) {
     if (targetPlayerId) {
       playerId = parseInt(targetPlayerId);
     }
+
+    console.log('=== getTeamAuditData called for playerId:', playerId);
 
     // Get all episodes up to and including the current episode
     const { data: allEpisodes, error: episodesError } = await supabase
@@ -620,18 +699,33 @@ async function getTeamAuditData(req, res) {
     const auditData = episodes.map(episode => {
       // Find contestants active this episode
       const activeContestants = (draftPicks || []).filter(pick => {
-        const startEpisode = episodes.find(ep => ep.id === pick.start_episode);
+        const startEpisode = allEpisodes.find(ep => ep.id === pick.start_episode);
         const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
 
         let endEpisodeNumber = null;
         if (pick.end_episode !== null) {
-          const endEpisode = episodes.find(ep => ep.id === pick.end_episode);
+          const endEpisode = allEpisodes.find(ep => ep.id === pick.end_episode);
           endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
         }
 
-        // Replacements appear starting from their start_episode (which is already set correctly in the DB)
-        return startEpisodeNumber <= episode.episode_number &&
+        const isActive = startEpisodeNumber <= episode.episode_number &&
                (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+
+        // Debug logging for Kristina Mills
+        if (playerId === 4 && pick.contestants?.name?.includes('Kristina') && episode.episode_number <= 3) {
+          console.log(`\n=== AUDIT DEBUG: Episode ${episode.episode_number} ===`);
+          console.log('Pick:', pick.contestants.name);
+          console.log('start_episode (ID):', pick.start_episode);
+          console.log('startEpisodeNumber:', startEpisodeNumber);
+          console.log('end_episode (ID):', pick.end_episode);
+          console.log('endEpisodeNumber:', endEpisodeNumber);
+          console.log('episode.episode_number:', episode.episode_number);
+          console.log('Check:', `${startEpisodeNumber} <= ${episode.episode_number} && (${endEpisodeNumber} === null || ${endEpisodeNumber} >= ${episode.episode_number})`);
+          console.log('isActive:', isActive);
+        }
+
+        // Replacements appear starting from their start_episode (which is already set correctly in the DB)
+        return isActive;
       });
 
       // Get episode scores and events for this episode
@@ -676,10 +770,25 @@ async function getTeamAuditData(req, res) {
 
       // Handle sole survivor - find who was active for this episode
       let soleSurvivor = null;
-      const activeSoleSurvivorForEpisode = (soleSurvivorHistory || []).find(h => 
-        h.start_episode <= episode.episode_number &&
-        (h.end_episode === null || h.end_episode >= episode.episode_number)
-      );
+      const activeSoleSurvivorForEpisode = (soleSurvivorHistory || []).find(h => {
+        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
+        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
+
+        let endEpisodeNumber = null;
+        if (h.end_episode !== null) {
+          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
+          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
+        }
+
+        return startEpisodeNumber <= episode.episode_number &&
+               (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+      });
+
+      // Debug logging for player 4
+      if (playerId === 4 && episode.episode_number <= 3) {
+        const kristina = draftedContestants.find(c => c.name?.includes('Kristina'));
+        console.log(`Episode ${episode.episode_number}: Kristina in draftedContestants?`, !!kristina);
+      }
 
       if (activeSoleSurvivorForEpisode && activeSoleSurvivorForEpisode.contestants) {
         const scoreData = episodeScoreData.find(s => s.contestant_id === activeSoleSurvivorForEpisode.contestants.id);
