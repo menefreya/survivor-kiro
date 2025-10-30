@@ -432,12 +432,12 @@ async function getAllEpisodesWithTeamSummary(req, res) {
     const episodeSummaries = (episodes || []).map(episode => {
       // Find active contestants for this episode
       const activeContestants = (draftPicks || []).filter(pick => {
-        const startEpisode = allEpisodes.find(ep => ep.id === pick.start_episode);
+        const startEpisode = episodes.find(ep => ep.id === pick.start_episode);
         const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
 
         let endEpisodeNumber = null;
         if (pick.end_episode !== null) {
-          const endEpisode = allEpisodes.find(ep => ep.id === pick.end_episode);
+          const endEpisode = episodes.find(ep => ep.id === pick.end_episode);
           endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
         }
 
@@ -447,14 +447,9 @@ async function getAllEpisodesWithTeamSummary(req, res) {
 
       // Find active sole survivor for this episode
       const activeSoleSurvivorForEpisode = (allSoleSurvivorHistory || []).find(h => {
-        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
-        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
-
-        let endEpisodeNumber = null;
-        if (h.end_episode !== null) {
-          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
-          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
-        }
+        // start_episode and end_episode contain episode numbers, not IDs
+        const startEpisodeNumber = h.start_episode || 1;
+        const endEpisodeNumber = h.end_episode;
 
         return startEpisodeNumber <= episode.episode_number &&
                (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
@@ -547,7 +542,7 @@ async function getTeamAuditData(req, res) {
 
     console.log('=== getTeamAuditData called for playerId:', playerId);
 
-    // Get all episodes up to and including the current episode
+    // Get all episodes
     const { data: allEpisodes, error: episodesError } = await supabase
       .from('episodes')
       .select('id, episode_number, aired_date, is_current')
@@ -558,14 +553,8 @@ async function getTeamAuditData(req, res) {
       return res.status(500).json({ error: 'Failed to fetch episodes' });
     }
 
-    // Find the current episode
-    const currentEpisode = allEpisodes?.find(ep => ep.is_current);
-    const currentEpisodeNumber = currentEpisode ? currentEpisode.episode_number : null;
-
-    // Filter episodes up to current and reverse for descending order
-    const episodes = currentEpisodeNumber
-      ? allEpisodes.filter(ep => ep.episode_number <= currentEpisodeNumber).reverse()
-      : allEpisodes.reverse();
+    // Show all episodes in descending order
+    const episodes = allEpisodes.reverse();
 
     // Get player's draft picks with episode ranges
     const { data: draftPicks, error: draftError } = await supabase
@@ -768,17 +757,23 @@ async function getTeamAuditData(req, res) {
       // Handle sole survivor - find who was active for this episode
       let soleSurvivor = null;
       const activeSoleSurvivorForEpisode = (soleSurvivorHistory || []).find(h => {
-        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
-        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
+        // start_episode and end_episode contain episode numbers, not IDs
+        const startEpisodeNumber = h.start_episode || 1;
+        const endEpisodeNumber = h.end_episode;
 
-        let endEpisodeNumber = null;
-        if (h.end_episode !== null) {
-          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
-          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
+        const isActive = startEpisodeNumber <= episode.episode_number &&
+               (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+
+        // Debug logging for player 3
+        if (playerId === 3 && episode.episode_number >= 4 && episode.episode_number <= 7) {
+          console.log(`\n=== Episode ${episode.episode_number} - Sole Survivor Check ===`);
+          console.log(`Contestant: ${h.contestants?.name}`);
+          console.log(`start_episode: ${startEpisodeNumber}, end_episode: ${endEpisodeNumber}`);
+          console.log(`Check: ${startEpisodeNumber} <= ${episode.episode_number} && (${endEpisodeNumber} === null || ${endEpisodeNumber} >= ${episode.episode_number})`);
+          console.log(`isActive: ${isActive}`);
         }
 
-        return startEpisodeNumber <= episode.episode_number &&
-               (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
+        return isActive;
       });
 
       // Debug logging for player 4

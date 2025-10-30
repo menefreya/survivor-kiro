@@ -368,7 +368,7 @@ async function replaceDraftPickForSoleSurvivor(playerId, contestantId) {
       throw new Error(`No available replacement contestant found for player ${playerId}`);
     }
 
-    // End the current draft pick
+    // End the current draft pick at the current episode
     const { error: endError } = await supabase
       .from('draft_picks')
       .update({ end_episode: currentEpisodeId })
@@ -378,14 +378,33 @@ async function replaceDraftPickForSoleSurvivor(playerId, contestantId) {
       throw new Error(`Failed to end draft pick: ${endError.message}`);
     }
 
-    // Create new draft pick for replacement contestant
+    // Find the next episode after the current episode
+    const { data: nextEpisode, error: nextEpisodeError } = await supabase
+      .from('episodes')
+      .select('id, episode_number')
+      .gt('episode_number', currentEpisodeNumber)
+      .order('episode_number', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (nextEpisodeError) {
+      throw new Error(`Failed to find next episode: ${nextEpisodeError.message}`);
+    }
+
+    if (!nextEpisode) {
+      throw new Error(`No future episodes available for replacement draft pick`);
+    }
+
+    const nextEpisodeId = nextEpisode.id;
+
+    // Create new draft pick for replacement contestant starting next episode
     const { data: newPick, error: insertError } = await supabase
       .from('draft_picks')
       .insert({
         player_id: playerId,
         contestant_id: replacementContestant,
         pick_number: existingPick.pick_number,
-        start_episode: currentEpisodeId,
+        start_episode: nextEpisodeId,
         end_episode: null,
         is_replacement: true,
         replaced_contestant_id: contestantId
@@ -414,8 +433,8 @@ async function replaceDraftPickForSoleSurvivor(playerId, contestantId) {
       replacementContestantName: newContestant?.name,
       oldPickId: existingPick.id,
       newPickId: newPick.id,
-      episodeId: currentEpisodeId,
-      episodeNumber: currentEpisodeNumber,
+      episodeId: nextEpisodeId,
+      episodeNumber: nextEpisode.episode_number,
       reason: 'sole_survivor_selection'
     };
 
