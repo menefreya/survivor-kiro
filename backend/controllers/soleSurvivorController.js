@@ -39,15 +39,14 @@ async function updateSoleSurvivor(req, res) {
     // Per requirement 2.6: Allow sole survivor pick even if eliminated
     // This allows players to re-pick if their sole survivor is eliminated
 
-    // Get current episode ID and number (find the episode marked as is_current)
+    // Get current episode number (find the episode marked as is_current)
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
-      .select('id, episode_number')
+      .select('episode_number')
       .eq('is_current', true)
       .single();
 
     // Default to episode 1 if no current episode is set
-    const currentEpisodeId = currentEpisode?.id || 1;
     const currentEpisodeNumber = currentEpisode?.episode_number || 1;
 
     // Get player's current sole survivor to check if it's changing
@@ -69,13 +68,11 @@ async function updateSoleSurvivor(req, res) {
       });
     }
 
-    // End previous selection if exists and get the end_episode to calculate next episode
-    let nextEpisodeId = null;
+    // End previous selection if exists
     if (player.sole_survivor_id) {
-      // End the previous sole survivor at the current episode
       const { error: endError } = await supabase
         .from('sole_survivor_history')
-        .update({ end_episode: currentEpisodeId })
+        .update({ end_episode: currentEpisodeNumber })
         .eq('player_id', playerId)
         .is('end_episode', null);
 
@@ -83,25 +80,6 @@ async function updateSoleSurvivor(req, res) {
         console.error('Error ending previous sole survivor selection:', endError);
         return res.status(500).json({ error: 'Failed to update sole survivor history' });
       }
-
-      // Find the next episode after the current episode
-      const { data: nextEpisode, error: nextEpisodeError } = await supabase
-        .from('episodes')
-        .select('id')
-        .gt('episode_number', currentEpisodeNumber)
-        .order('episode_number', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-
-      if (nextEpisodeError) {
-        console.error('Error finding next episode:', nextEpisodeError);
-        return res.status(500).json({ error: 'Failed to find next episode' });
-      }
-
-      nextEpisodeId = nextEpisode?.id;
-    } else {
-      // No previous sole survivor, so start from current episode
-      nextEpisodeId = currentEpisodeId;
     }
 
     // Check if the new sole survivor is currently a draft pick and replace if needed
@@ -115,27 +93,19 @@ async function updateSoleSurvivor(req, res) {
       });
     }
 
-    // Create new selection record - only if we have a next episode to start from
-    if (nextEpisodeId) {
-      const { error: historyError } = await supabase
-        .from('sole_survivor_history')
-        .insert({
-          player_id: playerId,
-          contestant_id: contestant_id,
-          start_episode: nextEpisodeId,
-          end_episode: null
-        });
-
-      if (historyError) {
-        console.error('Error creating sole survivor history:', historyError);
-        return res.status(500).json({ error: 'Failed to create sole survivor history' });
-      }
-    } else {
-      // No future episodes available
-      console.log('No future episodes available for new sole survivor selection');
-      return res.status(400).json({
-        error: 'Cannot change sole survivor - no future episodes available. The season may be over.'
+    // Create new selection record
+    const { error: historyError } = await supabase
+      .from('sole_survivor_history')
+      .insert({
+        player_id: playerId,
+        contestant_id: contestant_id,
+        start_episode: currentEpisodeNumber,
+        end_episode: null
       });
+
+    if (historyError) {
+      console.error('Error creating sole survivor history:', historyError);
+      return res.status(500).json({ error: 'Failed to create sole survivor history' });
     }
 
     // Update player's sole survivor pick
