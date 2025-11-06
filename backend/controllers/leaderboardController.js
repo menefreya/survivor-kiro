@@ -309,9 +309,9 @@ async function getLeaderboard(req, res) {
           const ssScores = scoresLookup[history.contestant_id];
           if (ssScores && ssScores[latestEpisode.id]) {
             // Only count if this sole survivor was active during latest episode
-            // Sole survivor history stores episode NUMBERS
-            if (history.start_episode <= latestEpisode.episode_number &&
-                (history.end_episode === null || history.end_episode >= latestEpisode.episode_number)) {
+            // Sole survivor history stores episode IDs (consistent with draft picks)
+            if (history.start_episode <= latestEpisode.id &&
+                (history.end_episode === null || history.end_episode >= latestEpisode.id)) {
               weeklyChange += ssScores[latestEpisode.id];
             }
           }
