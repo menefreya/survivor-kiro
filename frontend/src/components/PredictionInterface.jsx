@@ -20,6 +20,7 @@ const PredictionInterface = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
+
   useEffect(() => {
     fetchPredictionData();
   }, []);
@@ -219,8 +220,16 @@ const PredictionInterface = () => {
       
       setSubmittedPredictions(predictionsArray);
       
-      // Scroll to success message
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Refresh all players' predictions to show updated comparison grid
+      await fetchAllPlayersPredictions();
+      
+      // Scroll to comparison grid after successful submission
+      setTimeout(() => {
+        const compareSection = document.getElementById('compare');
+        if (compareSection) {
+          compareSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
       
     } catch (err) {
       console.error('Error submitting predictions:', err);
@@ -285,6 +294,8 @@ const PredictionInterface = () => {
       {error && (
         <div className="form-message form-error">{error}</div>
       )}
+
+
 
       {!hasSubmitted && !isLocked && (
         <form onSubmit={handleSubmit} className="layout-stack">
@@ -375,7 +386,7 @@ const PredictionInterface = () => {
       )}
 
       {/* All Players' Predictions Section - Comparison Grid */}
-      {allPlayersPredictions.length > 0 && (() => {
+      {(allPlayersPredictions.length > 0 || hasSubmitted) && (() => {
         // Include current user in the display
         const allPlayers = [...allPlayersPredictions];
 
@@ -489,6 +500,8 @@ const PredictionInterface = () => {
                   </tbody>
                 </table>
               </div>
+              
+
             </div>
           </div>
         );
