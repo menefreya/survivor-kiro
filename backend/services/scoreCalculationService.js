@@ -366,7 +366,7 @@ class ScoreCalculationService {
     // Calculate score for each sole survivor period
     if (soleSurvivorHistory && soleSurvivorHistory.length > 0) {
       for (const selection of soleSurvivorHistory) {
-        const contestantScore = await this.calculateContestantScoreForEpisodeRangeByNumber(
+        const contestantScore = await this.calculateContestantScoreForEpisodeRange(
           selection.contestant_id,
           selection.start_episode,
           selection.end_episode

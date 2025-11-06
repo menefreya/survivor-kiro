@@ -39,14 +39,20 @@ async function updateSoleSurvivor(req, res) {
     // Per requirement 2.6: Allow sole survivor pick even if eliminated
     // This allows players to re-pick if their sole survivor is eliminated
 
-    // Get current episode number (find the episode marked as is_current)
+    // Get current episode ID (find the episode marked as is_current)
     const { data: currentEpisode, error: episodeError } = await supabase
       .from('episodes')
-      .select('episode_number')
+      .select('id, episode_number')
       .eq('is_current', true)
       .single();
 
+    if (episodeError) {
+      console.error('Error fetching current episode:', episodeError);
+      return res.status(500).json({ error: 'Failed to fetch current episode' });
+    }
+
     // Default to episode 1 if no current episode is set
+    const currentEpisodeId = currentEpisode?.id || 1;
     const currentEpisodeNumber = currentEpisode?.episode_number || 1;
 
     // Get player's current sole survivor to check if it's changing
@@ -72,7 +78,7 @@ async function updateSoleSurvivor(req, res) {
     if (player.sole_survivor_id) {
       const { error: endError } = await supabase
         .from('sole_survivor_history')
-        .update({ end_episode: currentEpisodeNumber })
+        .update({ end_episode: currentEpisodeId })
         .eq('player_id', playerId)
         .is('end_episode', null);
 
@@ -99,7 +105,7 @@ async function updateSoleSurvivor(req, res) {
       .insert({
         player_id: playerId,
         contestant_id: contestant_id,
-        start_episode: currentEpisodeNumber,
+        start_episode: currentEpisodeId,
         end_episode: null
       });
 

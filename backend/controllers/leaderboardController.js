@@ -168,7 +168,7 @@ async function getLeaderboard(req, res) {
     };
 
     // Helper function to calculate score for a contestant in an episode range using episode numbers
-    // Used for sole survivor history which stores start_episode and end_episode as episode numbers
+    // Used for legacy compatibility or when working with episode numbers directly
     const calculateScoreForRangeByNumbers = (contestantId, startEpisodeNumber, endEpisodeNumber) => {
       if (!scoresLookup[contestantId]) return 0;
 
@@ -250,8 +250,8 @@ async function getLeaderboard(req, res) {
         if (!history.contestants) continue;
 
         // Calculate score for this sole survivor period
-        // Sole survivor history uses episode NUMBERS for start_episode and end_episode
-        const periodScore = calculateScoreForRangeByNumbers(
+        // Sole survivor history uses episode IDs for start_episode and end_episode (consistent with draft picks)
+        const periodScore = calculateScoreForRangeByIds(
           history.contestant_id,
           history.start_episode,
           history.end_episode
