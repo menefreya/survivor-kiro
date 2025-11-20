@@ -18,6 +18,11 @@ const AdminEventEntry = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [creatingEpisode, setCreatingEpisode] = useState(false);
   const [settingCurrentEpisode, setSettingCurrentEpisode] = useState(false);
+  const [showEpisodeModal, setShowEpisodeModal] = useState(false);
+  const [newEpisodeData, setNewEpisodeData] = useState({
+    episode_number: '',
+    aired_date: ''
+  });
 
 
   // Fetch episodes and contestants on mount
@@ -82,22 +87,32 @@ const AdminEventEntry = () => {
     setError('');
   };
 
-  // Handle creating a new episode
-  const handleCreateNewEpisode = async () => {
+  // Open modal for creating a new episode
+  const handleCreateNewEpisode = () => {
+    // Calculate next episode number
+    const nextEpisodeNumber = episodes.length > 0
+      ? Math.max(...episodes.map(ep => ep.episode_number)) + 1
+      : 1;
+    
+    setNewEpisodeData({
+      episode_number: nextEpisodeNumber,
+      aired_date: new Date().toISOString().split('T')[0] // Default to today
+    });
+    setShowEpisodeModal(true);
+  };
+
+  // Submit new episode creation
+  const handleSubmitNewEpisode = async (e) => {
+    e.preventDefault();
     setCreatingEpisode(true);
     setError('');
     setSuccessMessage('');
 
     try {
-      // Calculate next episode number
-      const nextEpisodeNumber = episodes.length > 0
-        ? Math.max(...episodes.map(ep => ep.episode_number)) + 1
-        : 1;
-
       // Create new episode
       const response = await api.post('/scores/episodes', {
-        episode_number: nextEpisodeNumber,
-        aired_date: new Date().toISOString().split('T')[0] // Today's date
+        episode_number: parseInt(newEpisodeData.episode_number),
+        aired_date: newEpisodeData.aired_date
       });
 
       const newEpisode = response.data;
@@ -108,7 +123,8 @@ const AdminEventEntry = () => {
       // Select the new episode
       setSelectedEpisodeId(newEpisode.id);
       
-      setSuccessMessage(`Episode ${nextEpisodeNumber} created successfully!`);
+      setSuccessMessage(`Episode ${newEpisodeData.episode_number} created successfully!`);
+      setShowEpisodeModal(false);
       
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -306,6 +322,84 @@ const AdminEventEntry = () => {
               Green buttons indicate positive points, red buttons indicate penalties. 
               Click "Save All Events" when finished.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* New Episode Modal */}
+      {showEpisodeModal && (
+        <div className="modal-overlay" onClick={() => setShowEpisodeModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Create New Episode</h3>
+              <button
+                className="modal-close"
+                onClick={() => setShowEpisodeModal(false)}
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmitNewEpisode}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label htmlFor="episode-number" className="required">
+                    Episode Number
+                  </label>
+                  <input
+                    type="number"
+                    id="episode-number"
+                    value={newEpisodeData.episode_number}
+                    onChange={(e) => setNewEpisodeData({
+                      ...newEpisodeData,
+                      episode_number: e.target.value
+                    })}
+                    min="1"
+                    required
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="aired-date" className="required">
+                    Air Date
+                  </label>
+                  <input
+                    type="date"
+                    id="aired-date"
+                    value={newEpisodeData.aired_date}
+                    onChange={(e) => setNewEpisodeData({
+                      ...newEpisodeData,
+                      aired_date: e.target.value
+                    })}
+                    required
+                    className="form-input"
+                  />
+                  <small className="form-help">
+                    The episode will appear on the leaderboard after this date
+                  </small>
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  onClick={() => setShowEpisodeModal(false)}
+                  className="btn btn--secondary"
+                  disabled={creatingEpisode}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn--primary"
+                  disabled={creatingEpisode}
+                >
+                  {creatingEpisode ? 'Creating...' : 'Create Episode'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
