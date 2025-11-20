@@ -481,10 +481,12 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
         continue;
       }
 
-      // Get ALL draft picks from ALL players (not just this player)
+      // Get ALL ACTIVE draft picks from ALL players (not just this player)
+      // Only consider picks that haven't ended (end_episode IS NULL)
       const { data: allDraftPicks, error: allPicksError } = await supabase
         .from('draft_picks')
-        .select('contestant_id');
+        .select('contestant_id')
+        .is('end_episode', null);
 
       if (allPicksError) {
         console.error(`Failed to fetch all draft picks:`, allPicksError);
@@ -634,9 +636,10 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
       }
 
       // Only create replacement if we have a next episode to start from
+      let newPick = null;
       if (nextEpisodeId) {
         // Create new draft pick for replacement contestant starting next episode
-        const { data: newPick, error: insertError } = await supabase
+        const { data: insertedPick, error: insertError } = await supabase
           .from('draft_picks')
           .insert({
             player_id: playerId,
@@ -654,18 +657,10 @@ async function replaceEliminatedDraftPicks(eliminatedContestantId) {
           console.error(`Failed to create replacement draft pick for player ${playerId}:`, insertError);
           continue;
         }
+        
+        newPick = insertedPick;
       } else {
         console.log(`No future episodes available for replacement contestant`);
-      }
-
-      if (insertError) {
-        console.error(`Failed to create replacement draft pick for player ${playerId}:`, insertError);
-        continue;
-      }
-
-      if (updateError) {
-        console.error(`Failed to update draft pick for player ${playerId}:`, updateError);
-        continue;
       }
 
       // Log the replacement
