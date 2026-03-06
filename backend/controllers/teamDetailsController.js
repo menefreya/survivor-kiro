@@ -112,24 +112,10 @@ async function getTeamDetailsForEpisode(req, res) {
     }
 
     // Find sole survivor active during this episode
+    // Note: start_episode and end_episode in sole_survivor_history are episode NUMBERS, not IDs
     const soleSurvivorHistory = (allSoleSurvivorHistory || []).filter(h => {
-      const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
-      if (!startEpisode) {
-        console.error(`Sole survivor start episode not found: history ID ${h.id}, start_episode ${h.start_episode}`);
-        console.error(`Available episodes:`, allEpisodes.map(ep => `ID ${ep.id} = Episode ${ep.episode_number}`));
-        return false; // Skip this history as we can't determine when it's active
-      }
-      const startEpisodeNumber = startEpisode.episode_number;
-
-      let endEpisodeNumber = null;
-      if (h.end_episode !== null) {
-        const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
-        if (!endEpisode) {
-          console.error(`Sole survivor end episode not found: history ID ${h.id}, end_episode ${h.end_episode}`);
-          return false; // Skip this history as we can't determine when it ends
-        }
-        endEpisodeNumber = endEpisode.episode_number;
-      }
+      const startEpisodeNumber = h.start_episode;
+      const endEpisodeNumber = h.end_episode;
 
       return startEpisodeNumber <= episode.episode_number &&
              (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
@@ -446,15 +432,10 @@ async function getAllEpisodesWithTeamSummary(req, res) {
       });
 
       // Find active sole survivor for this episode
+      // Note: start_episode and end_episode in sole_survivor_history are episode NUMBERS, not IDs
       const activeSoleSurvivorForEpisode = (allSoleSurvivorHistory || []).find(h => {
-        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
-        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
-
-        let endEpisodeNumber = null;
-        if (h.end_episode !== null) {
-          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
-          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
-        }
+        const startEpisodeNumber = h.start_episode;
+        const endEpisodeNumber = h.end_episode;
 
         return startEpisodeNumber <= episode.episode_number &&
                (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
@@ -777,16 +758,11 @@ async function getTeamAuditData(req, res) {
       }).filter(Boolean);
 
       // Handle sole survivor - find who was active for this episode
+      // Note: start_episode and end_episode in sole_survivor_history are episode NUMBERS, not IDs
       let soleSurvivor = null;
       const activeSoleSurvivorForEpisode = (soleSurvivorHistory || []).find(h => {
-        const startEpisode = allEpisodes.find(ep => ep.id === h.start_episode);
-        const startEpisodeNumber = startEpisode ? startEpisode.episode_number : 1;
-
-        let endEpisodeNumber = null;
-        if (h.end_episode !== null) {
-          const endEpisode = allEpisodes.find(ep => ep.id === h.end_episode);
-          endEpisodeNumber = endEpisode ? endEpisode.episode_number : null;
-        }
+        const startEpisodeNumber = h.start_episode;
+        const endEpisodeNumber = h.end_episode;
 
         return startEpisodeNumber <= episode.episode_number &&
                (endEpisodeNumber === null || endEpisodeNumber >= episode.episode_number);
