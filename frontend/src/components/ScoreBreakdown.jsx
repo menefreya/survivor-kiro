@@ -155,7 +155,9 @@ function ScoreBreakdown({ playerId, onClose }) {
               {manualBonuses.length > 0 && (
                 <ul style={{ fontSize: '0.8em', margin: '4px 0 0 12px', color: 'var(--color-text-secondary)' }}>
                   {manualBonuses.map(b => (
-                    <li key={b.id}>{b.reason}: {b.amount >= 0 ? '+' : ''}{b.amount}</li>
+                    <li key={b.id}>
+                      {b.episode ? `Ep ${b.episode.episode_number} — ` : ''}{b.reason}: {b.amount >= 0 ? '+' : ''}{b.amount}
+                    </li>
                   ))}
                 </ul>
               )}

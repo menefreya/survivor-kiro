@@ -692,6 +692,17 @@ async function getTeamAuditData(req, res) {
       console.error('Error fetching all predictions:', allPredictionsError);
     }
 
+    // Get all manual bonuses for this player
+    const { data: allManualBonuses, error: manualBonusError } = await supabase
+      .from('player_bonuses')
+      .select('id, amount, reason, episode_id')
+      .eq('player_id', playerId)
+      .order('created_at', { ascending: true });
+
+    if (manualBonusError) {
+      console.error('Error fetching manual bonuses:', manualBonusError);
+    }
+
     // Build detailed audit data for each episode
     const auditData = episodes.map(episode => {
       // Find contestants active this episode
@@ -826,9 +837,11 @@ async function getTeamAuditData(req, res) {
         .filter(c => c.is_active_for_scoring)
         .reduce((sum, c) => sum + c.episode_score, 0);
       const soleSurvivorScore = soleSurvivor ? soleSurvivor.episode_score : 0;
-      const predictionBonus = allPredictions ? 
+      const predictionBonus = allPredictions ?
         allPredictions.filter(p => p.episode_id === episode.id).length * 3 : 0;
-      const totalScore = draftScore + soleSurvivorScore + predictionBonus;
+      const episodeBonuses = (allManualBonuses || []).filter(b => b.episode_id === episode.id);
+      const episodeBonusTotal = episodeBonuses.reduce((sum, b) => sum + b.amount, 0);
+      const totalScore = draftScore + soleSurvivorScore + predictionBonus + episodeBonusTotal;
 
       return {
         episode: {
@@ -844,12 +857,14 @@ async function getTeamAuditData(req, res) {
           draft_score: draftScore,
           sole_survivor_score: soleSurvivorScore,
           prediction_bonus: predictionBonus,
+          manual_bonus: episodeBonusTotal,
           total_episode_score: totalScore
         },
-        prediction_bonuses: allPredictions ? 
+        prediction_bonuses: allPredictions ?
           allPredictions
             .filter(p => p.episode_id === episode.id)
-            .map(() => ({ prediction_text: 'Elimination prediction', points: 3 })) : []
+            .map(() => ({ prediction_text: 'Elimination prediction', points: 3 })) : [],
+        manual_bonuses: episodeBonuses
       };
     });
 

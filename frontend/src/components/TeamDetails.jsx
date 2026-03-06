@@ -213,6 +213,12 @@ const TeamDetails = () => {
                     <span className="overall-total-label">Predictions</span>
                     <span className="overall-total-value">{overallTotals.prediction_bonus} pts</span>
                   </div>
+                  {overallTotals.manual_bonus !== 0 && (
+                    <div className="overall-total-item">
+                      <span className="overall-total-label">Bonus Points</span>
+                      <span className="overall-total-value">{overallTotals.manual_bonus > 0 ? '+' : ''}{overallTotals.manual_bonus} pts</span>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -224,7 +230,7 @@ const TeamDetails = () => {
 
         <div className="audit-episodes">
           {auditData.map(episodeData => {
-            const { episode, team, scores, prediction_bonuses } = episodeData;
+            const { episode, team, scores, prediction_bonuses, manual_bonuses } = episodeData;
             
             return (
               <div key={episode.id} className="audit-episode-card">
@@ -255,6 +261,14 @@ const TeamDetails = () => {
                       {scores.prediction_bonus > 0 ? '+' : ''}{scores.prediction_bonus}
                     </span>
                   </div>
+                  {scores.manual_bonus !== 0 && (
+                    <div className="audit-summary-stat">
+                      <span className="audit-summary-label">Bonus</span>
+                      <span className={`audit-summary-value ${scores.manual_bonus >= 0 ? 'positive' : 'negative'}`}>
+                        {scores.manual_bonus > 0 ? '+' : ''}{scores.manual_bonus}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="audit-detailed-breakdown">
@@ -339,6 +353,22 @@ const TeamDetails = () => {
                           <span className="audit-prediction-icon">🎯</span>
                           <span className="audit-prediction-text">{prediction.prediction_text}</span>
                           <span className="audit-prediction-points">+{prediction.points}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Manual Bonuses */}
+                  {manual_bonuses && manual_bonuses.length > 0 && (
+                    <div className="audit-breakdown-section">
+                      <h4>Bonus Points</h4>
+                      {manual_bonuses.map((bonus) => (
+                        <div key={bonus.id} className="audit-prediction">
+                          <span className="audit-prediction-icon">⭐</span>
+                          <span className="audit-prediction-text">{bonus.reason}</span>
+                          <span className={`audit-prediction-points ${bonus.amount >= 0 ? 'positive' : 'negative'}`}>
+                            {bonus.amount >= 0 ? '+' : ''}{bonus.amount}
+                          </span>
                         </div>
                       ))}
                     </div>
