@@ -134,7 +134,6 @@ const PlayerRow = ({
             onMouseLeave={() => setShowBonusTooltip(false)}
             aria-label={`Bonus points: ${manualBonus}`}
           >
-            <span className="bonus-icon" role="img" aria-hidden="true">⭐</span>
             <span className="bonus-value">{manualBonus >= 0 ? '+' : ''}{manualBonus}</span>
             {showBonusTooltip && (
               <div className="bonus-tooltip" role="tooltip">

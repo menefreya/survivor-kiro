@@ -364,7 +364,6 @@ const TeamDetails = () => {
                       <h4>Bonus Points</h4>
                       {manual_bonuses.map((bonus) => (
                         <div key={bonus.id} className="audit-prediction">
-                          <span className="audit-prediction-icon">⭐</span>
                           <span className="audit-prediction-text">{bonus.reason}</span>
                           <span className={`audit-prediction-points ${bonus.amount >= 0 ? 'positive' : 'negative'}`}>
                             {bonus.amount >= 0 ? '+' : ''}{bonus.amount}
