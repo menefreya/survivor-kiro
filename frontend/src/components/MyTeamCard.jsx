@@ -84,16 +84,6 @@ const MyTeamCard = ({ soleSurvivor, draftPicks, totalScore, error, onRetry, play
                 />
               ))}
               
-              {/* Show message if only sole survivor remains (all draft picks eliminated) */}
-              {soleSurvivor && (!draftPicks || draftPicks.length === 0) && (
-                <div className="team-status-message" role="status">
-                  <p className="status-text">
-                    <span className="status-icon">⚡</span>
-                    All your draft picks have been eliminated. Your sole survivor is still in the game!
-                  </p>
-                </div>
-              )}
-              
               {/* Show empty state if no contestants at all */}
               {!soleSurvivor && (!draftPicks || draftPicks.length === 0) && (
                 <div className="empty-state" role="status">
