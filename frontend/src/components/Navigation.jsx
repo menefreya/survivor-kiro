@@ -81,8 +81,8 @@ const Navigation = () => {
       <div className="navigation__logo">
         <Link to="/home" className="navigation__logo-link" onClick={closeMobileMenu}>
           <img 
-            src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/survivor-49.png"
-            alt="Survivor 49 Fantasy League"
+            src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/Season%2050/Survivor%2050%20Logo.webp"
+            alt="Survivor 50 Fantasy League"
             className="navigation__logo-image"
           />
         </Link>

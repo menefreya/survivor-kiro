@@ -154,8 +154,8 @@ const Home = () => {
         <div className="survivor-tagline">
           <div className="tagline-content">
             <img 
-              src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/survivor-49.png"
-              alt="Survivor 49"
+              src="https://dclyjrauprgibydlojcg.supabase.co/storage/v1/object/public/profile-images/Season%2050/Survivor%2050%20Logo.webp"
+              alt="Survivor 50"
               className="tagline-logo"
             />
             <h1 className="tagline-text">

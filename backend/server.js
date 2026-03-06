@@ -66,6 +66,7 @@ const episodeRoutes = require('./routes/episodes');
 const teamDetailsRoutes = require('./routes/teamDetails');
 const rulesRoutes = require('./routes/rules');
 const debugRoutes = require('./routes/debug');
+const bonusRoutes = require('./routes/bonuses');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/contestants', contestantRoutes);
@@ -83,6 +84,7 @@ app.use('/api/episodes', episodeRoutes);
 app.use('/api/team-details', teamDetailsRoutes);
 app.use('/api/rules', rulesRoutes);
 app.use('/api/debug', debugRoutes);
+app.use('/api/bonuses', bonusRoutes);
 
 // Health check with database test
 app.get('/health', async (req, res) => {

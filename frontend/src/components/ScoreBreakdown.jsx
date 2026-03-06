@@ -17,6 +17,8 @@ function ScoreBreakdown({ playerId, onClose }) {
   const [soleSurvivorData, setSoleSurvivorData] = useState(null);
   const [currentEpisode, setCurrentEpisode] = useState(null);
   const [predictionBonus, setPredictionBonus] = useState(0);
+  const [manualBonus, setManualBonus] = useState(0);
+  const [manualBonuses, setManualBonuses] = useState([]);
 
   useEffect(() => {
     fetchScoreBreakdown();
@@ -44,6 +46,18 @@ function ScoreBreakdown({ playerId, onClose }) {
       } catch (err) {
         console.error('Error fetching prediction bonus:', err);
         setPredictionBonus(0);
+      }
+
+      // Fetch manual bonuses
+      try {
+        const bonusResponse = await api.get(`/bonuses/player/${playerId}`);
+        const bonuses = bonusResponse.data || [];
+        setManualBonuses(bonuses);
+        setManualBonus(bonuses.reduce((sum, b) => sum + b.amount, 0));
+      } catch (err) {
+        console.error('Error fetching manual bonuses:', err);
+        setManualBonus(0);
+        setManualBonuses([]);
       }
 
       // Fetch draft picks breakdown with episode ranges
@@ -103,7 +117,7 @@ function ScoreBreakdown({ playerId, onClose }) {
   const draftScore = draftPicksData.reduce((sum, pick) => sum + (pick.draft_pick?.range_score || 0), 0);
   const soleSurvivorScore = soleSurvivorData?.contestant?.total_score || 0;
   const soleSurvivorBonus = soleSurvivorData?.bonus?.total_bonus || 0;
-  const totalScore = draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus;
+  const totalScore = draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus + manualBonus;
 
   return (
     <div className="score-breakdown-modal" onClick={onClose}>
@@ -132,6 +146,19 @@ function ScoreBreakdown({ playerId, onClose }) {
             <div className="summary-item bonus">
               <span className="summary-label">Prediction Bonus:</span>
               <span className="summary-value">+{predictionBonus} pts</span>
+            </div>
+          )}
+          {manualBonus !== 0 && (
+            <div className="summary-item bonus">
+              <span className="summary-label">Bonus Points:</span>
+              <span className="summary-value">{manualBonus >= 0 ? '+' : ''}{manualBonus} pts</span>
+              {manualBonuses.length > 0 && (
+                <ul style={{ fontSize: '0.8em', margin: '4px 0 0 12px', color: 'var(--color-text-secondary)' }}>
+                  {manualBonuses.map(b => (
+                    <li key={b.id}>{b.reason}: {b.amount >= 0 ? '+' : ''}{b.amount}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
           <div className="summary-item total">

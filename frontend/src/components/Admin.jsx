@@ -3,6 +3,7 @@ import api from '../services/api';
 import AdminEventEntry from './AdminEventEntry';
 import AdminPredictionManager from './AdminPredictionManager';
 import AdminPredictionStatistics from './AdminPredictionStatistics';
+import AdminBonusManager from './AdminBonusManager';
 import '../styles/07-pages/admin.css';
 // Prediction styles are included in admin.css
 
@@ -178,6 +179,15 @@ const Admin = () => {
           onClick={() => setActiveTab('predictions')}
         >
           Predictions
+        </button>
+        <button
+          role="tab"
+          aria-selected={activeTab === 'bonuses'}
+          aria-controls="bonuses-panel"
+          className={`admin-tab ${activeTab === 'bonuses' ? 'active' : ''}`}
+          onClick={() => setActiveTab('bonuses')}
+        >
+          Bonuses
         </button>
       </div>
 
@@ -390,6 +400,15 @@ const Admin = () => {
 
               {draftError && <div className="error-message" role="alert">{draftError}</div>}
               {draftSuccess && <div className="success-message" role="status">{draftSuccess}</div>}
+            </section>
+          </div>
+        )}
+
+        {/* Bonuses Tab */}
+        {activeTab === 'bonuses' && (
+          <div role="tabpanel" id="bonuses-panel" aria-labelledby="bonuses-tab">
+            <section className="admin-section">
+              <AdminBonusManager />
             </section>
           </div>
         )}

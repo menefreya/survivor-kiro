@@ -382,12 +382,27 @@ class ScoreCalculationService {
     // Calculate and add prediction bonus
     const predictionBonus = await predictionScoringService.getPredictionBonus(playerId);
 
+    // Sum any manual bonuses awarded by admins
+    const { data: bonusRows, error: bonusError } = await supabase
+      .from('player_bonuses')
+      .select('amount')
+      .eq('player_id', playerId);
+
+    if (bonusError) {
+      throw new Error(`Failed to fetch player bonuses: ${bonusError.message}`);
+    }
+
+    const manualBonus = bonusRows
+      ? bonusRows.reduce((sum, row) => sum + row.amount, 0)
+      : 0;
+
     return {
       draft_score: draftScore,
       sole_survivor_score: soleSurvivorScore,
       sole_survivor_bonus: soleSurvivorBonus,
       prediction_bonus: predictionBonus,
-      total: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus
+      manual_bonus: manualBonus,
+      total: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus + manualBonus
     };
   }
 }

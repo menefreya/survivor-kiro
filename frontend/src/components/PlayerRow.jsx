@@ -12,10 +12,12 @@ const PlayerRow = ({
   draftedContestants,
   soleSurvivor,
   predictionBonus,
+  manualBonus,
   currentEpisodePredictionBonus
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showBonusTooltip, setShowBonusTooltip] = useState(false);
 
   // Determine rank badge color based on position
   const getRankBadgeColor = (rank) => {
@@ -123,6 +125,24 @@ const PlayerRow = ({
             </div>
           )}
         </div>
+
+        {/* Manual Bonus Indicator */}
+        {manualBonus !== 0 && (
+          <div
+            className="prediction-bonus-indicator"
+            onMouseEnter={() => setShowBonusTooltip(true)}
+            onMouseLeave={() => setShowBonusTooltip(false)}
+            aria-label={`Bonus points: ${manualBonus}`}
+          >
+            <span className="bonus-icon" role="img" aria-hidden="true">⭐</span>
+            <span className="bonus-value">{manualBonus >= 0 ? '+' : ''}{manualBonus}</span>
+            {showBonusTooltip && (
+              <div className="bonus-tooltip" role="tooltip">
+                Bonus Points: {manualBonus >= 0 ? '+' : ''}{manualBonus} pts
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Prediction Bonus Indicator - Only show bullseye if correct prediction in current episode */}
         {currentEpisodePredictionBonus > 0 && (

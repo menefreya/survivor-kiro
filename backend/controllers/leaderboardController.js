@@ -123,6 +123,18 @@ async function getLeaderboard(req, res) {
       });
     }
 
+    // BULK QUERY 5: Get all manual bonuses for all players at once
+    const { data: allManualBonuses, error: manualBonusError } = await supabase
+      .from('player_bonuses')
+      .select('player_id, amount');
+
+    const manualBonusMap = {};
+    if (!manualBonusError && allManualBonuses) {
+      allManualBonuses.forEach(bonus => {
+        manualBonusMap[bonus.player_id] = (manualBonusMap[bonus.player_id] || 0) + bonus.amount;
+      });
+    }
+
     // BULK QUERY 5: Get correct predictions for ONLY the latest episode (for bullseye display)
     const latestEpisodeCorrectPredictions = {};
     if (latestEpisode) {
@@ -274,12 +286,13 @@ async function getLeaderboard(req, res) {
       }
 
       const predictionBonus = predictionBonusMap[player.id] || 0;
+      const manualBonus = manualBonusMap[player.id] || 0;
       const currentEpisodePredictionBonus = latestEpisodeCorrectPredictions[player.id] ? 3 : 0;
 
       if (player.id === 3) {
-        console.log(`TOTALS: draft=${draftScore}, soleSurvivor=${soleSurvivorScore}, prediction=${predictionBonus}`);
+        console.log(`TOTALS: draft=${draftScore}, soleSurvivor=${soleSurvivorScore}, prediction=${predictionBonus}, manualBonus=${manualBonus}`);
         console.log(`Current episode prediction bonus: ${currentEpisodePredictionBonus}`);
-        console.log(`FINAL TOTAL: ${draftScore + soleSurvivorScore + predictionBonus}`);
+        console.log(`FINAL TOTAL: ${draftScore + soleSurvivorScore + predictionBonus + manualBonus}`);
         console.log('=================================');
       }
 
@@ -332,11 +345,12 @@ async function getLeaderboard(req, res) {
         player_name: player.name,
         username: player.email.split('@')[0],
         profile_image_url: player.profile_image_url,
-        total_score: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus,
+        total_score: draftScore + soleSurvivorScore + soleSurvivorBonus + predictionBonus + manualBonus,
         draft_score: draftScore,
         sole_survivor_score: soleSurvivorScore,
         sole_survivor_bonus: soleSurvivorBonus,
         prediction_bonus: predictionBonus,
+        manual_bonus: manualBonus,
         current_episode_prediction_bonus: currentEpisodePredictionBonus,
         elimination_compensation: 0,
         bonus_breakdown: bonusBreakdown,
