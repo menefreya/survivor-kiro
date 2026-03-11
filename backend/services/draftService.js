@@ -107,94 +107,107 @@ async function executeDraft() {
       );
     }
 
-  // Get all players with their sole survivor picks
-  const { data: players, error: playersError } = await supabase
-    .from('players')
-    .select('id, name, sole_survivor_id')
-    .order('id', { ascending: true });
+    // Get all players with their sole survivor picks
+    const { data: players, error: playersError } = await supabase
+      .from('players')
+      .select('id, name, sole_survivor_id')
+      .order('id', { ascending: true });
 
-  if (playersError) {
-    throw new Error(`Failed to fetch players: ${playersError.message}`);
-  }
-
-  if (players.length === 0) {
-    throw new Error('No players found');
-  }
-
-  // Randomize player order for fair draft
-  // Fisher-Yates shuffle algorithm
-  const shufflePlayers = (array) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    if (playersError) {
+      throw new Error(`Failed to fetch players: ${playersError.message}`);
     }
-    return shuffled;
-  };
 
-  const randomizedPlayers = shufflePlayers(players);
-  console.log('Draft order:', randomizedPlayers.map(p => p.name).join(', '));
+    if (players.length === 0) {
+      throw new Error('No players found');
+    }
 
-  // Get all rankings for all players
-  const { data: rankings, error: rankingsError } = await supabase
-    .from('rankings')
-    .select('player_id, contestant_id, rank')
-    .order('player_id', { ascending: true })
-    .order('rank', { ascending: true });
+    // Randomize player order for fair draft
+    // Fisher-Yates shuffle algorithm
+    const shufflePlayers = (array) => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
 
-  if (rankingsError) {
-    throw new Error(`Failed to fetch rankings: ${rankingsError.message}`);
-  }
+    const randomizedPlayers = shufflePlayers(players);
+    console.log('Draft order:', randomizedPlayers.map(p => p.name).join(', '));
 
-  // Organize rankings by player, excluding their sole survivor pick
-  const playerRankings = {};
-  players.forEach(player => {
-    playerRankings[player.id] = rankings
-      .filter(r => r.player_id === player.id)
-      .filter(r => r.contestant_id !== player.sole_survivor_id) // Exclude sole survivor
-      .map(r => r.contestant_id);
-  });
+    // Get all rankings for all players
+    const { data: rankings, error: rankingsError } = await supabase
+      .from('rankings')
+      .select('player_id, contestant_id, rank')
+      .order('player_id', { ascending: true })
+      .order('rank', { ascending: true });
 
-  // Execute snake draft
-  const draftPicks = [];
-  const assignedContestants = new Set();
-  const picksPerPlayer = 2;
-  const totalRounds = picksPerPlayer;
+    if (rankingsError) {
+      throw new Error(`Failed to fetch rankings: ${rankingsError.message}`);
+    }
 
-  for (let round = 0; round < totalRounds; round++) {
-    // Determine pick order for this round (snake draft)
-    const pickOrder = round % 2 === 0 
-      ? [...randomizedPlayers] // Forward order for even rounds (0, 2, 4...)
-      : [...randomizedPlayers].reverse(); // Reverse order for odd rounds (1, 3, 5...)
+    // Organize rankings by player, excluding their sole survivor pick
+    const playerRankings = {};
+    players.forEach(player => {
+      playerRankings[player.id] = rankings
+        .filter(r => r.player_id === player.id)
+        .filter(r => r.contestant_id !== player.sole_survivor_id) // Exclude sole survivor
+        .map(r => r.contestant_id);
+    });
 
-    for (const player of pickOrder) {
-      const playerRanking = playerRankings[player.id];
-      
-      // Find highest-ranked contestant not yet picked
-      let selectedContestant = null;
-      for (const contestantId of playerRanking) {
-        if (!assignedContestants.has(contestantId)) {
-          selectedContestant = contestantId;
-          break;
+    // Get the first episode (episode_number = 1) to use as start_episode
+    const { data: firstEpisode, error: episodeError } = await supabase
+      .from('episodes')
+      .select('id')
+      .eq('episode_number', 1)
+      .single();
+
+    if (episodeError || !firstEpisode) {
+      throw new Error('Episode 1 not found. Please create episode 1 before running the draft.');
+    }
+
+    const startEpisodeId = firstEpisode.id;
+
+    // Execute snake draft
+    const draftPicks = [];
+    const assignedContestants = new Set();
+    const picksPerPlayer = 2;
+    const totalRounds = picksPerPlayer;
+
+    for (let round = 0; round < totalRounds; round++) {
+      // Determine pick order for this round (snake draft)
+      const pickOrder = round % 2 === 0 
+        ? [...randomizedPlayers] // Forward order for even rounds (0, 2, 4...)
+        : [...randomizedPlayers].reverse(); // Reverse order for odd rounds (1, 3, 5...)
+
+      for (const player of pickOrder) {
+        const playerRanking = playerRankings[player.id];
+        
+        // Find highest-ranked contestant not yet picked
+        let selectedContestant = null;
+        for (const contestantId of playerRanking) {
+          if (!assignedContestants.has(contestantId)) {
+            selectedContestant = contestantId;
+            break;
+          }
         }
-      }
 
-      if (!selectedContestant) {
-        throw new Error(`No available contestants for player ${player.name}`);
-      }
+        if (!selectedContestant) {
+          throw new Error(`No available contestants for player ${player.name}`);
+        }
 
-      // Record the pick
-      assignedContestants.add(selectedContestant);
-      draftPicks.push({
-        player_id: player.id,
-        contestant_id: selectedContestant,
-        pick_number: draftPicks.length + 1,
-        start_episode: 1, // Episode ID 1 (which should be episode number 1)
-        end_episode: null,
-        is_replacement: false
-      });
+        // Record the pick
+        assignedContestants.add(selectedContestant);
+        draftPicks.push({
+          player_id: player.id,
+          contestant_id: selectedContestant,
+          pick_number: draftPicks.length + 1,
+          start_episode: startEpisodeId,
+          end_episode: null,
+          is_replacement: false
+        });
+      }
     }
-  }
 
     // Save draft picks to database
     const { data: savedPicks, error: saveError } = await supabase
