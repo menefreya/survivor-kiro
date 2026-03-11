@@ -336,11 +336,20 @@ const PredictionInterface = () => {
                         <div className="u-flex u-flex-col u-items-center u-gap-3 u-text-center">
                           <div className="avatar avatar--2xl">
                             {contestant.image_url ? (
-                              <img
-                                src={contestant.image_url}
-                                alt={contestant.name}
-                                className="avatar__image"
-                              />
+                              <>
+                                <img
+                                  src={contestant.image_url}
+                                  alt={contestant.name}
+                                  className="avatar__image"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.classList.remove('u-hidden');
+                                  }}
+                                />
+                                <div className="avatar__initials u-hidden">
+                                  {contestant.name.charAt(0)}
+                                </div>
+                              </>
                             ) : (
                               <div className="avatar__initials">
                                 {contestant.name.charAt(0)}
@@ -441,11 +450,20 @@ const PredictionInterface = () => {
                           <div className="entity-row entity-row--compact">
                             <div className="avatar avatar--sm">
                               {playerData.player.profile_image_url ? (
-                                <img
-                                  src={playerData.player.profile_image_url}
-                                  alt={playerData.player.name}
-                                  className="avatar__image"
-                                />
+                                <>
+                                  <img
+                                    src={playerData.player.profile_image_url}
+                                    alt={playerData.player.name}
+                                    className="avatar__image"
+                                    onError={(e) => {
+                                      e.target.style.display = 'none';
+                                      e.target.nextSibling.classList.remove('u-hidden');
+                                    }}
+                                  />
+                                  <div className="avatar__initials u-hidden">
+                                    {playerData.player.name.charAt(0).toUpperCase()}
+                                  </div>
+                                </>
                               ) : (
                                 <div className="avatar__initials">
                                   {playerData.player.name.charAt(0).toUpperCase()}
@@ -467,11 +485,20 @@ const PredictionInterface = () => {
                                   <div className="u-relative">
                                     <div className="avatar avatar--xs">
                                       {prediction.contestant?.image_url ? (
-                                        <img
-                                          src={prediction.contestant.image_url}
-                                          alt={prediction.contestant.name}
-                                          className="avatar__image"
-                                        />
+                                        <>
+                                          <img
+                                            src={prediction.contestant.image_url}
+                                            alt={prediction.contestant.name}
+                                            className="avatar__image"
+                                            onError={(e) => {
+                                              e.target.style.display = 'none';
+                                              e.target.nextSibling.classList.remove('u-hidden');
+                                            }}
+                                          />
+                                          <div className="avatar__initials u-hidden">
+                                            {prediction.contestant?.name?.charAt(0) || '?'}
+                                          </div>
+                                        </>
                                       ) : (
                                         <div className="avatar__initials">
                                           {prediction.contestant?.name?.charAt(0) || '?'}

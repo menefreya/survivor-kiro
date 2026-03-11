@@ -90,7 +90,7 @@ const PlayerRow = ({
                 alt={`${playerName}'s profile picture`}
                 onError={(e) => {
                   e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
+                  e.target.nextSibling.classList.remove('u-hidden');
                 }}
               />
             ) : (
@@ -188,7 +188,8 @@ const PlayerRow = ({
                       className="team-member-image"
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
+                        e.target.nextSibling.classList.remove('u-hidden');
+                        e.target.nextSibling.classList.add('u-flex');
                       }}
                     />
                   ) : null}
@@ -230,7 +231,8 @@ const PlayerRow = ({
                         className="team-member-image"
                         onError={(e) => {
                           e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          e.target.nextSibling.classList.remove('u-hidden');
+                          e.target.nextSibling.classList.add('u-flex');
                         }}
                       />
                     ) : null}
