@@ -262,8 +262,8 @@ async function getLeaderboard(req, res) {
         if (!history.contestants) continue;
 
         // Calculate score for this sole survivor period
-        // Sole survivor history uses episode IDs for start_episode and end_episode (consistent with draft picks)
-        const periodScore = calculateScoreForRangeByIds(
+        // Sole survivor history stores episode NUMBERS (not IDs), so use ByNumbers helper
+        const periodScore = calculateScoreForRangeByNumbers(
           history.contestant_id,
           history.start_episode,
           history.end_episode
@@ -322,9 +322,9 @@ async function getLeaderboard(req, res) {
           const ssScores = scoresLookup[history.contestant_id];
           if (ssScores && ssScores[latestEpisode.id]) {
             // Only count if this sole survivor was active during latest episode
-            // Sole survivor history stores episode IDs (consistent with draft picks)
-            if (history.start_episode <= latestEpisode.id &&
-                (history.end_episode === null || history.end_episode >= latestEpisode.id)) {
+            // Sole survivor history stores episode NUMBERS (not IDs)
+            if (history.start_episode <= latestEpisode.episode_number &&
+                (history.end_episode === null || history.end_episode >= latestEpisode.episode_number)) {
               weeklyChange += ssScores[latestEpisode.id];
             }
           }
