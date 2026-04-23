@@ -1,6 +1,7 @@
 const supabase = require('../db/supabase');
 const { replaceDraftPickForSoleSurvivor } = require('../services/draftService');
 const ScoreCalculationService = require('../services/scoreCalculationService');
+const path = require('path');
 
 /**
  * Get all players
@@ -362,10 +363,72 @@ async function getSoleSurvivorBonus(req, res) {
   }
 }
 
+/**
+ * Upload profile image to Supabase storage
+ * POST /api/players/:id/profile-image
+ */
+async function uploadProfileImage(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (parseInt(id) !== userId && !req.user.isAdmin) {
+      return res.status(403).json({ error: 'You can only update your own profile' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file provided' });
+    }
+
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const allowed = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    if (!allowed.includes(ext)) {
+      return res.status(400).json({ error: 'Invalid file type. Allowed: jpg, png, gif, webp' });
+    }
+
+    const fileName = `player-${id}-${Date.now()}${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('profile-images')
+      .upload(fileName, req.file.buffer, {
+        contentType: req.file.mimetype,
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.error('Supabase storage upload error:', uploadError);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('profile-images')
+      .getPublicUrl(fileName);
+
+    // Update player record with new URL
+    const { data: updatedPlayer, error: updateError } = await supabase
+      .from('players')
+      .update({ profile_image_url: publicUrl })
+      .eq('id', id)
+      .select('id, email, name, profile_image_url, is_admin, has_submitted_rankings, sole_survivor_id')
+      .single();
+
+    if (updateError) {
+      console.error('Update player profile image error:', updateError);
+      return res.status(500).json({ error: 'Failed to update profile' });
+    }
+
+    res.json({ message: 'Profile image updated successfully', player: updatedPlayer });
+  } catch (error) {
+    console.error('Upload profile image error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   getAllPlayers,
   getPlayerById,
   updatePlayerProfile,
+  uploadProfileImage,
   getSoleSurvivorHistory,
   updateSoleSurvivor,
   getSoleSurvivorBonus

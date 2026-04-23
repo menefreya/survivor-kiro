@@ -12,6 +12,8 @@ const Profile = () => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isUpdatingName, setIsUpdatingName] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [nameError, setNameError] = useState('');
@@ -22,25 +24,41 @@ const Profile = () => {
     navigate('/login');
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setError('');
+  };
+
   const handleUpdateProfileImage = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setIsUpdating(true);
 
+    if (!selectedFile) {
+      setError('Please select an image file');
+      return;
+    }
+
+    setIsUpdating(true);
     try {
-      await api.put(`/players/${user.id}`, {
-        profile_image_url: profileImageUrl
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const response = await api.post(`/players/${user.id}/profile-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      // Update user in context with new profile image
-      const updatedUser = { ...user, profile_image_url: profileImageUrl };
+      const updatedUser = { ...user, profile_image_url: response.data.player.profile_image_url };
       updateUser(updatedUser);
 
       setSuccess('Profile image updated successfully!');
-      setProfileImageUrl('');
+      setSelectedFile(null);
+      setPreviewUrl('');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to update profile image');
+      setError(err.response?.data?.error || 'Failed to upload profile image');
     } finally {
       setIsUpdating(false);
     }
@@ -164,17 +182,21 @@ const Profile = () => {
         <h3 className="profile-container__subtitle">Update Profile Image</h3>
         <form onSubmit={handleUpdateProfileImage}>
           <div className="form-group">
-            <label htmlFor="profileImageUrl" className="form-label">Profile Image URL:</label>
+            <label htmlFor="profileImageFile" className="form-label">Choose an image:</label>
             <input
-              type="url"
-              id="profileImageUrl"
+              type="file"
+              id="profileImageFile"
               className="form-input"
-              value={profileImageUrl}
-              onChange={(e) => setProfileImageUrl(e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              required
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleFileChange}
             />
           </div>
+
+          {previewUrl && (
+            <div className="profile-image-preview">
+              <img src={previewUrl} alt="Preview of selected profile" className="profile-image" />
+            </div>
+          )}
 
           {error && <div className="form-error" role="alert">{error}</div>}
           {success && <div className="form-success" role="status">{success}</div>}
@@ -182,10 +204,10 @@ const Profile = () => {
           <button
             type="submit"
             className="btn btn--primary"
-            disabled={isUpdating}
+            disabled={isUpdating || !selectedFile}
             aria-busy={isUpdating}
           >
-            {isUpdating ? 'Updating...' : 'Update Image'}
+            {isUpdating ? 'Uploading...' : 'Upload Image'}
           </button>
         </form>
       </div>
