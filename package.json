@@ -4,7 +4,6 @@
   "description": "Survivor Fantasy League application with React frontend and Express backend",
   "private": true,
   "type": "module",
-
   "scripts": {
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "install:backend": "cd backend && npm install",
@@ -26,9 +25,11 @@
   "devDependencies": {
     "concurrently": "^8.2.2"
   },
-
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.5"
   }
 }

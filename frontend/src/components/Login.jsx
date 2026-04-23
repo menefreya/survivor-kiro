@@ -132,6 +132,9 @@ const Login = () => {
               </button>
             </form>
             <div className="auth-footer">
+              <Link to="/forgot-password">Forgot your password?</Link>
+            </div>
+            <div className="auth-footer">
               Don't have an account? <Link to="/signup">Sign Up</Link>
             </div>
           </div>
