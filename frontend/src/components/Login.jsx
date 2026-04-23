@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    email: '',
+    email: sessionStorage.getItem('login_email') || '',
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +21,10 @@ const Login = () => {
       ...formData,
       [name]: value
     });
+    // Persist email in sessionStorage so it survives remounts
+    if (name === 'email') {
+      sessionStorage.setItem('login_email', value);
+    }
     // Clear error when user starts typing
     if (error) {
       setError('');
@@ -39,6 +43,9 @@ const Login = () => {
       });
 
       const { token, user } = response.data;
+
+      // Clear persisted email on successful login
+      sessionStorage.removeItem('login_email');
 
       // Store token in localStorage and AuthContext
       login(token, user);
